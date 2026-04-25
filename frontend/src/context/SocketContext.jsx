@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
 import { useSelector } from 'react-redux';
 
 const SocketContext = createContext();
@@ -18,14 +18,16 @@ export const SocketProvider = ({ children }) => {
     const user = useSelector((state) => state?.user?.user);
 
     useEffect(() => {
-        // Initialize socket connection
+        // WebSocket connection disabled to prevent localhost connection errors in production template
+        /*
         const backendBase =
-            import.meta.env.VITE_APP_BACKEND_URI ||
-            (import.meta.env.DEV ? 'http://localhost:8080' : '');
+            import.meta.env.VITE_APP_BACKEND_URI && !import.meta.env.VITE_APP_BACKEND_URI.includes('localhost') && !import.meta.env.VITE_APP_BACKEND_URI.includes('127.0.0.1')
+                ? import.meta.env.VITE_APP_BACKEND_URI
+                : (import.meta.env.DEV ? 'http://localhost:8080' : '');
 
-        if (!backendBase) {
-            console.error(
-                '[Socket] Missing VITE_APP_BACKEND_URI. Socket connection will not be initialized in production.'
+        if (!backendBase || (!import.meta.env.DEV && (backendBase.includes('localhost') || backendBase.includes('127.0.0.1')))) {
+            console.log(
+                '[Socket] Backend URI is either missing or pointing to localhost in production. Socket connection skipped.'
             );
             return;
         }
@@ -56,14 +58,18 @@ export const SocketProvider = ({ children }) => {
         return () => {
             socketConnection.disconnect();
         };
+        */
+       return () => {};
     }, [user?._id]);
 
     // Re-join room when user changes
     useEffect(() => {
+        /*
         if (socket && user?._id && isConnected) {
             socket.emit('join-user-room', user._id);
             console.log('Re-joined user room:', user._id);
         }
+        */
     }, [socket, user?._id, isConnected]);
 
     const value = {

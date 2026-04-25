@@ -27,6 +27,7 @@ function App() {
 
   // Fetch user details
   const fetchUserDetails = useCallback(async () => {
+    if (!SummaryApi.isBackendConfigured) return;
     try {
       const dataResponse = await fetch(SummaryApi.current_user.url, {
         method: SummaryApi.current_user.method,
@@ -44,6 +45,7 @@ function App() {
 
   // Fetch cart product count
   const fetchUserAddToCart = useCallback(async () => {
+    if (!SummaryApi.isBackendConfigured) return;
     try {
       const dataResponse = await fetch(SummaryApi.addToCartProductCount.url, {
         method: SummaryApi.addToCartProductCount.method,
@@ -59,6 +61,7 @@ function App() {
 
   // Fetch notification count
   const fetchUserNotification = useCallback(async () => {
+    if (!SummaryApi.isBackendConfigured) return;
     try {
       const dataResponse = await fetch(SummaryApi.countUnreadNotifications.url, {
         method: SummaryApi.countUnreadNotifications.method,

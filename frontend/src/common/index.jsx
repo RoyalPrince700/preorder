@@ -1,6 +1,7 @@
 const backendDomain =
-  import.meta.env.VITE_APP_BACKEND_URI ||
-  (import.meta.env.DEV ? 'http://localhost:8080' : '');
+  import.meta.env.VITE_APP_BACKEND_URI && !import.meta.env.VITE_APP_BACKEND_URI.includes('localhost') && !import.meta.env.VITE_APP_BACKEND_URI.includes('127.0.0.1')
+    ? import.meta.env.VITE_APP_BACKEND_URI
+    : (import.meta.env.DEV ? 'http://localhost:8080' : '');
 
 if (!backendDomain) {
   // In production this MUST be configured (e.g. https://preordify.onrender.com)
@@ -9,7 +10,10 @@ if (!backendDomain) {
   );
 }
 
+const isBackendConfigured = !!backendDomain && (!backendDomain.includes('localhost') || import.meta.env.DEV);
+
 const SummaryApi = {
+    isBackendConfigured,
     signUp : {
         url : `${backendDomain}/api/signup`,
         method : "post"
@@ -92,6 +96,10 @@ const SummaryApi = {
     
     uploadProduct : {
         url : `${backendDomain}/api/upload-product`,
+        method : "post"
+    },
+    uploadImage : {
+        url : `${backendDomain}/api/upload-image`,
         method : "post"
     },
     allProduct : {

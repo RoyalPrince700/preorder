@@ -8,7 +8,12 @@ const SubCategoryList = () => {
 
         const categoryLoading = new Array(13).fill(null)  //this line is to display an image before the category image load each time we refresh or login to home page
       
-  const fetchSubCategoryProduct = async()=>{
+  const fetchData = async()=>{
+        if (!SummaryApi.isBackendConfigured) {
+            setLoading(false);
+            setSubCategoryProduct([]);
+            return;
+        }
         setLoading(true)
         const response = await fetch(SummaryApi.subCategoryProduct.url)
         const dataResponse = await response.json()
@@ -18,7 +23,7 @@ const SubCategoryList = () => {
         }
 
         useEffect(()=>{
-            fetchSubCategoryProduct()
+            fetchData()
         },[])
             
 return (

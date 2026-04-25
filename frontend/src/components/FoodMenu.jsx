@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
+import SummaryApi from '../common';
+
 const FoodMenu = ({ vendorId }) => {
     const [menu, setMenu] = useState([]);
     const [cart, setCart] = useState([]);
 
     useEffect(() => {
+        if (!SummaryApi.isBackendConfigured) return;
         fetch(`/api/food-menu?vendorId=${vendorId}`)
             .then(res => res.json())
             .then(data => setMenu(data.menu))
