@@ -122,8 +122,9 @@ const Header = () => {
   }, [visible]);
 
   return (
-    <header className='fixed top-0 left-0 right-0 z-50 border-b-2 border-slate-100 bg-white/95 backdrop-blur'>
-      <div className='relative mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-2 sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
+    <>
+      <header className='fixed top-0 left-0 right-0 z-50 border-b-2 border-slate-100 bg-white/95 backdrop-blur'>
+        <div className='relative mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-2 sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
         <Link to='/' className='shrink-0'>
           <div className='flex flex-col'>
             <span className='select-none text-xl font-black uppercase tracking-tighter text-slate-950 sm:text-3xl'>
@@ -249,24 +250,28 @@ const Header = () => {
           </button>
         </div>
       </div>
+    </header>
 
       {/* Mobile menu: backdrop + slide-over panel (above header to avoid click/hover bugs) */}
       {visible && (
         <div
-          className="fixed inset-0 z-[100] xl:hidden"
+          className="fixed inset-0 z-[999] xl:hidden"
           role="dialog"
           aria-modal="true"
         >
           <button
             type="button"
-            className="absolute inset-0 cursor-default bg-slate-900/40"
+            className="absolute inset-0 cursor-default bg-slate-900/60 backdrop-blur-sm"
             onClick={() => setVisible(false)}
             aria-label="Close menu"
           />
-          <div className="absolute right-0 top-0 flex h-full w-full max-w-xs flex-col overflow-y-auto border-l-2 border-slate-900 bg-white shadow-2xl">
-            <div className="flex shrink-0 cursor-pointer items-center gap-4 border-b-2 border-slate-900 p-5" onClick={() => setVisible(false)}>
-              <IoMdArrowDropdown className="h-4 w-4 rotate-180" />
-              <p className="text-xs font-black uppercase tracking-widest text-slate-950">Close Menu</p>
+          <div className="absolute right-0 top-0 flex h-full w-full max-w-[280px] flex-col overflow-y-auto border-l-2 border-slate-900 bg-white shadow-2xl">
+            <div className="flex shrink-0 cursor-pointer items-center justify-between border-b-2 border-slate-900 p-5" onClick={() => setVisible(false)}>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-950">Menu</p>
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] font-bold uppercase text-slate-500">Close</p>
+                <IoMdArrowDropdown className="h-4 w-4 rotate-180" />
+              </div>
             </div>
 
             <div className="border-b border-slate-100 px-6 py-6">
@@ -356,8 +361,8 @@ const Header = () => {
           </div>
         </div>
       )}
-    </header>
-  )
+    </>
+  );
 };
 
 export default Header;
