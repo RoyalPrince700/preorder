@@ -166,20 +166,16 @@ const Header = () => {
           ))}
         </nav>
 
-        {!hideSearchBar && (
-          <div className='flex min-w-0 flex-1 items-center rounded-none border-2 border-slate-200 bg-slate-50 px-2.5 py-1.5 lg:hidden'>
-            <GrSearch className='mr-2 h-3.5 w-3.5 shrink-0 text-slate-400' />
-            <input
-              type='text'
-              placeholder='SEARCH'
-              className='w-full min-w-0 bg-transparent text-[10px] font-black outline-none placeholder:text-slate-400 sm:text-sm'
-              value={search}
-              onChange={handleSearch}
-            />
-          </div>
-        )}
-
         <div className='ml-auto flex shrink-0 items-center gap-2 sm:gap-5'>
+          {!hideSearchBar && (
+            <div 
+              onClick={() => navigate("/search")}
+              className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-none text-slate-700 transition hover:text-orange-600 lg:hidden'
+            >
+              <GrSearch className='h-5 w-5' />
+            </div>
+          )}
+
           <div className='group relative hidden sm:block'>
             {user ? (
               <>

@@ -16,7 +16,10 @@ const VerticalCard = ({ loading, data = [] }) => {
               <div className="p-4">
                 <div className="mb-2 h-4 animate-pulse rounded bg-slate-200"></div>
                 <div className="mb-4 h-4 w-3/4 animate-pulse rounded bg-slate-200"></div>
-                <div className="h-10 animate-pulse rounded-xl bg-slate-100"></div>
+                <div className="flex gap-2">
+                  <div className="h-10 flex-1 animate-pulse bg-slate-100"></div>
+                  <div className="h-10 w-10 animate-pulse bg-slate-100"></div>
+                </div>
               </div>
             </div>
           ))

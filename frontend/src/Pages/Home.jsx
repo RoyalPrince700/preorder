@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CategoryList from '../components/CategoryList'
 import SubCategoryList from '../components/SubCategoryList'
 import BannerProduct from '../components/BannerProduct'
@@ -10,13 +10,21 @@ import Hero from '../components/Hero'
 
 
 function Home() {
+  const [selectedCategory, setSelectedCategory] = useState("all")
+
   return (
     <div className='mt-0 lg:mt-2'>
       <Hero />
-      <div className='my-8'>
-        <CategoryList/>
+      <div className='mt-8 mb-2'>
+        <CategoryList 
+          activeCategory={selectedCategory} 
+          onCategoryClick={setSelectedCategory} 
+        />
       </div>
-      <VerticalCardProduct  category={"all"} heading={"All Products"} />
+      <VerticalCardProduct 
+        category={selectedCategory} 
+        showHeading={false} 
+      />
 
 
 

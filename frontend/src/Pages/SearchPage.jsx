@@ -13,7 +13,8 @@ const SearchPage = () => {
     setInput(q);
   }, [q]);
 
-  const results = useMemo(() => searchLocalProducts(q), [q]);
+  // Compute live results based on the current input
+  const results = useMemo(() => searchLocalProducts(input), [input]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,41 +26,45 @@ const SearchPage = () => {
     }
   };
 
-  const hasQuery = q.length > 0;
+  const hasInput = input.trim().length > 0;
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-16 pt-24 sm:px-6 lg:px-8">
-      <div className="mb-12 border-b-2 border-slate-100 pb-8">
-        <h1 className="text-3xl font-black uppercase tracking-tighter text-slate-950 sm:text-5xl leading-none">Search</h1>
-        <p className="mt-4 text-xs font-bold uppercase tracking-widest text-slate-500">
-          Find exclusive drops from our preorder catalog.
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="mb-12">
-        <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-stretch">
-          <div className="flex flex-1 items-center rounded-none border-2 border-slate-200 bg-white px-4 py-3.5 transition-colors focus-within:border-orange-500">
-            <GrSearch className="mr-3 shrink-0 text-slate-400" />
+      {/* Prominent Search Bar at Top */}
+      <div className="mb-10">
+        <form onSubmit={handleSubmit}>
+          <div className="flex w-full items-center rounded-none border-2 border-slate-950 bg-white px-5 py-4 transition-all focus-within:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <GrSearch className="mr-4 shrink-0 text-slate-950 h-6 w-6" />
             <input
               type="search"
               name="q"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="SEARCH DROPS, BRANDS, COLLECTIONS..."
-              className="w-full min-w-0 bg-transparent text-sm font-black uppercase tracking-widest outline-none placeholder:text-slate-300"
+              className="w-full min-w-0 bg-transparent text-base font-black uppercase tracking-widest outline-none placeholder:text-slate-300"
               autoComplete="off"
+              autoFocus
             />
+            <button
+              type="submit"
+              className="ml-4 hidden text-xs font-black uppercase tracking-widest text-slate-950 hover:text-orange-600 sm:block"
+            >
+              SEARCH
+            </button>
           </div>
-          <button
-            type="submit"
-            className="rounded-none bg-slate-950 px-10 py-4 text-xs font-black uppercase tracking-widest text-white transition hover:bg-orange-600 sm:w-auto"
-          >
-            SEARCH
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
 
-      {!hasQuery && (
+      <div className="mb-12 border-b-2 border-slate-100 pb-8">
+        <h1 className="text-xl font-black uppercase tracking-widest text-slate-950 sm:text-2xl leading-none">
+          {hasInput ? "Search Results" : "Discovery"}
+        </h1>
+        <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.2em] text-orange-600">
+          {hasInput ? `Browsing our preorder catalog for "${input}"` : "Explore curated drops and collections"}
+        </p>
+      </div>
+
+      {!hasInput && (
         <div className="mb-12 border-2 border-slate-100 p-8 sm:p-10">
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-6">Explore Collections</p>
           <div className="flex flex-wrap gap-3">
@@ -76,11 +81,11 @@ const SearchPage = () => {
         </div>
       )}
 
-      {hasQuery && (
+      {hasInput && (
         <section aria-live="polite">
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-baseline sm:justify-between border-b-2 border-slate-100 pb-4">
             <h2 className="text-xs font-black uppercase tracking-[0.2em] text-slate-950">
-              Results for: <span className="text-orange-600">"{q}"</span>
+              Live Results for: <span className="text-orange-600">"{input}"</span>
             </h2>
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
               {results.length} {results.length === 1 ? 'DROP' : 'DROPS'} FOUND
@@ -98,7 +103,7 @@ const SearchPage = () => {
         </section>
       )}
 
-      {!hasQuery && (
+      {!hasInput && (
         <p className="text-center text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300">Start typing to discover the latest preorders</p>
       )}
     </div>

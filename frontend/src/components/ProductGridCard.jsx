@@ -34,22 +34,22 @@ const ProductGridCard = ({ product }) => {
           </div>
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col px-3 pb-0 pt-3 md:px-4 md:pt-4">
+        <div className="flex min-w-0 flex-1 flex-col px-3 pb-0 pt-2 md:px-4">
           <p className="truncate text-[9px] font-black uppercase tracking-[0.2em] text-orange-600">
             {product?.category}
           </p>
-          <h3 className="mt-1 min-w-0 line-clamp-1 text-sm font-black uppercase tracking-tighter text-slate-950 sm:text-base">
+          <h3 className="mt-0.5 min-w-0 line-clamp-1 text-sm font-black uppercase tracking-tighter text-slate-950 sm:text-base">
             {product?.productName}
           </h3>
 
-          <div className="mt-2 flex min-w-0 flex-wrap items-center gap-2">
+          <div className="mt-1 flex min-w-0 flex-wrap items-center gap-2">
             <div className="flex shrink-0 items-center gap-1 text-orange-500">
               <FaStar className="h-3 w-3" />
               <span className="text-[10px] font-black text-slate-950 uppercase tracking-widest">{product?.rating || 4.5}</span>
             </div>
           </div>
 
-          <div className="mt-2 flex min-w-0 flex-wrap items-end gap-2">
+          <div className="mt-1 flex min-w-0 flex-wrap items-end gap-2">
             <span className="text-base font-black tracking-tighter text-slate-950 sm:text-xl">
               {displayNARCurrency(product?.sellingPrice)}
             </span>
@@ -62,13 +62,21 @@ const ProductGridCard = ({ product }) => {
         </div>
       </Link>
 
-      <div className="mt-4 p-3 md:p-4">
+      <div className="mt-2 flex items-center justify-between px-3 pb-3 md:px-4 md:pb-4">
+        <Link
+          to={`/product/${product?._id}`}
+          onClick={scrollTop}
+          className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-950 hover:text-orange-600 hover:underline underline-offset-4"
+        >
+          VIEW DETAIL
+        </Link>
         <button
           type="button"
           onClick={handleAddToCart}
-          className="w-full bg-slate-950 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-colors hover:bg-orange-600"
+          className="text-slate-950 transition-colors hover:text-orange-600"
+          title="Add to Cart"
         >
-          ADD TO CART
+          <FaCartPlus size={20} />
         </button>
       </div>
     </div>
