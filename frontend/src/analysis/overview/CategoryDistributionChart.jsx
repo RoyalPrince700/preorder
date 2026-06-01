@@ -1,11 +1,10 @@
-import { toast } from "react-toastify";
 import SummaryApi from "../../common";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { adminChartCard, adminChartTitle, adminLoading, CHART_COLORS } from "../../common/adminUi";
 
-const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#10B981", "#F59E0B"];
+const COLORS = CHART_COLORS;
 
 const CategoryDistributionChart = () => {
   const [categoryData, setCategoryData] = useState([]);
@@ -36,21 +35,21 @@ const CategoryDistributionChart = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading Category Distribution...</p>;
+    return <div className={adminLoading}>Loading categories...</div>;
   }
 
   if (!categoryData.length) {
-    return <p>No data available for the chart.</p>;
+    return (
+      <div className={adminChartCard}>
+        <h2 className={adminChartTitle}>Category Distribution</h2>
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-400">No data available</p>
+      </div>
+    );
   }
 
 	return (
-		<motion.div
-			className="bg-white shadow-md rounded-xl p-6 border border-gray-200"
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ delay: 0.3 }}
-		>
-			<h2 className="text-lg font-semibold mb-4 text-gray-800">Category Distribution</h2>
+		<div className={adminChartCard}>
+			<h2 className={adminChartTitle}>Category Distribution</h2>
 			<div className="h-80">
 				<ResponsiveContainer width={"100%"} height={"100%"}>
 					<PieChart>
@@ -80,7 +79,7 @@ const CategoryDistributionChart = () => {
 					</PieChart>
 				</ResponsiveContainer>
 			</div>
-		</motion.div>
+		</div>
 	);
 };
 

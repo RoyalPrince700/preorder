@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import UploadProduct from '../components/UploadProduct';
 import SummaryApi from '../common';
 import AdminProductCard from '../components/AdminProductCard';
+import Header from '../common/Header';
+import { adminBtnPrimary } from '../common/adminUi';
 
 const AllProducts = () => {
   const [openUploadProduct, setOpenUploadProduct] = useState(false);
@@ -18,41 +20,40 @@ const AllProducts = () => {
   }, []);
 
   return (
-    <div>
-      {/* Header with Upload button */}
-      <div className="bg-white py-2 px-4 flex mt-28 justify-between items-center shadow-sm border-b border-gray-200">
-        <h2 className="font-bold text-lg text-gray-800">All Products</h2>
-        <button
-          className="border-2 hover:text-white transition-all 
-          hover:bg-blue-600 border-blue-600 
-          text-blue-600 font-medium py-1 px-3 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-          onClick={() => setOpenUploadProduct(true)}
-        >
-          Upload Product
-        </button>
-      </div>
+    <div className="flex-1 overflow-auto">
+      <Header title="Products" subtitle="Manage suits, shoes, wear, gadgets & more" />
 
-      {/* All Products Grid */}
-      <div
-        className="flex flex-wrap gap-5 py-4 h-[calc(100vh-200px)] 
-        overflow-y-scroll bg-gray-50 px-4"
-      >
-        {allProduct.length > 0 ? (
-          allProduct.map((product, index) => (
-            <AdminProductCard
-              data={product}
-              key={index + 'allProduct'}
-              fetchdata={fetchAllProduct}
-            />
-          ))
-        ) : (
-          <p className="text-gray-500 text-center w-full">
-            No products available.
+      <div className="border-b-2 border-slate-100 bg-white px-4 py-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+            {allProduct.length} product{allProduct.length !== 1 ? 's' : ''} listed
           </p>
-        )}
+          <button type="button" className={adminBtnPrimary} onClick={() => setOpenUploadProduct(true)}>
+            Upload Product
+          </button>
+        </div>
       </div>
 
-      {/* Upload Product Modal */}
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap gap-5">
+          {allProduct.length > 0 ? (
+            allProduct.map((product, index) => (
+              <AdminProductCard
+                data={product}
+                key={product?._id || index}
+                fetchdata={fetchAllProduct}
+              />
+            ))
+          ) : (
+            <div className="w-full border-2 border-dashed border-slate-100 py-20 text-center">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">
+                No products available
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
       {openUploadProduct && (
         <UploadProduct
           onClose={() => setOpenUploadProduct(false)}

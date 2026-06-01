@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import {
 	LineChart,
 	Line,
@@ -7,10 +6,17 @@ import {
 	YAxis,
 	CartesianGrid,
 	Tooltip,
-	Legend,
 	ResponsiveContainer,
 } from "recharts";
 import SummaryApi from "../../common";
+import { adminChartCard, adminChartTitle, adminError, adminLoading } from "../../common/adminUi";
+
+const tooltipStyle = {
+	backgroundColor: "#FFFFFF",
+	border: "2px solid #0f172a",
+	borderRadius: 0,
+	color: "#0f172a",
+};
 
 const DailyOrders = () => {
 	const [dailyOrdersData, setDailyOrdersData] = useState([]);
@@ -20,14 +26,13 @@ const DailyOrders = () => {
 	useEffect(() => {
 		const fetchDailyOrders = async () => {
 			try {
-				const response = await fetch(SummaryApi.assignedOrders.url, {
-					method: SummaryApi.assignedOrders.method,
+				const response = await fetch(SummaryApi.allOrders.url, {
+					method: SummaryApi.allOrders.method,
 					credentials: "include",
 				});
 				const data = await response.json();
 
 				if (data.success) {
-					// Generate daily orders count
 					const orders = data.data;
 					const dailyCounts = {};
 
@@ -39,7 +44,6 @@ const DailyOrders = () => {
 						dailyCounts[date] = (dailyCounts[date] || 0) + 1;
 					});
 
-					// Convert dailyCounts into chart data format
 					const formattedData = Object.keys(dailyCounts).map((date) => ({
 						date,
 						orders: dailyCounts[date],
@@ -60,38 +64,25 @@ const DailyOrders = () => {
 		fetchDailyOrders();
 	}, []);
 
-	if (loading) return <div>Loading...</div>;
-	if (error) return <div>Error: {error}</div>;
+	if (loading) return <div className={adminLoading}>Loading daily orders...</div>;
+	if (error) return <p className={adminError}>{error}</p>;
 
 	return (
-		<motion.div
-			className="bg-white shadow-md rounded-xl p-6 border border-gray-200"
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ delay: 0.2 }}
-		>
-			<h2 className="text-xl font-semibold text-gray-800 mb-4">Daily Orders</h2>
+		<div className={adminChartCard}>
+			<h2 className={adminChartTitle}>Daily Orders</h2>
 
 			<div style={{ width: "100%", height: 300 }}>
 				<ResponsiveContainer>
 					<LineChart data={dailyOrdersData}>
-						<CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-						<XAxis dataKey="date" stroke="#6B7280" />
-						<YAxis stroke="#6B7280" />
-						<Tooltip
-							contentStyle={{
-								backgroundColor: "#FFFFFF",
-								borderColor: "#E5E7EB",
-								color: "#111827"
-							}}
-							itemStyle={{ color: "#374151" }}
-						/>
-						<Legend />
-						<Line type="monotone" dataKey="orders" stroke="#8B5CF6" strokeWidth={2} />
+						<CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+						<XAxis dataKey="date" stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+						<YAxis stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+						<Tooltip contentStyle={tooltipStyle} />
+						<Line type="monotone" dataKey="orders" stroke="#0f172a" strokeWidth={2} dot={{ fill: "#ea580c", r: 4 }} />
 					</LineChart>
 				</ResponsiveContainer>
 			</div>
-		</motion.div>
+		</div>
 	);
 };
 

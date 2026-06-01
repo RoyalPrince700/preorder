@@ -8,8 +8,18 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { motion } from "framer-motion";
 import SummaryApi from "../../common";
+import { adminChartCard, adminChartTitle } from "../../common/adminUi";
+
+const tooltipStyle = {
+  backgroundColor: "#FFFFFF",
+  border: "2px solid #0f172a",
+  borderRadius: 0,
+  color: "#0f172a",
+  fontSize: "11px",
+  fontWeight: 700,
+  textTransform: "uppercase",
+};
 
 
 const SalesOverviewChart = () => {
@@ -25,8 +35,8 @@ const SalesOverviewChart = () => {
 
   const fetchWeeklySales = async () => {
     try {
-      const response = await fetch(SummaryApi.assignedOrders.url, {
-        method: SummaryApi.assignedOrders.method,
+      const response = await fetch(SummaryApi.allOrders.url, {
+        method: SummaryApi.allOrders.method,
         credentials: "include",
       });
       const dataResponse = await response.json();
@@ -37,7 +47,7 @@ const SalesOverviewChart = () => {
 
         // Process orders to calculate sales per day
         orders.forEach((order) => {
-          if (order.status === "Delivered") {
+          if (order.status === "Delivered" || order.adminConfirmed === true) {
             const orderDate = new Date(order.createdAt);
             const dayOfWeek = orderDate.getDay(); // 0 (Sunday) to 6 (Saturday)
 
@@ -57,40 +67,28 @@ const SalesOverviewChart = () => {
   }, []);
 
   return (
-    <motion.div
-      className="bg-white shadow-md rounded-xl p-6 border border-gray-200"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-    >
-      <h2 className="text-lg font-semibold mb-4 text-gray-800">Sales Overview</h2>
+    <div className={adminChartCard}>
+      <h2 className={adminChartTitle}>Sales Overview</h2>
 
       <div className="h-80">
         <ResponsiveContainer width={"100%"} height={"100%"}>
           <LineChart data={weeklySalesData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-            <XAxis dataKey={"name"} stroke="#6B7280" />
-            <YAxis stroke="#6B7280" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#FFFFFF",
-                borderColor: "#E5E7EB",
-                color: "#111827"
-              }}
-              itemStyle={{ color: "#374151" }}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis dataKey={"name"} stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+            <YAxis stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+            <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: "#0f172a" }} />
             <Line
               type="monotone"
               dataKey="sales"
-              stroke="#6366F1"
+              stroke="#ea580c"
               strokeWidth={3}
-              dot={{ fill: "#6366F1", strokeWidth: 2, r: 6 }}
-              activeDot={{ r: 8, strokeWidth: 2 }}
+              dot={{ fill: "#ea580c", strokeWidth: 2, r: 5 }}
+              activeDot={{ r: 7, strokeWidth: 2 }}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

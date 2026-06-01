@@ -9,6 +9,9 @@ const userDetailsController = require('../controller/user/userDetails');
 const userLogout = require('../controller/user/userLogout');
 const allUsers = require('../controller/user/allUsers');
 const updateUser = require('../controller/user/updateUser');
+const updateProfile = require('../controller/user/updateProfile');
+const getUserMeasurements = require('../controller/user/getUserMeasurements');
+const updateUserMeasurements = require('../controller/user/updateUserMeasurements');
 const uploadProductController = require('../controller/product/uploadProduct');
 const getProductController = require('../controller/product/getProduct');
 const updateProductController = require('../controller/product/updateProduct');
@@ -71,6 +74,9 @@ const verifyPaymentController = require('../controller/order/verifyPaymentContro
 router.get("/auth/google", googleAuth);
 router.get("/auth/google/callback", googleAuthCallback);
 router.get("/user-details", authToken, userDetailsController);
+router.post("/update-profile", authToken, updateProfile);
+router.get("/user-measurements", authToken, getUserMeasurements);
+router.post("/user-measurements", authToken, requireRole('ADMIN'), updateUserMeasurements);
 router.get("/userLogout", userLogout);
 router.post("/verify-email", verifyEmailController)
 router.post("/forgot-password", forgotPassword)
@@ -130,9 +136,9 @@ router.post('/api/place-food-order', authToken, placeFoodOrder);
 // Food menu route
 router.get('/api/food-menu', getFoodMenuController);
 // Upload product
-router.post("/upload-product", authToken, uploadProductController);
+router.post("/upload-product", authToken, requireRole('ADMIN'), uploadProductController);
 // Upload image
-router.post("/upload-image", authToken, upload.single('image'), uploadImage);
+router.post("/upload-image", authToken, requireRole('ADMIN'), upload.single('image'), uploadImage);
 router.get("/get-product", getProductController);
 router.post("/update-product", authToken, requireRole('ADMIN'), updateProductController);
 router.get("/get-categoryProduct", getCategoryProduct);

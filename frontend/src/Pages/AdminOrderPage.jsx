@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { FaShoppingCart, FaClock, FaCheckCircle, FaMoneyBillWave } from "react-icons/fa";
 import Header from "../common/Header";
 import StatCard from "../common/StatCard";
+import { adminError, adminLoading } from "../common/adminUi";
 import DailyOrders from "../analysis/overview/DailyOrders";
 import OrderDistribution from "../analysis/overview/OrderDistribution";
 import OrdersTable from "../analysis/overview/OrdersTable";
@@ -25,7 +25,6 @@ const AdminOrderPage = () => {
     useEffect(() => {
         const fetchOrderStats = async () => {
             try {
-                // Fetch all orders
                 const response = await fetch(SummaryApi.allOrders.url, {
                     method: SummaryApi.allOrders.method,
                     headers: { "Content-Type": "application/json" },
@@ -35,19 +34,11 @@ const AdminOrderPage = () => {
 
                 if (data.success) {
                     const orders = data.data;
-
-                    // Total Orders
                     const totalOrders = orders.length;
-
-                    // Pending Orders
                     const pendingOrders = orders.filter(order => order.status === "Pending").length;
-
-                    // Completed Orders
-                    const completedOrders = orders.filter(order => order.status === "Delivered").length;
-
-                    // Total Revenue
+                    const completedOrders = orders.filter(order => order.status === "Delivered" || order.adminConfirmed === true).length;
                     const totalRevenue = orders
-                        .filter(order => order.status === "Delivered")
+                        .filter(order => order.status === "Delivered" || order.adminConfirmed === true)
                         .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
 
                     setOrderStats({
@@ -70,54 +61,43 @@ const AdminOrderPage = () => {
         fetchOrderStats();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    if (loading) {
+        return (
+            <div>
+                <Header title="Orders" subtitle="Manage and track customer orders" />
+                <div className={adminLoading}>Loading orders...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div>
+                <Header title="Orders" />
+                <div className="mx-auto max-w-7xl px-4 py-8">
+                    <p className={adminError}>{error}</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div className="flex-1 relative z-10 overflow-y-auto h-screen">
-            <Header title="Orders" />
+        <div className="flex-1 overflow-auto">
+            <Header title="Orders" subtitle="Manage and track customer orders" />
 
-            <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
-                {/* ORDER STATS */}
-                <motion.div
-                    className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 1 }}
-                >
-                    <StatCard
-                        name="Total Orders"
-                        icon={FaShoppingCart}
-                        value={orderStats.totalOrders}
-                        color="#6366F1"
-                    />
-                    <StatCard
-                        name="Pending Orders"
-                        icon={FaClock}
-                        value={orderStats.pendingOrders}
-                        color="#F59E0B"
-                    />
-                    <StatCard
-                        name="Completed Orders"
-                        icon={FaCheckCircle}
-                        value={orderStats.completedOrders}
-                        color="#10B981"
-                    />
-                    <StatCard
-                        name="Total Revenue"
-                        icon={FaMoneyBillWave}
-                        value={orderStats.totalRevenue}
-                        color="#EF4444"
-                    />
-                </motion.div>
+            <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <StatCard name="Total Orders" icon={FaShoppingCart} value={orderStats.totalOrders} />
+                    <StatCard name="Pending Orders" icon={FaClock} value={orderStats.pendingOrders} />
+                    <StatCard name="Completed Orders" icon={FaCheckCircle} value={orderStats.completedOrders} />
+                    <StatCard name="Total Revenue" icon={FaMoneyBillWave} value={orderStats.totalRevenue} />
+                </div>
 
-                {/* CHARTS */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     <DailyOrders />
                     <OrderDistribution />
                 </div>
 
-                {/* ORDERS TABLE */}
                 <OrdersTable />
             </main>
         </div>

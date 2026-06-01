@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, Link } from 'react-router-dom'
 import VerticalCard from '../components/VerticalCard'
-import {
-  getAllLocalProducts,
-  getLocalCategorySummaries,
-  getLocalProductsByCategory,
-  productCategoryOptions,
-} from '../data/localProducts'
+import SummaryApi from '../common'
+import productCategory from '../helpers/productCategory'
 
 const CategoryProduct = () => {
 
@@ -34,42 +30,55 @@ const CategoryProduct = () => {
 
     const fetchAllCategories = async () => {
       setLoading(true)
-      setCategories(getLocalCategorySummaries())
+      try {
+        const response = await fetch(SummaryApi.categoryProduct.url, {
+          method: SummaryApi.categoryProduct.method,
+        })
+        const dataResponse = await response.json()
+        const summaries = (dataResponse?.data || []).map((product) => ({
+          category: product.category,
+          label: product.category,
+          productImage: product.productImage,
+        }))
+        setCategories(summaries)
+      } catch {
+        setCategories([])
+      }
       setLoading(false)
     }
 
     const fetchAllProducts = async () => {
       setLoading(true)
-      // Backend version kept here for easy reactivation later.
-      // const response = await fetch(SummaryApi.allProduct.url)
-      // const dataResponse = await response.json()
-      // setData(dataResponse?.data || [])
-      setData(getAllLocalProducts())
+      try {
+        const response = await fetch(SummaryApi.allProduct.url, {
+          method: SummaryApi.allProduct.method,
+        })
+        const dataResponse = await response.json()
+        setData(dataResponse?.data || [])
+      } catch {
+        setData([])
+      }
       setLoading(false)
     }
 
     const fetchData = async()=>{
       setLoading(true)
-      // Backend version kept here for easy reactivation later.
-      // const response = await fetch(SummaryApi.filterProduct.url,{
-      //   method : SummaryApi.filterProduct.method,
-      //   headers : {
-      //     'content-type' : 'application/json'
-      //   },
-      //   body : JSON.stringify({
-      //     category : filterCategoryList
-      //   })
-      // })
-      //
-      // const dataResponse = await response.json()
-      // setData(dataResponse?.data || [])
-      const filteredProducts = filterCategoryList.flatMap((category) =>
-        getLocalProductsByCategory(category)
-      )
-      const uniqueProducts = Array.from(
-        new Map(filteredProducts.map((product) => [product._id, product])).values()
-      )
-      setData(uniqueProducts)
+      try {
+        const response = await fetch(SummaryApi.filterProduct.url,{
+          method : SummaryApi.filterProduct.method,
+          headers : {
+            'content-type' : 'application/json'
+          },
+          body : JSON.stringify({
+            category : filterCategoryList
+          })
+        })
+
+        const dataResponse = await response.json()
+        setData(dataResponse?.data || [])
+      } catch {
+        setData([])
+      }
       setLoading(false)
     }
 
@@ -176,7 +185,7 @@ const CategoryProduct = () => {
             <h3 className='text-xs font-black uppercase tracking-[0.2em] text-slate-950 border-b-2 border-slate-950 pb-2 mb-4'>Category</h3>
             <form className='text-xs font-bold uppercase tracking-widest flex flex-col gap-3 py-2'>
               {
-                productCategoryOptions.map((categoryName, index) => {
+                productCategory.map((categoryName, index) => {
                   return (
                     <div className='flex items-center gap-3 cursor-pointer group' key={index}>
                       <input type='checkbox' name={"category"}

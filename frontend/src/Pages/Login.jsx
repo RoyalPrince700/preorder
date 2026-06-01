@@ -1,177 +1,166 @@
-import React, { useContext, useState } from 'react';
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
-import { motion } from 'framer-motion';
-import SummaryApi from '../common';
+import React, { useContext } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+import { Link } from 'react-router-dom';
+import {
+  FaShirt,
+  FaShoePrints,
+  FaMobileScreen,
+  FaShieldHalved,
+  FaTruckFast,
+} from 'react-icons/fa6';
 import Context from '../context';
-import LogoImg from '../assets/wifmartlogo.png';
+
+const perks = [
+  { icon: FaShirt, label: 'Suits, casual wear & everyday style' },
+  { icon: FaShoePrints, label: 'Footwear for every occasion' },
+  { icon: FaMobileScreen, label: 'Gadgets, tech & lifestyle picks' },
+  { icon: FaTruckFast, label: 'Track orders from cart to delivery' },
+  { icon: FaShieldHalved, label: 'Secure sign-in with Google' },
+];
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [data, setData] = useState({
-    email: "",
-    password: ""
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
-  const { fetchUserDetails, fetchUserAddToCart, signInWithGoogle } = useContext(Context);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true); // Disable button on submit
-  
-    try {
-      const response = await fetch(SummaryApi.signIn.url, {
-        method: SummaryApi.signIn.method,
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
-  
-      if (response.ok && result.success) {
-        toast.success(result.message);
-        fetchUserDetails();
-        fetchUserAddToCart();
-        navigate("/"); // Redirect to homepage
-      } else if (result.redirect) {
-        // Redirect for unverified email
-        toast.warning(result.message || "Redirecting to verification...");
-        navigate("/token-verification"); // Redirect to the token page
-      } else {
-        toast.error(result.message || "An error occurred. Please try again.");
-      }
-    } catch (error) {
-      toast.error("Network error. Please try again later.");
-    } finally {
-      setIsSubmitting(false); // Re-enable button
-    }
-  };
-  
-  
+  const { signInWithGoogle } = useContext(Context);
 
   return (
-    <section id="login">
-    <div
-      className="mx-auto h-[100vh] flex items-center justify-center p-4 bg-gradient-to-br from-white to-gray-50 text-black"
+    <section
+      id="login"
+      className="flex min-h-screen flex-col bg-white lg:flex-row"
     >
-    
-      <motion.div
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="backdrop-blur-md bg-white/80 mx-auto p-6 w-full max-w-md rounded-lg shadow-xl border border-gray-200"
-      >
-         <div className="flex justify-center mb-8">
-        <Link to="/">
-          <img src={LogoImg} alt="Ronniesfabrics" className="w-[120px] h-[20px] object-contain select-none" draggable={false} />
-        </Link>
-      </div>
-        <p className="text-center text-gray-600 mb-6">Access your account</p>
-  
-        <div className="space-y-4">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-md shadow-md border border-gray-300 transition-all"
-          >
-            <FcGoogle className="text-2xl" />
-            Continue with Google
-          </motion.button>
+      {/* Brand panel */}
+      <div className="relative flex flex-1 flex-col justify-between border-b-2 border-slate-900 bg-slate-950 px-6 py-10 text-white sm:px-10 lg:border-b-0 lg:border-r-2 lg:py-14">
+        <div>
+          <Link to="/" className="inline-block">
+            <span className="text-2xl font-black uppercase tracking-tighter sm:text-4xl">
+              Wifmart
+            </span>
+            <span className="mt-3 block text-[10px] font-black uppercase tracking-[0.3em] text-orange-500">
+              Suits · Shoes · Wear · Gadgets & more
+            </span>
+          </Link>
+        </div>
 
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Sign in restricted to Google</span>
-            </div>
+        <div className="my-12 hidden max-w-md lg:block">
+          <span className="inline-flex items-center rounded-none bg-orange-600 px-3 py-1 text-[10px] font-black uppercase tracking-[0.3em] text-white">
+            Wifmart Store
+          </span>
+          <h1 className="mt-6 text-4xl font-black uppercase leading-none tracking-tighter xl:text-5xl">
+            Dress sharp.
+            <br />
+            Shop smart.
+          </h1>
+          <p className="mt-6 text-xs font-bold uppercase tracking-widest leading-relaxed text-slate-400">
+            Your one-stop shop for men&apos;s suits, shoe wear, general fashion,
+            gadgets, and everyday essentials — sign in with Google to save your
+            cart and follow every order.
+          </p>
+          <ul className="mt-10 space-y-4">
+            {perks.map(({ icon: Icon, label }) => (
+              <li
+                key={label}
+                className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-300"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center border-2 border-white/20 bg-white/5">
+                  <Icon className="h-4 w-4 text-orange-500" />
+                </span>
+                {label}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-600">
+          &copy; {new Date().getFullYear()} Wifmart. All rights reserved.
+        </p>
+      </div>
+
+      {/* Auth card */}
+      <div className="flex flex-1 items-center justify-center px-4 py-12 sm:px-8 lg:py-16">
+        <div className="w-full max-w-md">
+          <div className="mb-8 border-b-2 border-slate-100 pb-8 lg:hidden">
+            <span className="inline-flex items-center rounded-none bg-orange-600 px-3 py-1 text-[10px] font-black uppercase tracking-[0.3em] text-white">
+              Sign In
+            </span>
+            <h2 className="mt-4 text-2xl font-black uppercase tracking-tighter text-slate-950 sm:text-3xl">
+              Welcome to Wifmart
+            </h2>
           </div>
 
-          {/* Manual login commented out as requested */}
-          {/* 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label className="block mb-2 text-sm font-medium text-black">Email:</label>
-              <input
-                type="email"
-                placeholder="Enter email"
-                name="email"
-                value={data.email}
-                onChange={handleChange}
-                className="w-full p-3 rounded-md bg-gray-100 text-black focus:outline-none focus:ring-2 focus:ring-yellow-500 border border-gray-300"
-                required
-              />
+          <div className="border-2 border-slate-900 bg-white p-8 shadow-[0_24px_60px_rgba(15,23,42,0.08)] sm:p-10">
+            <div className="hidden lg:block">
+              <span className="inline-flex items-center rounded-none bg-orange-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-orange-600">
+                Sign In
+              </span>
+              <h2 className="mt-4 text-2xl font-black uppercase tracking-tighter text-slate-950 sm:text-3xl">
+                Welcome to Wifmart
+              </h2>
+              <p className="mt-3 text-xs font-bold uppercase tracking-widest text-slate-500">
+                Continue with your Google account
+              </p>
             </div>
-    
-            <div>
-              <label className="block mb-2 text-sm font-medium text-black">Password:</label>
-              <div className="flex items-center bg-gray-100 p-3 rounded-md border border-gray-300">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={data.password}
-                  onChange={handleChange}
-                  placeholder="Enter password"
-                  className="w-full bg-transparent text-black focus:outline-none"
-                  required
-                />
-                <div
-                  className="cursor-pointer text-xl ml-3 text-gray-600"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </div>
-              </div>
-              <Link
-                to="/forgot-password"
-                className="block mt-2 text-sm text-black hover:underline hover:text-black text-right"
-              >
-                Forgot Password?
-              </Link>
-            </div>
-    
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-black hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-md shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 disabled:opacity-50"
+
+            <p className="mt-6 text-xs font-bold uppercase tracking-widest leading-relaxed text-slate-500 lg:mt-8">
+              Sign in to shop suits, footwear, apparel, gadgets, and more —
+              with your basket, orders, and updates in one place.
+            </p>
+
+            <button
+              type="button"
+              onClick={signInWithGoogle}
+              className="mt-8 flex w-full items-center justify-center gap-3 border-2 border-slate-900 bg-white py-5 text-sm font-black uppercase tracking-[0.15em] text-slate-950 transition-colors hover:bg-slate-950 hover:text-white"
             >
-              {isSubmitting ? "Logging in..." : "Login"}
-            </motion.button>
-          </form>
-          */}
-        </div>
-  
-        <p className="mt-5 text-center text-black">
-          Don't have an account?{" "}
+              <FcGoogle className="h-6 w-6 shrink-0" />
+              Continue with Google
+            </button>
+
+            <div className="relative my-8">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t-2 border-slate-100" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-white px-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  Google only
+                </span>
+              </div>
+            </div>
+
+            <p className="text-center text-[10px] font-bold uppercase leading-relaxed tracking-widest text-slate-400">
+              Email and password sign-in is disabled. Use Google to create or
+              access your Wifmart account securely.
+            </p>
+          </div>
+
+          <p className="mt-8 text-center text-xs font-bold uppercase tracking-widest text-slate-500">
+            New here?{' '}
+            <Link
+              to="/sign-up"
+              className="text-slate-950 underline decoration-2 underline-offset-4 transition-colors hover:text-orange-600"
+            >
+              Create account
+            </Link>
+          </p>
+
           <Link
-            to="/sign-up"
-            className="text-black hover:underline hover:text-black"
+            to="/"
+            className="mt-4 block text-center text-[10px] font-black uppercase tracking-widest text-slate-400 transition-colors hover:text-orange-600"
           >
-            Sign Up
+            &larr; Back to Wifmart store
           </Link>
-        </p>
-      </motion.div>
-    </div>
-  </section>
-  
+
+          <ul className="mt-10 space-y-3 border-t-2 border-slate-100 pt-8 lg:hidden">
+            {perks.map(({ icon: Icon, label }) => (
+              <li
+                key={label}
+                className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-500"
+              >
+                <Icon className="h-4 w-4 shrink-0 text-orange-600" />
+                {label}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
   );
 };
 
 export default Login;
-

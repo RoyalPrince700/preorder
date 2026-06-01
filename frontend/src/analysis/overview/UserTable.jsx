@@ -1,33 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { FaSearch } from "react-icons/fa";
-import { MdModeEdit } from "react-icons/md";
-import ChangeUserRole from "../../common/ChangeUserRole"; // Import the modal component
-import SummaryApi from "../../common"; // Import API
+import ChangeUserRole from "../../common/ChangeUserRole";
+import AdminUserMeasurements from "../../components/AdminUserMeasurements";
+import SummaryApi from "../../common";
+import {
+  adminChartCard,
+  adminChartTitle,
+  adminTableHead,
+  adminTh,
+  adminBtnSecondary,
+} from "../../common/adminUi";
+
+const getRoleColor = (role) => {
+  switch (role?.toLowerCase()) {
+    case "admin":
+      return "bg-slate-950 text-white border-slate-950";
+    case "moderator":
+      return "bg-orange-100 text-orange-800 border-orange-200";
+    case "user":
+      return "bg-slate-100 text-slate-800 border-slate-200";
+    default:
+      return "bg-slate-100 text-slate-600 border-slate-200";
+  }
+};
 
 const UsersTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [userData, setUserData] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
+  const [openMeasurements, setOpenMeasurements] = useState(false);
   const [updateUserDetails, setUpdateUserDetails] = useState({
     email: "",
     name: "",
     role: "",
     _id: "",
   });
+  const [measurementUser, setMeasurementUser] = useState(null);
 
   const fetchUsers = async () => {
     try {
       const response = await fetch(SummaryApi.allUser.url, {
         method: SummaryApi.allUser.method,
-        credentials: "include", // Include credentials if required
+        credentials: "include",
       });
       const result = await response.json();
 
       if (result.success) {
         setUserData(result.data);
-        setFilteredUsers(result.data); // Set initial filtered users
+        setFilteredUsers(result.data);
       } else {
         console.error(result.message);
       }
@@ -49,116 +70,102 @@ const UsersTable = () => {
   };
 
   useEffect(() => {
-    fetchUsers(); // Fetch user data on component mount
+    fetchUsers();
   }, []);
 
-  // Function to get role-based colors
-  const getRoleColor = (role) => {
-    switch (role.toLowerCase()) {
-      case "admin":
-        return "bg-purple-100 text-purple-800";
-      case "moderator":
-        return "bg-blue-100 text-blue-800";
-      case "user":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
-    <motion.div
-      className="bg-white shadow-md rounded-xl p-6 border border-gray-200"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-    >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Users</h2>
+    <div className={adminChartCard}>
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className={adminChartTitle}>All Users</h2>
         <div className="relative">
           <input
             type="text"
             placeholder="Search users..."
-            className="bg-gray-100 text-gray-800 placeholder-gray-500 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+            className="w-full rounded-none border-2 border-slate-100 bg-slate-50 py-2.5 pl-10 pr-4 text-xs font-bold uppercase tracking-widest text-slate-950 outline-none transition-colors focus:border-orange-500 sm:w-64"
             value={searchTerm}
             onChange={handleSearch}
           />
-          <FaSearch className="absolute left-3 top-2.5 text-gray-400" size={18} />
+          <FaSearch className="absolute left-3 top-3 text-slate-400" size={14} />
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="overflow-x-auto border-2 border-slate-900">
+        <table className="min-w-full">
           <thead>
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Sr.
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Verified
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
+            <tr className={adminTableHead}>
+              <th className={adminTh}>Sr.</th>
+              <th className={adminTh}>Email</th>
+              <th className={adminTh}>Role</th>
+              <th className={adminTh}>Verified</th>
+              <th className={adminTh}>Actions</th>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-100">
+          <tbody>
             {filteredUsers.map((user, index) => (
-              <motion.tr
-                key={user._id} // Using `_id` from MongoDB
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className="hover:bg-gray-50 transition-colors"
+              <tr
+                key={user._id}
+                className="border-b border-slate-100 transition-colors hover:bg-orange-50/30"
               >
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                <td className="px-4 py-4 text-xs font-bold text-slate-600">
                   {index + 1}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-700">{user.email}</div>
+                <td className="px-4 py-4 text-xs font-bold text-slate-700">
+                  {user.email}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-4">
                   <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getRoleColor(
+                    className={`border px-2 py-1 text-[10px] font-black uppercase tracking-widest ${getRoleColor(
                       user.role
                     )}`}
                   >
                     {user.role}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-4">
                   <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                    className={`border px-2 py-1 text-[10px] font-black uppercase tracking-widest ${
                       user.isVerified
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
+                        ? "bg-green-100 text-green-800 border-green-200"
+                        : "bg-red-100 text-red-800 border-red-200"
                     }`}
                   >
                     {user.isVerified ? "Verified" : "Not Verified"}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                  <button
-                    className="text-blue-600 hover:text-blue-800 font-medium mr-2"
-                    onClick={() => {
-                      setUpdateUserDetails(user);
-                      setOpenUpdateRole(true);
-                    }}
-                  >
-                    Edit
-                  </button>
+                <td className="px-4 py-4">
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      className={adminBtnSecondary}
+                      onClick={() => {
+                        setUpdateUserDetails(user);
+                        setOpenUpdateRole(true);
+                      }}
+                    >
+                      Role
+                    </button>
+                    <button
+                      type="button"
+                      className={adminBtnSecondary}
+                      onClick={() => {
+                        setMeasurementUser(user);
+                        setOpenMeasurements(true);
+                      }}
+                    >
+                      Measurements
+                    </button>
+                  </div>
                 </td>
-              </motion.tr>
+              </tr>
             ))}
           </tbody>
         </table>
+        {filteredUsers.length === 0 && (
+          <p className="py-12 text-center text-xs font-black uppercase tracking-[0.3em] text-slate-400">
+            No users found
+          </p>
+        )}
       </div>
 
       {openUpdateRole && (
@@ -171,7 +178,18 @@ const UsersTable = () => {
           callFunc={fetchUsers}
         />
       )}
-    </motion.div>
+
+      {openMeasurements && measurementUser && (
+        <AdminUserMeasurements
+          user={measurementUser}
+          onClose={() => {
+            setOpenMeasurements(false);
+            setMeasurementUser(null);
+          }}
+          onSaved={fetchUsers}
+        />
+      )}
+    </div>
   );
 };
 

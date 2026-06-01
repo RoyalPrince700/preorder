@@ -7,7 +7,7 @@ const PurchaseProtection = () => {
         <span className="page-kicker">Policy Center</span>
         <h1 className="page-title">Purchase Protection</h1>
         <p className="page-subtitle">
-          Buy with more confidence on Preordify through secure payments, order visibility, and issue resolution support.
+          Buy with more confidence on Wifmart through secure payments, order visibility, and issue resolution support.
         </p>
       </header>
 
@@ -45,7 +45,7 @@ const PurchaseProtection = () => {
         <section className="page-card">
           <h2 className="page-card-title">How to report an issue</h2>
           <div className="page-list text-sm">
-            <div className="page-list-item"><span className="page-list-bullet">1</span><span>Contact support at 07019277357 or support@preordify.com.</span></div>
+            <div className="page-list-item"><span className="page-list-bullet">1</span><span>Contact support at 07019277357 or support@Wifmart.com.</span></div>
             <div className="page-list-item"><span className="page-list-bullet">2</span><span>Provide your order number and a clear description of the issue.</span></div>
             <div className="page-list-item"><span className="page-list-bullet">3</span><span>Include screenshots or photos when helpful.</span></div>
             <div className="page-list-item"><span className="page-list-bullet">4</span><span>Receive an update or resolution path within 24 to 48 hours.</span></div>
@@ -55,11 +55,11 @@ const PurchaseProtection = () => {
         <section className="page-dark-card">
           <h2 className="text-2xl font-bold">Protection help</h2>
           <p className="mt-3 text-sm leading-7 text-slate-300">
-            The Preordify protection team is available for order disputes, damaged items, and payment concerns.
+            The Wifmart protection team is available for order disputes, damaged items, and payment concerns.
           </p>
           <div className="mt-6 space-y-3 text-sm">
             <div><span className="page-contact-label">Phone:</span> 07019277357</div>
-            <div><span className="page-contact-label">Email:</span> protection@preordify.com</div>
+            <div><span className="page-contact-label">Email:</span> protection@Wifmart.com</div>
             <div><span className="page-contact-label">Live chat:</span> Available on website</div>
           </div>
         </section>

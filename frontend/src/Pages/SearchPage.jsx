@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { GrSearch } from 'react-icons/gr';
 import VerticalCard from '../components/VerticalCard';
-import { searchLocalProducts, productCategoryOptions } from '../data/localProducts';
+import SummaryApi from '../common';
+import productCategory from '../helpers/productCategory';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,8 +14,34 @@ const SearchPage = () => {
     setInput(q);
   }, [q]);
 
-  // Compute live results based on the current input
-  const results = useMemo(() => searchLocalProducts(input), [input]);
+  const [results, setResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+
+  useEffect(() => {
+    const query = input.trim();
+    if (!query) {
+      setResults([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setSearchLoading(true);
+      try {
+        const response = await fetch(
+          `${SummaryApi.searchProduct.url}?q=${encodeURIComponent(query)}`,
+          { method: SummaryApi.searchProduct.method }
+        );
+        const dataResponse = await response.json();
+        setResults(dataResponse?.data || []);
+      } catch {
+        setResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [input]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -68,7 +95,7 @@ const SearchPage = () => {
         <div className="mb-12 border-2 border-slate-100 p-8 sm:p-10">
           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-6">Explore Collections</p>
           <div className="flex flex-wrap gap-3">
-            {productCategoryOptions.map((c) => (
+            {productCategory.map((c) => (
               <Link
                 key={c.value}
                 to={`/product-category?category=${encodeURIComponent(c.value)}`}
@@ -98,7 +125,7 @@ const SearchPage = () => {
               <p className="mt-4 text-[10px] font-bold uppercase tracking-widest text-slate-300">Try a different keyword or browse collections above</p>
             </div>
           ) : (
-            <VerticalCard loading={false} data={results} />
+            <VerticalCard loading={searchLoading} data={results} />
           )}
         </section>
       )}

@@ -1,72 +1,70 @@
 import React, { useState } from 'react';
 import { MdModeEditOutline, MdDelete } from "react-icons/md";
 import AdminEditProduct from './AdminEditProduct';
-import AdminDeleteProduct from './AdminDeleteProduct'; // Import the AdminDeleteProduct component
+import AdminDeleteProduct from './AdminDeleteProduct';
 import displayNGNCurrency from '../helpers/displayCurrency';
 
 const AdminProductCard = ({ data, fetchdata }) => {
     const [editProduct, setEditProduct] = useState(false);
-    const [deleteProduct, setDeleteProduct] = useState(false); // State for managing delete modal visibility
+    const [deleteProduct, setDeleteProduct] = useState(false);
 
     return (
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 w-48 hover:shadow-md transition-all">
-            {/* Product Image */}
-            <div className="w-full h-32 flex justify-center items-center mb-2 overflow-hidden rounded-lg bg-gray-50">
+        <div className="group w-52 border-2 border-slate-100 bg-white p-4 transition-colors hover:border-orange-500">
+            <div className="mb-3 flex h-36 w-full items-center justify-center border-2 border-slate-50 bg-slate-50 p-2">
                 <img
-                    src={data?.productImage[0] || '/placeholder-image.png'} // Fallback image
-                    className="object-contain w-full h-full hover:scale-110 transition-transform"
+                    src={data?.productImage[0] || '/placeholder-image.png'}
+                    className="h-full w-full object-contain mix-blend-multiply transition-transform group-hover:scale-105"
                     alt={data?.productName || "Product Image"}
                 />
             </div>
 
-            {/* Product Name */}
-            <h1 className="text-gray-800 text-sm font-semibold mb-1 truncate">
+            <h3 className="line-clamp-2 text-xs font-black uppercase tracking-widest text-slate-950 leading-tight">
                 {data?.productName || "Unnamed Product"}
-            </h1>
+            </h3>
 
-            {/* Product Price */}
+            {data?.category && (
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-orange-600">
+                    {data.category}
+                </p>
+            )}
+
             {data.sellingPrice > 0 && (
-                <p className="text-gray-900 font-bold text-base mb-2">
+                <p className="mt-2 text-sm font-black tracking-tighter text-slate-950">
                     {displayNGNCurrency(data.sellingPrice)}
                 </p>
             )}
 
-            {/* Action Buttons */}
-            <div className="flex justify-end gap-2 mt-2">
-    {/* Edit Button */}
-    <button
-        className="p-2 rounded-full bg-yellow-500 hover:bg-yellow-400 text-white transition-all"
-        onClick={() => setEditProduct(true)}
-        title="Edit Product"
-    >
-        <MdModeEditOutline className="text-xl" />
-    </button>
+            <div className="mt-4 flex justify-end gap-2 border-t border-slate-100 pt-3">
+                <button
+                    type="button"
+                    className="flex h-9 w-9 items-center justify-center border-2 border-slate-900 text-slate-950 transition-colors hover:bg-slate-950 hover:text-white"
+                    onClick={() => setEditProduct(true)}
+                    title="Edit Product"
+                >
+                    <MdModeEditOutline className="text-lg" />
+                </button>
+                <button
+                    type="button"
+                    className="flex h-9 w-9 items-center justify-center border-2 border-red-600 text-red-600 transition-colors hover:bg-red-600 hover:text-white"
+                    onClick={() => setDeleteProduct(true)}
+                    title="Delete Product"
+                >
+                    <MdDelete className="text-lg" />
+                </button>
+            </div>
 
-    {/* Delete Button */}
-    <button
-        className="p-2 rounded-full bg-red-500 hover:bg-red-700 text-white transition-all"
-        onClick={() => setDeleteProduct(true)}
-        title="Delete Product"
-    >
-        <MdDelete className="text-xl" />
-    </button>
-</div>
-
-
-            {/* Edit Product Modal */}
             {editProduct && (
                 <AdminEditProduct
                     productData={data}
-                    onClose={() => setEditProduct(false)} // Close the edit modal
+                    onClose={() => setEditProduct(false)}
                     fetchdata={fetchdata}
                 />
             )}
 
-            {/* Delete Product Modal */}
             {deleteProduct && (
                 <AdminDeleteProduct
-                    productId={data?._id} // Use `_id` from the product schema
-                    onClose={() => setDeleteProduct(false)} // Close the delete modal
+                    productId={data?._id}
+                    onClose={() => setDeleteProduct(false)}
                     fetchData={fetchdata}
                 />
             )}

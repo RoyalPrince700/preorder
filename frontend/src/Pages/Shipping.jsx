@@ -7,7 +7,7 @@ const Shipping = () => {
         <span className="page-kicker">Policy Center</span>
         <h1 className="page-title">Shipping & Delivery</h1>
         <p className="page-subtitle">
-          Delivery guidance for Preordify orders, preorder timelines, shipping fees, and tracking support.
+          Delivery guidance for Wifmart orders, preorder timelines, shipping fees, and tracking support.
         </p>
       </header>
 
@@ -46,11 +46,11 @@ const Shipping = () => {
       <section className="page-dark-card mt-6">
         <h2 className="text-2xl font-bold">Order tracking</h2>
         <p className="mt-3 text-sm leading-7 text-slate-300">
-          Preordify keeps buyers informed with order status updates by SMS, email, and in-app tracking where available.
+          Wifmart keeps buyers informed with order status updates by SMS, email, and in-app tracking where available.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Phone:</span><div className="mt-2 text-white">07019277357</div></div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Email:</span><div className="mt-2 text-white">support@preordify.com</div></div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Email:</span><div className="mt-2 text-white">support@Wifmart.com</div></div>
           <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Hours:</span><div className="mt-2 text-white">Mon-Fri 9AM-6PM</div></div>
         </div>
       </section>

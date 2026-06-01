@@ -4,7 +4,7 @@ const backendDomain =
     : (import.meta.env.DEV ? 'http://localhost:8080' : '');
 
 if (!backendDomain) {
-  // In production this MUST be configured (e.g. https://preordify.onrender.com)
+  // In production this MUST be configured (e.g. https://wifmart.onrender.com)
   console.error(
     '[Config] Missing VITE_APP_BACKEND_URI. Set it in your deployment environment to your backend base URL.'
   );
@@ -34,6 +34,18 @@ const SummaryApi = {
     current_user : {
         url : `${backendDomain}/api/user-details`,
         method : "get"
+    },
+    updateProfile : {
+        url : `${backendDomain}/api/update-profile`,
+        method : "post"
+    },
+    getUserMeasurements : {
+        url : `${backendDomain}/api/user-measurements`,
+        method : "get"
+    },
+    updateUserMeasurements : {
+        url : `${backendDomain}/api/user-measurements`,
+        method : "post"
     },
     logout_user : {
         url : `${backendDomain}/api/userLogout`,

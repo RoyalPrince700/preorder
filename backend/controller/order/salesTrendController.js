@@ -5,6 +5,14 @@ const salesTrendController = async (req, res) => {
         // Aggregate sales data by month
         const salesData = await orderModel.aggregate([
             {
+                $match: {
+                    $or: [
+                        { status: "Delivered" },
+                        { adminConfirmed: true }
+                    ]
+                }
+            },
+            {
                 $group: {
                     _id: { $month: "$createdAt" }, // Group by the month of the createdAt field
                     totalSales: { $sum: "$totalPrice" }, // Sum the total sales for each month

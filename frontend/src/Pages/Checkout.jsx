@@ -5,6 +5,9 @@ import displayNARCurrency from '../helpers/displayCurrency';
 import { toast } from 'react-toastify';
 import Context from '../context';
 
+const inputClass =
+  'block w-full rounded-none border-2 border-slate-100 bg-slate-50 p-4 text-xs font-bold uppercase tracking-widest text-slate-950 outline-none transition-colors placeholder:text-slate-400 focus:border-orange-500';
+
 const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,22 +15,6 @@ const Checkout = () => {
 
   const cartItems = location.state?.cartItems || [];
   const totalPrice = location.state?.totalPrice || 0;
-
-  // Shipping fee removed; totals use cart total only
-
-  if (cartItems.length === 0) {
-    return (
-      <div className="container mx-auto mt-10 text-center">
-        <p className="text-xl font-medium">No items in the cart. Please go back to add items.</p>
-        <button
-          className="mt-5 px-5 py-3 bg-yellow-600 text-white font-medium rounded-lg hover:bg-yellow-800 transition-all duration-300"
-          onClick={() => navigate('/cart')}
-        >
-          Back to Cart
-        </button>
-      </div>
-    );
-  }
 
   const [shippingDetails, setShippingDetails] = useState({
     name: '',
@@ -37,6 +24,11 @@ const Checkout = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const totalQty = cartItems.reduce(
+    (sum, item) => sum + (item?.quantity || 1),
+    0
+  );
 
   const handleChange = (e) => {
     setShippingDetails({
@@ -91,190 +83,286 @@ const Checkout = () => {
     }
   };
 
-  const handleFlutterwavePayment = async () => {
-    if (!validateShippingDetails()) return;
+  // const handleFlutterwavePayment = async () => {
+  //   if (!validateShippingDetails()) return;
+  //
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(SummaryApi.payment.url, {
+  //       method: SummaryApi.payment.method,
+  //       credentials: 'include',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         cartItems,
+  //         shippingDetails,
+  //       }),
+  //     });
+  //
+  //     const data = await response.json();
+  //
+  //     if (data.success && data.data?.link) {
+  //       window.location.href = data.data.link;
+  //     } else {
+  //       toast.error(data.message || 'Failed to initiate payment');
+  //       setIsLoading(false);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error initiating Flutterwave payment:', error);
+  //     toast.error('Error processing payment. Please try again.');
+  //     setIsLoading(false);
+  //   }
+  // };
 
+  const handleWhatsAppCheckout = async () => {
+    if (!validateShippingDetails()) return;
+    
     setIsLoading(true);
     try {
-      const response = await fetch(SummaryApi.payment.url, {
-        method: SummaryApi.payment.method,
+      const payload = {
+        name: shippingDetails.name,
+        number: shippingDetails.number,
+        address: shippingDetails.address,
+        note: shippingDetails.note || '',
+        cartItems,
+        totalPrice: totalPrice,
+        paymentMethod: 'WhatsApp',
+      };
+
+      const response = await fetch(SummaryApi.checkout.url, {
+        method: SummaryApi.checkout.method,
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          cartItems,
-          shippingDetails // Include shipping details
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Failed to process order');
 
-      if (data.success && data.data?.link) {
-        // Redirect to Flutterwave payment page
-        window.location.href = data.data.link;
-      } else {
-        toast.error(data.message || 'Failed to initiate payment');
-        setIsLoading(false);
-      }
+      toast.success('Your order has been recorded! Redirecting to WhatsApp...');
+      await fetchUserAddToCart();
+
+      let message = `*New Order Details*\n\n`;
+
+      message += `*Products:*\n`;
+      cartItems.forEach((item, index) => {
+        const product = item?.productId || {};
+        const name = product?.productName || item?.name || 'Item';
+        const qty = item?.quantity || 1;
+        const price = product?.sellingPrice || item?.price || 0;
+        
+        const productLink = `${window.location.origin}/product/${product?._id || item?._id}`;
+
+        message += `${index + 1}. ${name}\n   Qty: ${qty} | Price: ${displayNARCurrency(price * qty)}\n   Link: ${productLink}\n`;
+      });
+
+      message += `\n*Total Amount:* ${displayNARCurrency(totalPrice)}\n`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/2348160881705?text=${encodedMessage}`;
+
+      // Update the current route so that when they come back, they are on the orders page
+      navigate('/order', { replace: true });
+
+      // Redirect the current tab to WhatsApp (bypasses popup blockers)
+      window.location.href = whatsappUrl;
     } catch (error) {
-      console.error('Error initiating Flutterwave payment:', error);
-      toast.error('Error processing payment. Please try again.');
+      console.error('Error during WhatsApp checkout:', error);
+      toast.error('Error processing your order. Please try again.');
+    } finally {
       setIsLoading(false);
     }
   };
 
-  // const handleWhatsAppRedirect = async () => {
-  //   if (!validateShippingDetails()) return;
-
-  //   // Persist order so it appears on the user orders page
-  //   let createdOrderId = '';
-  //   try {
-  //     const payload = {
-  //       name: shippingDetails.name,
-  //       number: shippingDetails.number,
-  //       address: shippingDetails.address,
-  //       note: shippingDetails.note || '',
-  //       cartItems,
-  //       totalPrice: totalPrice,
-  //       paymentMethod: 'WhatsApp Order',
-  //     };
-
-  //     const response = await fetch(SummaryApi.checkout.url, {
-  //       method: SummaryApi.checkout.method,
-  //       credentials: 'include',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(payload),
-  //     });
-
-  //     const data = await response.json();
-  //     if (response.ok && data?.data?._id) {
-  //       createdOrderId = data.data._id;
-  //       await fetchUserAddToCart();
-  //     }
-  //   } catch (err) {
-  //     console.error('Failed to create WhatsApp order checkout', err);
-  //     // continue anyway; we still open WhatsApp
-  //   }
-
-  //   const itemsDetailed = cartItems.map((item) => {
-  //     const productObj = item?.productId || {};
-  //     const id = productObj?._id || item?.productId;
-  //     const name = item?.name || productObj?.productName || productObj?.name || 'Item';
-  //     const qty = item?.quantity || 1;
-  //     const price = productObj?.sellingPrice || item?.price || '';
-  //     const origin = typeof window !== 'undefined' ? window.location.origin : '';
-  //     const link = id ? `${origin}/product/${id}` : '';
-  //     const priceText = price !== '' ? `${displayNARCurrency(price)}` : '';
-  //     return `- ${name} x${qty} ${priceText} ${link}`;
-  //   }).join('%0A');
-
-  //   const message = `Hello, I'd like to complete my order.%0A` +
-  //     (createdOrderId ? `Order ID: ${createdOrderId}%0A` : '') +
-  //     `Name: ${shippingDetails.name}%0A` +
-  //     `Phone: ${shippingDetails.number}%0A` +
-  //     `Address: ${shippingDetails.address}%0A` +
-  //     `Note: ${shippingDetails.note || 'N/A'}%0A` +
-  //     `Items:%0A${itemsDetailed}%0A` +
-  //     `Total: ${displayNARCurrency(totalPrice.toFixed(2))}`;
-
-  //   // Fire-and-forget admin email notification; don't block WhatsApp redirect
-  //   try {
-  //     await fetch(SummaryApi.notifyAdminsOrder.url, {
-  //       method: SummaryApi.notifyAdminsOrder.method,
-  //       credentials: 'include',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({
-  //         name: shippingDetails.name,
-  //         number: shippingDetails.number,
-  //         address: shippingDetails.address,
-  //         note: shippingDetails.note || '',
-  //         cartItems,
-  //         total: displayNARCurrency(totalPrice.toFixed(2)),
-  //         paymentMethod: 'WhatsApp Order',
-  //       }),
-  //     });
-  //   } catch (e) {
-  //     // Non-blocking: log and continue
-  //     console.error('Failed to notify admins via email', e);
-  //   }
-
-  //   const businessNumber = '07019277357';
-  //   const url = `https://wa.me/${businessNumber}?text=${message}`;
-  //   window.open(url, '_blank');
-  //   navigate('/order');
-  // };
+  if (cartItems.length === 0) {
+    return (
+      <div className="container mx-auto mt-4 px-4 pt-20 max-w-7xl">
+        <div className="mb-8 border-b-2 border-slate-100 pb-8">
+          <span className="inline-flex items-center rounded-none bg-orange-600 px-3 py-1 text-[10px] font-black uppercase tracking-[0.3em] text-white">
+            Checkout
+          </span>
+          <h1 className="mt-6 text-3xl font-black uppercase tracking-tighter text-slate-950 sm:text-5xl leading-none">
+            Complete Order
+          </h1>
+        </div>
+        <div className="border-2 border-dashed border-slate-100 py-20 text-center">
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">
+            No items in your basket
+          </p>
+          <button
+            className="mt-8 bg-slate-950 px-8 py-4 text-sm font-black uppercase tracking-[0.2em] text-white transition-colors hover:bg-orange-600"
+            onClick={() => navigate('/cart')}
+          >
+            Back to Cart
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container px-4 pt-16 mx-auto mt-4">
-      <h1 className="text-3xl font-semibold mb-8">Checkout</h1>
-      <div className="mb-10">
-        <h2 className="text-xl font-medium mb-4">Shipping Details</h2>
-        <input
-          type="text"
-          name="name"
-          value={shippingDetails.name}
-          onChange={handleChange}
-          placeholder="Full Name"
-          required
-          className="block w-full p-4 border border-gray-300 rounded-lg mb-4 text-lg"
-        />
-        <input
-          type="tel"
-          name="number"
-          value={shippingDetails.number}
-          onChange={handleChange}
-          placeholder="Phone Number"
-          required
-          className="block w-full p-4 border border-gray-300 rounded-lg mb-4 text-lg"
-        />
-        <textarea
-          name="address"
-          value={shippingDetails.address}
-          onChange={handleChange}
-          placeholder="Complete Address"
-          required
-          className="block w-full p-4 border border-gray-300 rounded-lg mb-4 text-lg"
-        />
-        <textarea
-          name="note"
-          value={shippingDetails.note}
-          onChange={handleChange}
-          placeholder="Leave a note (optional)"
-          className="block w-full p-4 border border-gray-300 rounded-lg mb-4 text-lg"
-        />
+    <div className="container mx-auto mt-4 px-4 pt-20 max-w-7xl">
+      <div className="mb-8 border-b-2 border-slate-100 pb-8">
+        <span className="inline-flex items-center rounded-none bg-orange-600 px-3 py-1 text-[10px] font-black uppercase tracking-[0.3em] text-white">
+          Checkout
+        </span>
+        <h1 className="mt-6 text-3xl font-black uppercase tracking-tighter text-slate-950 sm:text-5xl leading-none">
+          Complete Order
+        </h1>
+        <p className="mt-4 text-xs font-bold uppercase tracking-widest text-slate-500">
+          Enter shipping details and confirm your preorder drop.
+        </p>
       </div>
 
-      <div className="mb-10 bg-white shadow-lg rounded-lg p-6">
-  <h2 className="text-xl font-medium mb-6 border-b pb-3">Order Summary</h2>
-  <div className="flex justify-between items-center mb-4">
-    <span className="text-lg text-gray-700">Items in Cart:</span>
-    <span className="text-lg font-medium">{cartItems.length}</span>
-  </div>
-  <div className="flex justify-between items-center mb-4">
-    <span className="text-lg text-gray-700">Total Price:</span>
-    <span className="text-lg font-medium">{displayNARCurrency(totalPrice.toFixed(2))}</span>
-  </div>
-  
-</div>
+      <div className="flex flex-col gap-12 lg:flex-row lg:justify-between">
+        {/* Left: shipping + items */}
+        <div className="w-full max-w-3xl space-y-10">
+          <section className="border-2 border-slate-100 bg-white p-6 sm:p-8">
+            <h2 className="mb-6 text-xs font-black uppercase tracking-[0.3em] text-slate-950 border-b-2 border-slate-950 pb-2">
+              Shipping Details
+            </h2>
+            <div className="space-y-4">
+              <input
+                type="text"
+                name="name"
+                value={shippingDetails.name}
+                onChange={handleChange}
+                placeholder="Full Name"
+                required
+                className={inputClass}
+              />
+              <input
+                type="tel"
+                name="number"
+                value={shippingDetails.number}
+                onChange={handleChange}
+                placeholder="Phone Number"
+                required
+                className={inputClass}
+              />
+              <textarea
+                name="address"
+                value={shippingDetails.address}
+                onChange={handleChange}
+                placeholder="Complete Address"
+                required
+                rows={3}
+                className={`${inputClass} resize-none`}
+              />
+              <textarea
+                name="note"
+                value={shippingDetails.note}
+                onChange={handleChange}
+                placeholder="Leave a note (optional)"
+                rows={2}
+                className={`${inputClass} resize-none`}
+              />
+            </div>
+          </section>
 
+          <section>
+            <h2 className="mb-4 text-xs font-black uppercase tracking-[0.3em] text-slate-950">
+              Your Items ({cartItems.length})
+            </h2>
+            <div className="space-y-4">
+              {cartItems.map((item) => {
+                const product = item?.productId || {};
+                const qty = item?.quantity || 1;
+                const price = product?.sellingPrice || item?.price || 0;
+                const name =
+                  product?.productName || item?.name || 'Item';
+                const image =
+                  product?.productImage?.[0] || item?.image || '';
 
-      <div className="flex flex-col sm:flex-row gap-4 my-3">
-        <button
-          className={`bg-blue-600 text-white font-medium px-5 py-3 rounded-lg
-           hover:bg-blue-700 transition-all duration-300 ease-in-out ${
-             isLoading ? 'opacity-50 cursor-not-allowed' : ''
-           }`}
-          onClick={handleFlutterwavePayment}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Processing...' : `Checkout (${displayNARCurrency(totalPrice.toFixed(2))})`}
-        </button>
-        {/* <button
-          className="bg-black text-white font-medium px-5 py-3 rounded-lg
-           hover:bg-gray-800 transition-all duration-300 ease-in-out"
-          onClick={handleWhatsAppRedirect}
-        >
-          Complete Order on WhatsApp
-        </button> */}
+                return (
+                  <div
+                    key={item?._id || product?._id || name}
+                    className="grid w-full grid-cols-[100px,1fr] border-2 border-slate-100 bg-white p-4 transition-colors hover:border-orange-500"
+                  >
+                    <div className="flex h-[100px] items-center justify-center bg-white p-2">
+                      {image ? (
+                        <img
+                          src={image}
+                          alt={name}
+                          className="h-full w-full object-contain mix-blend-multiply"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-slate-50" />
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-between px-4 py-1">
+                      <div>
+                        <h3 className="line-clamp-2 text-xs font-black uppercase tracking-widest text-slate-950 leading-tight">
+                          {name}
+                        </h3>
+                        {product?.category && (
+                          <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-orange-600">
+                            {product.category}
+                          </p>
+                        )}
+                      </div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                          Qty: {qty}
+                        </p>
+                        <p className="text-sm font-black tracking-tighter text-orange-600">
+                          {displayNARCurrency(price * qty)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+
+        {/* Right: order summary */}
+        <div className="w-full max-w-sm lg:mt-0">
+          <div className="border-2 border-slate-900 bg-white p-8 lg:sticky lg:top-28">
+            <h2 className="mb-6 border-b-2 border-slate-950 pb-2 text-xs font-black uppercase tracking-[0.3em] text-slate-950">
+              Order Summary
+            </h2>
+            <div className="mb-4 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+              <p>Total Items</p>
+              <p>{totalQty}</p>
+            </div>
+            <div className="mb-4 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+              <p>Products</p>
+              <p>{cartItems.length}</p>
+            </div>
+            <div className="mb-8 flex items-center justify-between border-t border-slate-100 pt-4 text-slate-950">
+              <p className="text-xs font-black uppercase tracking-widest">
+                Grand Total
+              </p>
+              <p className="text-2xl font-black tracking-tighter text-orange-600">
+                {displayNARCurrency(totalPrice.toFixed(2))}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className={`w-full bg-green-600 py-5 text-sm font-black uppercase tracking-[0.2em] text-white transition-colors hover:bg-green-700 shadow-[0_12px_28px_rgba(15,23,42,0.1)] ${
+                isLoading ? 'cursor-not-allowed opacity-50' : ''
+              }`}
+              onClick={handleWhatsAppCheckout}
+              disabled={isLoading}
+            >
+              Checkout via WhatsApp
+            </button>
+
+            <button
+              type="button"
+              className="mt-4 w-full text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 transition-colors hover:text-orange-600"
+              onClick={() => navigate('/cart')}
+            >
+              ← Back to Cart
+            </button>
+
+            <p className="mt-4 text-center text-[9px] font-bold uppercase tracking-widest text-slate-400">
+              Complete your order on WhatsApp
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

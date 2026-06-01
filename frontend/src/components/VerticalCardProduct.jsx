@@ -33,7 +33,7 @@ const VerticalCardProduct = ({ category, heading, showHeading = true }) => {
             {heading || "Trending Preorders"}
           </h2>
           <p className="mt-3 px-2 text-xs font-bold uppercase tracking-[0.2em] text-orange-600 sm:px-0">
-            Marketplace-style product discovery powered by your local asset catalog
+            Curated preorders from our live catalog
           </p>
         </div>
       )}

@@ -7,7 +7,7 @@ const Returns = () => {
         <span className="page-kicker">Policy Center</span>
         <h1 className="page-title">Returns & Exchanges</h1>
         <p className="page-subtitle">
-          Preordify aims to keep returns clear, fair, and easy to understand before you buy.
+          Wifmart aims to keep returns clear, fair, and easy to understand before you buy.
         </p>
       </header>
 
@@ -33,7 +33,7 @@ const Returns = () => {
         <section className="page-card-muted">
           <h2 className="page-card-title">How the return process works</h2>
           <div className="page-list text-sm">
-            <div className="page-list-item"><span className="page-list-bullet">1</span><span>Contact Preordify support to start your return request.</span></div>
+            <div className="page-list-item"><span className="page-list-bullet">1</span><span>Contact Wifmart support to start your return request.</span></div>
             <div className="page-list-item"><span className="page-list-bullet">2</span><span>Securely package the item using the original packaging where possible.</span></div>
             <div className="page-list-item"><span className="page-list-bullet">3</span><span>Ship it using the approved return method or courier instructions provided.</span></div>
             <div className="page-list-item"><span className="page-list-bullet">4</span><span>Refunds are typically processed within 5 to 7 business days after inspection.</span></div>
@@ -48,7 +48,7 @@ const Returns = () => {
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Phone:</span><div className="mt-2 text-white">07019277357</div></div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Email:</span><div className="mt-2 text-white">returns@preordify.com</div></div>
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Email:</span><div className="mt-2 text-white">returns@Wifmart.com</div></div>
           <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4"><span className="page-contact-label">Hours:</span><div className="mt-2 text-white">Mon-Fri 9AM-6PM</div></div>
         </div>
       </section>

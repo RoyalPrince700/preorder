@@ -5,7 +5,7 @@ const AboutUs = () => {
     <div className="page-shell">
       <header className="page-header">
         <span className="page-kicker">Our Story</span>
-        <h1 className="page-title">About Preordify</h1>
+        <h1 className="page-title">About Wifmart</h1>
         <p className="page-subtitle">
           Pioneering a high-energy, marketplace-first approach to preorder campaigns and exclusive limited drops.
         </p>
@@ -16,7 +16,7 @@ const AboutUs = () => {
           <section className="page-card">
             <h2 className="page-card-title">Our Mission</h2>
             <p className="page-copy">
-              At Preordify, our mission is to redefine how exclusive products are launched and discovered. 
+              At Wifmart, our mission is to redefine how exclusive products are launched and discovered. 
               We provide a high-octane, high-energy shopping experience from first drop to final checkout. 
               We are committed to empowering creators and brands with a platform built for speed, transparency, 
               and exclusive access for their most dedicated supporters.
@@ -26,13 +26,13 @@ const AboutUs = () => {
           <section className="page-card-muted">
             <h2 className="page-card-title">The Marketplace Vibe</h2>
             <p className="page-copy">
-              Preordify isn't just an e-commerce store; it's a launchpad for what's next. We curate 
+              Wifmart isn't just an e-commerce store; it's a launchpad for what's next. We curate 
               the most anticipated preorder drops across multiple categories, ensuring you're 
               always at the front of the line for the hottest releases.
             </p>
             <p className="mt-4 page-copy">
               Our platform is designed for the high-energy collector, the trend-setter, and the 
-              early adopter who values being first. Every drop on Preordify is a limited-time 
+              early adopter who values being first. Every drop on Wifmart is a limited-time 
               opportunity to secure a piece of the future.
             </p>
           </section>
@@ -75,7 +75,7 @@ const AboutUs = () => {
               </div>
               <div className="flex items-center gap-4">
                 <span className="page-contact-label">Email</span>
-                <span className="text-sm font-bold">contact@preordify.com</span>
+                <span className="text-sm font-bold">contact@Wifmart.com</span>
               </div>
             </div>
           </section>

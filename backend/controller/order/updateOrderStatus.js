@@ -6,7 +6,7 @@ const { sendOrderStatusUpdateEmail } = require("../../mailtrap/emails"); // Impo
 async function updateOrderStatus(req, res) {
     console.log("Request User ID:", req.userId);
     try {
-        const { orderId, status } = req.body;
+        const { orderId, status, adminConfirmed } = req.body;
 
         if (!orderId || !status) {
             return res.status(400).json({
@@ -16,9 +16,14 @@ async function updateOrderStatus(req, res) {
             });
         }
 
+        const updatePayload = { status };
+        if (typeof adminConfirmed !== 'undefined') {
+            updatePayload.adminConfirmed = adminConfirmed;
+        }
+
         const updatedOrder = await orderModel.findByIdAndUpdate(
             orderId,
-            { status },
+            updatePayload,
             { new: true }
         );
 

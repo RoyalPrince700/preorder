@@ -100,7 +100,7 @@ const FAQ = () => {
         <span className="page-kicker">Support Center</span>
         <h1 className="page-title">Frequently Asked Questions</h1>
         <p className="page-subtitle">
-          Quick answers about ordering, payments, shipping, returns, and product quality on Preordify.
+          Quick answers about ordering, payments, shipping, returns, and product quality on Wifmart.
         </p>
       </header>
 
@@ -157,7 +157,7 @@ const FAQ = () => {
               <span className="font-bold text-xl">✉️</span>
             </div>
             <h3 className="font-semibold mb-2">Email Us</h3>
-            <p className="opacity-80">support@preordify.com</p>
+            <p className="opacity-80">support@Wifmart.com</p>
             <p className="text-sm opacity-60">24/7 response</p>
           </div>
           <div>

@@ -5,6 +5,28 @@ import SummaryApi from "../../common";
 import displayNARCurrency from "../../helpers/displayCurrency";
 import ChangeOrderStatus from "../../components/ChangeOrderStatus";
 import { useSocket } from "../../context/SocketContext";
+import {
+  adminTableWrap,
+  adminTableHead,
+  adminTh,
+  adminBtnSecondary,
+  adminBtnConfirm,
+  adminChartTitle,
+} from "../../common/adminUi";
+
+const statusBadge = (status) => {
+  switch (status) {
+    case "Delivered":
+    case "Paid":
+      return "bg-green-100 text-green-800 border-green-200";
+    case "Pending":
+      return "bg-orange-100 text-orange-800 border-orange-200";
+    case "Cancelled":
+      return "bg-red-100 text-red-800 border-red-200";
+    default:
+      return "bg-slate-100 text-slate-800 border-slate-200";
+  }
+};
 
 const OrdersTable = () => {
   const [allOrders, setAllOrders] = useState([]);
@@ -16,7 +38,6 @@ const OrdersTable = () => {
   });
   const { socket } = useSocket();
 
-  // Fetch all orders
   const fetchAllOrders = async () => {
     try {
       const response = await fetch(SummaryApi.allOrders.url, {
@@ -41,18 +62,12 @@ const OrdersTable = () => {
     fetchAllOrders();
   }, []);
 
-  // Join admin room for real-time updates
   useEffect(() => {
     if (!socket) return;
 
-    // Join admin room
     socket.emit('join-admin-room');
-    console.log('Admin joined admin room');
 
     const handleAdminOrderStatusChange = (updateData) => {
-      console.log('Admin received order status change:', updateData);
-
-      // Update the local orders state
       setAllOrders((prevOrders) =>
         prevOrders.map((order) =>
           order._id === updateData.orderId
@@ -61,8 +76,7 @@ const OrdersTable = () => {
         )
       );
 
-      // Show a toast notification
-      toast.info(`Order #${updateData.orderId.slice(-6)} status updated to ${updateData.newStatus}`, {
+      toast.info(`Order #${updateData.orderId.slice(-12).toUpperCase()} status updated to ${updateData.newStatus}`, {
         position: "top-right",
         autoClose: 5000,
       });
@@ -70,160 +84,168 @@ const OrdersTable = () => {
 
     socket.on('admin-order-status-changed', handleAdminOrderStatusChange);
 
-    // Cleanup listener on unmount
     return () => {
       socket.off('admin-order-status-changed', handleAdminOrderStatusChange);
     };
   }, [socket]);
 
-  // Update order status
-  const updateOrderStatus = async (orderId, newStatus) => {
+  const updateOrderStatus = async (orderId, newStatus, adminConfirmed = undefined) => {
     try {
+      const payload = { orderId, status: newStatus };
+      if (adminConfirmed !== undefined) {
+        payload.adminConfirmed = adminConfirmed;
+      }
+      
       const response = await fetch(SummaryApi.updateOrder.url, {
         method: SummaryApi.updateOrder.method,
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ orderId, status: newStatus }),
+        body: JSON.stringify(payload),
       });
 
       const dataResponse = await response.json();
 
       if (dataResponse.success) {
-        toast.success("Order status updated successfully.");
-        fetchAllOrders(); // Refresh the orders list
+        toast.success(adminConfirmed ? "Order confirmed successfully." : "Order status updated successfully.");
+        fetchAllOrders();
       } else {
         toast.error(dataResponse.message);
       }
     } catch (error) {
       console.error("Update Error:", error);
-      toast.error("Failed to update order status.");
+      toast.error("Failed to update order.");
     }
   };
 
   return (
-    <div className="overflow-x-auto bg-white shadow-md rounded-xl border border-gray-200">
-      <table className="w-full table-auto">
-        <thead>
-          <tr className="bg-gray-100 text-gray-800 border-b border-gray-200">
-            <th className="px-4 py-3 text-left">#</th>
-            <th className="px-4 py-3 text-left">Order ID</th>
-            <th className="px-4 py-3 text-left">Status</th>
-            <th className="px-4 py-3 text-left">Order Date</th>
-            <th className="px-4 py-3 text-left">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="text-gray-700">
-          {allOrders.map((order, index) => (
-            <React.Fragment key={order._id || index}>
-              <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-3">{index + 1}</td>
-                <td className="px-4 py-3">
-                  <div className="relative group">
-                    <span
-                      className="truncate w-16 inline-block overflow-hidden whitespace-nowrap cursor-help"
-                      title={order._id}
-                    >
-                      {order._id.slice(0, 3)}...
-                    </span>
-                    <div className="absolute hidden group-hover:block bg-white border border-gray-200 shadow-lg text-gray-800 text-sm rounded p-2 z-10">
-                      {order._id}
+    <div>
+      <h2 className={`${adminChartTitle} mb-4`}>All Orders</h2>
+      <div className={adminTableWrap}>
+        <table className="w-full table-auto text-sm">
+          <thead>
+            <tr className={adminTableHead}>
+              <th className={adminTh}>#</th>
+              <th className={adminTh}>Order ID</th>
+              <th className={adminTh}>Status</th>
+              <th className={adminTh}>Order Date</th>
+              <th className={adminTh}>Actions</th>
+            </tr>
+          </thead>
+          <tbody className="text-slate-700">
+            {allOrders.map((order, index) => (
+              <React.Fragment key={order._id || index}>
+                <tr className="border-b border-slate-100 transition-colors hover:bg-orange-50/30">
+                  <td className="px-4 py-3 text-xs font-bold">{index + 1}</td>
+                  <td className="px-4 py-3">
+                    <div className="group relative">
+                      <span
+                        className="inline-block max-w-[8rem] cursor-help truncate font-black uppercase tracking-widest text-slate-950"
+                        title={order._id}
+                      >
+                        {order._id.slice(-12)}
+                      </span>
                     </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3">
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    order.status === 'Paid' ? 'bg-green-100 text-green-800' : 
-                    order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : 
-                    'bg-blue-100 text-blue-800'
-                  }`}>
-                    {order.status}
-                  </span>
-                </td>
-                <td className="px-4 py-3">{moment(order.createdAt).format("LL")}</td>
-                <td className="px-4 py-3 flex space-x-2">
-                  <button
-                    className="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition-colors text-sm"
-                    onClick={() =>
-                      setExpandedOrderId(
-                        expandedOrderId === order._id ? null : order._id
-                      )
-                    }
-                  >
-                    {expandedOrderId === order._id ? "Hide" : "Details"}
-                  </button>
-                  <button
-                    className="bg-gray-100 text-gray-700 px-3 py-1 rounded hover:bg-gray-600 hover:text-white transition-colors text-sm"
-                    onClick={() => {
-                      setCurrentOrderDetails({
-                        orderId: order._id,
-                        currentStatus: order.status,
-                      });
-                      setOpenChangeStatus(true);
-                    }}
-                  >
-                    Change Status
-                  </button>
-                </td>
-              </tr>
-              {expandedOrderId === order._id && (
-                <tr>
-                  <td colSpan={5}>
-                    <div className="bg-gray-50 p-6 rounded-lg m-2 border border-gray-100">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <p className="mb-2">
-                            <strong className="text-gray-900">Customer Name:</strong> {order.name || "Unknown"}
-                          </p>
-                          <p className="mb-2">
-                            <strong className="text-gray-900">Phone Number:</strong> {order.number || "N/A"}
-                          </p>
-                          <p className="mb-2">
-                            <strong className="text-gray-900">Address:</strong> {order.address || "N/A"}
-                          </p>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`border px-2 py-1 text-[10px] font-black uppercase tracking-widest ${statusBadge(order.status)}`}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">
+                    {moment(order.createdAt).format("LL")}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-2">
+                      {!order.adminConfirmed && (
+                        <button
+                          type="button"
+                          className={adminBtnConfirm}
+                          onClick={() => updateOrderStatus(order._id, order.status, true)}
+                        >
+                          Confirm
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className={adminBtnSecondary}
+                        onClick={() =>
+                          setExpandedOrderId(
+                            expandedOrderId === order._id ? null : order._id
+                          )
+                        }
+                      >
+                        {expandedOrderId === order._id ? "Hide" : "Details"}
+                      </button>
+                      <button
+                        type="button"
+                        className={adminBtnSecondary}
+                        onClick={() => {
+                          setCurrentOrderDetails({
+                            orderId: order._id,
+                            currentStatus: order.status,
+                          });
+                          setOpenChangeStatus(true);
+                        }}
+                      >
+                        Change Status
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {expandedOrderId === order._id && (
+                  <tr>
+                    <td colSpan={5} className="bg-slate-50 p-6">
+                      <div className="grid grid-cols-1 gap-4 border-2 border-slate-100 bg-white p-6 md:grid-cols-2">
+                        <div className="space-y-2 text-xs font-bold uppercase tracking-widest text-slate-500">
+                          <p><span className="text-slate-950">Customer:</span> {order.name || "Unknown"}</p>
+                          <p><span className="text-slate-950">Phone:</span> {order.number || "N/A"}</p>
+                          <p><span className="text-slate-950">Address:</span> {order.address || "N/A"}</p>
                         </div>
-                        <div>
-                          <p className="mb-2">
-                            <strong className="text-gray-900">Note:</strong> {order.note || "N/A"}
-                          </p>
-                          <p className="mb-2">
-                            <strong className="text-gray-900">Total Price:</strong>{" "}
-                            {displayNARCurrency(order.totalPrice.toFixed(2))}
-                          </p>
+                        <div className="space-y-2 text-xs font-bold uppercase tracking-widest text-slate-500">
+                          <p><span className="text-slate-950">Note:</span> {order.note || "N/A"}</p>
+                          <p><span className="text-slate-950">Total:</span> {displayNARCurrency(order.totalPrice.toFixed(2))}</p>
                         </div>
                       </div>
                       
-                      <h4 className="font-bold mt-6 mb-4 text-gray-900 border-b pb-2">Cart Items:</h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <h4 className="mt-6 border-b-2 border-slate-950 pb-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-950">
+                        Cart Items
+                      </h4>
+                      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {order.cartItems.map((item, idx) => (
-                          <div key={idx} className="flex items-center space-x-4 bg-white p-3 rounded-lg border border-gray-100">
+                          <div key={idx} className="flex items-center gap-4 border-2 border-slate-100 bg-white p-3">
                             {item.productId?.productImage?.[0] && (
                               <img
                                 src={item.productId.productImage[0]}
                                 alt={item.productId.productName}
-                                className="w-16 h-16 object-cover rounded-md"
+                                className="h-16 w-16 object-contain"
                               />
                             )}
                             <div>
-                              <p className="font-medium text-gray-800 text-sm">
+                              <p className="text-xs font-black uppercase tracking-widest text-slate-950">
                                 {item.productId?.productName || "Unknown"}
                               </p>
-                              <p className="text-xs text-gray-500 font-semibold">Quantity: {item.quantity}</p>
+                              <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                                Qty: {item.quantity}
+                              </p>
                             </div>
                           </div>
                         ))}
                       </div>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </React.Fragment>
-          ))}
-        </tbody>
-      </table>
-      {allOrders.length === 0 && (
-        <p className="text-center text-gray-500 py-10">No orders found.</p>
-      )}
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            ))}
+          </tbody>
+        </table>
+        {allOrders.length === 0 && (
+          <p className="py-12 text-center text-xs font-black uppercase tracking-[0.3em] text-slate-400">
+            No orders found
+          </p>
+        )}
+      </div>
       {openChangeStatus && (
         <ChangeOrderStatus
           orderId={currentOrderDetails.orderId}

@@ -12,6 +12,10 @@ const dailySalesController = async (req, res) => {
             {
                 $match: {
                     createdAt: { $gte: startDate, $lte: endDate }, // Filter orders within this week
+                    $or: [
+                        { status: "Delivered" },
+                        { adminConfirmed: true }
+                    ]
                 },
             },
             {

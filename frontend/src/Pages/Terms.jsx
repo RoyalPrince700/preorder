@@ -7,7 +7,7 @@ const Terms = () => {
         <span className="page-kicker">Policy Center</span>
         <h1 className="page-title">Terms & Conditions</h1>
         <p className="page-subtitle">
-          Review the rules and responsibilities that govern how Preordify products, checkout flows, and platform services are used.
+          Review the rules and responsibilities that govern how Wifmart products, checkout flows, and platform services are used.
         </p>
       </header>
 
@@ -15,7 +15,7 @@ const Terms = () => {
         <section className="page-card">
           <h2 className="page-card-title">Acceptance of terms</h2>
           <p className="page-copy">
-            By accessing and using the Preordify website and services, you agree to these terms. If you do not accept them, please do not use the platform.
+            By accessing and using the Wifmart website and services, you agree to these terms. If you do not accept them, please do not use the platform.
           </p>
         </section>
 
@@ -24,7 +24,7 @@ const Terms = () => {
           <div className="space-y-4">
             <div>
               <p className="font-semibold text-slate-900">Permission granted</p>
-              <p className="mt-1 text-sm text-slate-600">You may temporarily access materials on the Preordify website for personal, non-commercial viewing.</p>
+              <p className="mt-1 text-sm text-slate-600">You may temporarily access materials on the Wifmart website for personal, non-commercial viewing.</p>
             </div>
             <div>
               <p className="font-semibold text-slate-900">Prohibited uses</p>
@@ -74,10 +74,10 @@ const Terms = () => {
         <section className="page-dark-card">
           <h2 className="text-2xl font-bold">Legal contact</h2>
           <p className="mt-3 text-sm leading-7 text-slate-300">
-            Questions about these terms can be directed to the Preordify legal and compliance team.
+            Questions about these terms can be directed to the Wifmart legal and compliance team.
           </p>
           <div className="mt-6 space-y-3 text-sm">
-            <div><span className="page-contact-label">Email:</span> legal@preordify.com</div>
+            <div><span className="page-contact-label">Email:</span> legal@Wifmart.com</div>
             <div><span className="page-contact-label">Phone:</span> 07019277357</div>
             <div><span className="page-contact-label">Address:</span> Lagos, Nigeria</div>
           </div>

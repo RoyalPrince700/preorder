@@ -5,6 +5,14 @@ const salesByChannelController = async (req, res) => {
         // Aggregate sales data by channel
         const salesData = await orderModel.aggregate([
             {
+                $match: {
+                    $or: [
+                        { status: "Delivered" },
+                        { adminConfirmed: true }
+                    ]
+                }
+            },
+            {
                 $group: {
                     _id: "$salesChannel", // Assuming "salesChannel" is a field in the order schema
                     totalSales: { $sum: "$totalPrice" }, // Sum the total sales for each channel

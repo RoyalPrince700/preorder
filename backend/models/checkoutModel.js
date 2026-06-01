@@ -17,6 +17,10 @@ const checkoutSchema = new mongoose.Schema({
     ],
     totalPrice: Number,
     paymentMethod: String,
+    adminConfirmed: {
+        type: Boolean,
+        default: false
+    },
     status: {
         type: String,
         default: "Pending"

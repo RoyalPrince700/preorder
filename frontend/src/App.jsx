@@ -18,6 +18,7 @@ function App() {
   const location = useLocation();
   const [cartProductCount, setCartProductCount] = useState(0);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [authReady, setAuthReady] = useState(false);
 
   const shouldHideHeaderFooter = location.pathname.startsWith('/admin-overview') ||
     ['/login', '/sign-up', '/token-verification', '/forgot-password', '/verify-email'].includes(location.pathname) ||
@@ -27,7 +28,10 @@ function App() {
 
   // Fetch user details
   const fetchUserDetails = useCallback(async () => {
-    if (!SummaryApi.isBackendConfigured) return;
+    if (!SummaryApi.isBackendConfigured) {
+      setAuthReady(true);
+      return;
+    }
     try {
       const dataResponse = await fetch(SummaryApi.current_user.url, {
         method: SummaryApi.current_user.method,
@@ -37,9 +41,14 @@ function App() {
       const dataApi = await dataResponse.json();
       if (dataApi.success) {
         dispatch(setUserDetails(dataApi.data));
+      } else {
+        dispatch(setUserDetails(null));
       }
     } catch (error) {
       console.error('Failed to fetch user details:', error.message);
+      dispatch(setUserDetails(null));
+    } finally {
+      setAuthReady(true);
     }
   }, [dispatch]);
 
@@ -105,13 +114,22 @@ function App() {
   const contextValue = useMemo(
     () => ({
       fetchUserDetails,
+      authReady,
       cartProductCount,
       notificationCount,
       fetchUserAddToCart,
       fetchUserNotification,
       signInWithGoogle,
     }),
-    [cartProductCount, notificationCount, fetchUserAddToCart, fetchUserNotification, signInWithGoogle]
+    [
+      authReady,
+      fetchUserDetails,
+      cartProductCount,
+      notificationCount,
+      fetchUserAddToCart,
+      fetchUserNotification,
+      signInWithGoogle,
+    ]
   );
 
   return (

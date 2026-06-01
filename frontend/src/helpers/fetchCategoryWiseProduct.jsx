@@ -1,21 +1,18 @@
-import { getLocalProductsByCategory } from "../data/localProducts";
+import SummaryApi from "../common";
 
 const fetchCategoryWiseProduct = async (category) => {
-  // Backend version kept here for easy reactivation later.
-  // const response = await fetch(SummaryApi.categoryWiseProduct.url, {
-  //   method: SummaryApi.categoryWiseProduct.method,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     category: category,
-  //   }),
-  // });
-  //
-  // const dataResponse = await response.json();
-  // return dataResponse;
+  const response = await fetch(SummaryApi.categoryWiseProduct.url, {
+    method: SummaryApi.categoryWiseProduct.method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      category: category,
+    }),
+  });
 
-  return { data: getLocalProductsByCategory(category) };
+  const dataResponse = await response.json();
+  return dataResponse;
 };
 
 export default fetchCategoryWiseProduct;

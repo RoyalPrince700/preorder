@@ -1,21 +1,18 @@
-import { getLocalHotDealProducts } from "../data/localProducts";
+import SummaryApi from "../common";
 
 const fetchHotDealWiseProduct = async (hotDeal) => {
-  // Backend version kept here for easy reactivation later.
-  // const response = await fetch(SummaryApi.hotDealWiseProduct.url, {
-  //   method: SummaryApi.hotDealWiseProduct.method,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     hotDeal: hotDeal,
-  //   }),
-  // });
-  //
-  // const dataResponse = await response.json();
-  // return dataResponse;
+  const response = await fetch(SummaryApi.hotDealWiseProduct.url, {
+    method: SummaryApi.hotDealWiseProduct.method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      hotDeal: hotDeal,
+    }),
+  });
 
-  return { data: getLocalHotDealProducts(hotDeal) };
+  const dataResponse = await response.json();
+  return dataResponse;
 };
 
 export default fetchHotDealWiseProduct;

@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { motion } from "framer-motion";
-import SummaryApi from "../../common"; // Replace with your actual API configuration
+import SummaryApi from "../../common";
 import { toast } from "react-toastify";
+import { adminChartCard, adminChartTitle, CHART_COLORS } from "../../common/adminUi";
+
+const tooltipStyle = {
+  backgroundColor: "#FFFFFF",
+  border: "2px solid #0f172a",
+  borderRadius: 0,
+  color: "#0f172a",
+};
 
 const UserActivityHeatmap = () => {
   const [userActivityData, setUserActivityData] = useState([]);
@@ -16,7 +23,7 @@ const UserActivityHeatmap = () => {
       const dataResponse = await response.json();
 
       if (dataResponse.success) {
-        setUserActivityData(dataResponse.data); // Ensure backend data is in the required format
+        setUserActivityData(dataResponse.data);
       } else {
         toast.error(dataResponse.message);
       }
@@ -30,39 +37,26 @@ const UserActivityHeatmap = () => {
     fetchUserActivityData();
   }, []);
 
+  const barKeys = ["0-4", "4-8", "8-12", "12-16", "16-20", "20-24"];
+
   return (
-    <motion.div
-      className="bg-white shadow-md rounded-xl p-6 border border-gray-200"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4 }}
-    >
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">User Activity Heatmap</h2>
+    <div className={adminChartCard}>
+      <h2 className={adminChartTitle}>User Activity Heatmap</h2>
       <div style={{ width: "100%", height: 300 }}>
         <ResponsiveContainer>
           <BarChart data={userActivityData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-            <XAxis dataKey="day" stroke="#6B7280" />
-            <YAxis stroke="#6B7280" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#FFFFFF",
-                borderColor: "#E5E7EB",
-                color: "#111827"
-              }}
-              itemStyle={{ color: "#374151" }}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis dataKey="day" stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+            <YAxis stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+            <Tooltip contentStyle={tooltipStyle} />
             <Legend />
-            <Bar dataKey="0-4" stackId="a" fill="#6366F1" />
-            <Bar dataKey="4-8" stackId="a" fill="#8B5CF6" />
-            <Bar dataKey="8-12" stackId="a" fill="#EC4899" />
-            <Bar dataKey="12-16" stackId="a" fill="#10B981" />
-            <Bar dataKey="16-20" stackId="a" fill="#F59E0B" />
-            <Bar dataKey="20-24" stackId="a" fill="#3B82F6" />
+            {barKeys.map((key, index) => (
+              <Bar key={key} dataKey={key} stackId="a" fill={CHART_COLORS[index % CHART_COLORS.length]} />
+            ))}
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -7,7 +7,7 @@ const Privacy = () => {
         <span className="page-kicker">Policy Center</span>
         <h1 className="page-title">Privacy Policy</h1>
         <p className="page-subtitle">
-          Learn how Preordify collects, uses, and protects customer data across browsing, checkout, preorder updates, and support interactions.
+          Learn how Wifmart collects, uses, and protects customer data across browsing, checkout, preorder updates, and support interactions.
         </p>
       </header>
 
@@ -48,7 +48,7 @@ const Privacy = () => {
         <section className="page-card">
           <h2 className="page-card-title">Sharing and security</h2>
           <p className="page-copy">
-            Preordify does not sell or rent customer data. Information may be shared only with trusted service providers, payment processors,
+            Wifmart does not sell or rent customer data. Information may be shared only with trusted service providers, payment processors,
             logistics partners, or when required by law. We protect data using SSL encryption, access controls, secure payment processing,
             and internal security practices designed to reduce unauthorized access.
           </p>
@@ -76,10 +76,10 @@ const Privacy = () => {
           <section className="page-dark-card">
             <h2 className="text-2xl font-bold">Privacy contact</h2>
             <p className="mt-3 text-sm leading-7 text-slate-300">
-              If you have questions about how your information is handled, contact the Preordify privacy team.
+              If you have questions about how your information is handled, contact the Wifmart privacy team.
             </p>
             <div className="mt-6 space-y-3 text-sm">
-              <div><span className="page-contact-label">Email:</span> privacy@preordify.com</div>
+              <div><span className="page-contact-label">Email:</span> privacy@Wifmart.com</div>
               <div><span className="page-contact-label">Phone:</span> 07019277357</div>
               <div><span className="page-contact-label">Address:</span> Lagos, Nigeria</div>
             </div>

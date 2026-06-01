@@ -1,18 +1,15 @@
-import { getAllLocalProducts } from "../data/localProducts";
+import SummaryApi from "../common";
 
 const fetchAllProducts = async () => {
-  // Backend version kept here for easy reactivation later.
-  // const response = await fetch(SummaryApi.allProduct.url, {
-  //   method: SummaryApi.allProduct.method,
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-  //
-  // const dataResponse = await response.json();
-  // return dataResponse;
+  const response = await fetch(SummaryApi.allProduct.url, {
+    method: SummaryApi.allProduct.method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-  return { data: getAllLocalProducts() };
+  const dataResponse = await response.json();
+  return dataResponse;
 };
 
 export default fetchAllProducts;

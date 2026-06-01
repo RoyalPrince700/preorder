@@ -5,7 +5,7 @@ import displayNARCurrency from '../helpers/displayCurrency';
 import CategoryWiseProductDisplay from '../components/CategoryWiseProductDisplay';
 import addToCart from '../helpers/addToCart';
 import Context from '../context';
-import { getLocalProductById } from '../data/localProducts';
+import SummaryApi from '../common';
 
 const ProductDetails = () => {
   const [data, setData] = useState({
@@ -30,20 +30,22 @@ const ProductDetails = () => {
 
   const fetchProductDetails = async () => {
     setLoading(true);
-    // Backend version kept here for easy reactivation later.
-    // const response = await fetch(SummaryApi.productDetails.url, {
-    //   method: SummaryApi.productDetails.method,
-    //   headers: { 'content-type': 'application/json' },
-    //   body: JSON.stringify({ productId: params?.id }),
-    // });
-    // const dataResponse = await response.json();
-    // setData(dataResponse?.data);
-    // setActiveImage(dataResponse?.data.productImage[0]);
-
-    const localProduct = getLocalProductById(params?.id);
-    setData(localProduct || {});
-    setActiveImage(localProduct?.productImage?.[0] || '');
-    setLoading(false);
+    try {
+      const response = await fetch(SummaryApi.productDetails.url, {
+        method: SummaryApi.productDetails.method,
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ productId: params?.id }),
+      });
+      const dataResponse = await response.json();
+      const product = dataResponse?.data || {};
+      setData(product);
+      setActiveImage(product?.productImage?.[0] || '');
+    } catch {
+      setData({});
+      setActiveImage('');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -103,7 +105,7 @@ const ProductDetails = () => {
           <div className="flex flex-col lg:w-1/2">
             <div className="border-b border-slate-100 pb-6">
               <span className="inline-flex items-center rounded-none bg-orange-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-orange-600">
-                {data?.brandName || 'PREORDIFY EXCLUSIVE'}
+                {data?.brandName || 'Wifmart EXCLUSIVE'}
               </span>
               <h1 className="mt-4 text-3xl font-black uppercase tracking-tighter text-slate-950 sm:text-4xl lg:text-5xl leading-none">
                 {data?.productName}

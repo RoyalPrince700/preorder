@@ -39,7 +39,16 @@ const userSchema = new mongoose.Schema(
 		resetPasswordExpiresAt: Date,
 		verificationToken: String,
 		verificationTokenExpiresAt: Date,
-	
+    measurements: {
+      jacketSuit: { type: mongoose.Schema.Types.Mixed, default: {} },
+      trouser: { type: mongoose.Schema.Types.Mixed, default: {} },
+      nativeTop: { type: mongoose.Schema.Types.Mixed, default: {} },
+      nativeTrouser: { type: mongoose.Schema.Types.Mixed, default: {} },
+      shirt: { type: mongoose.Schema.Types.Mixed, default: {} },
+      shoes: { type: mongoose.Schema.Types.Mixed, default: {} },
+      updatedAt: { type: Date },
+      updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    },
   },
   {
     timestamps: true,

@@ -76,7 +76,7 @@ const buildProduct = ({
   productStatus,
   description:
     description ||
-    `${productName} is available on Preordify as a curated preorder-ready item with clear pricing, modern styling, and reliable delivery expectations.`,
+    `${productName} is available on Wifmart as a curated preorder-ready item with clear pricing, modern styling, and reliable delivery expectations.`,
 });
 
 export const localProducts = [

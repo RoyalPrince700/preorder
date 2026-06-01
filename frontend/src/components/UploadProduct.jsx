@@ -94,15 +94,27 @@ const UploadProduct = ({
 
   // Function to handle form submission
   const handleSubmit = async(e) => {
-    e.preventDefault()  // Preventing the default form submission
-  
+    e.preventDefault()
+
+    if (!data.productImage?.length) {
+      toast.error('Please upload at least one product image')
+      return
+    }
+
+    const payload = {
+      ...data,
+      price: data.price === '' ? undefined : Number(data.price),
+      sellingPrice: data.sellingPrice === '' ? undefined : Number(data.sellingPrice),
+      item: data.item === '' ? undefined : Number(data.item),
+    }
+
     const response = await fetch(SummaryApi.uploadProduct.url, {
       method : SummaryApi.uploadProduct.method,
       credentials : 'include',
       headers : {
         "content-type" : "application/json",
       },
-      body : JSON.stringify(data)
+      body : JSON.stringify(payload)
     })
       const responseData = await response.json()
       

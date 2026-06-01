@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
 
 const Footer = () => {
@@ -10,7 +11,7 @@ const Footer = () => {
   ];
 
   const companyLinks = [
-    { label: 'About Preordify', href: '/about-us' },
+    { label: 'About Wifmart', href: '/about-us' },
     { label: 'Contact Us', href: '/contact-us' },
     { label: 'FAQs', href: '/faq' },
     { label: 'Orders', href: '/order' },
@@ -27,7 +28,7 @@ const Footer = () => {
       <div className="mx-auto max-w-7xl">
         <div className="grid gap-12 lg:grid-cols-[1.5fr,1fr,1fr,1fr]">
           <div>
-            <span className="text-3xl font-black uppercase tracking-tighter text-white sm:text-4xl">Preordify</span>
+            <span className="text-3xl font-black uppercase tracking-tighter text-white sm:text-4xl">Wifmart</span>
             <p className="mt-6 max-w-sm text-xs font-bold uppercase leading-6 tracking-widest text-slate-500">
               High-energy marketplace for preorder campaigns, limited drops, and exclusive early access.
             </p>
@@ -56,9 +57,9 @@ const Footer = () => {
             <h3 className="text-xs font-black uppercase tracking-[0.3em] text-orange-600">Company</h3>
             <div className="mt-6 space-y-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
               {companyLinks.map((link) => (
-                <a key={link.label} href={link.href} className="block transition-colors hover:text-white hover:translate-x-1 duration-200">
+                <Link key={link.label} to={link.href} className="block transition-colors hover:text-white hover:translate-x-1 duration-200">
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -76,7 +77,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-16 flex flex-col gap-6 border-t-2 border-slate-900 pt-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; 2026 Preordify. All rights reserved.</p>
+          <p>&copy; 2026 Wifmart. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             <span className="text-orange-600">Secure Payments</span>
             <span className="h-3 w-px bg-slate-800"></span>

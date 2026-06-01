@@ -22,7 +22,7 @@ const Support = () => {
     },
     {
       question: 'What should I do if I have an issue with my order?',
-      answer: 'Contact us at 07019277357 or email us at support@preordify.com, and we’ll assist you promptly.',
+      answer: 'Contact us at 07019277357 or email us at support@Wifmart.com, and we’ll assist you promptly.',
     },
   ];
 
@@ -36,7 +36,7 @@ const Support = () => {
         <span className="page-kicker">Support Center</span>
         <h1 className="page-title">Help for orders, delivery, and account questions.</h1>
         <p className="page-subtitle">
-          Preordify support is designed to keep preorder shoppers informed with quick answers, clear next steps, and direct contact options.
+          Wifmart support is designed to keep preorder shoppers informed with quick answers, clear next steps, and direct contact options.
         </p>
       </header>
 
@@ -61,7 +61,7 @@ const Support = () => {
       </div>
 
       <section className="page-dark-card mt-6">
-        <h2 className="text-2xl font-bold">Contact Preordify support</h2>
+        <h2 className="text-2xl font-bold">Contact Wifmart support</h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-300">
           Reach out for help with order issues, preorder timing, payments, or tracking updates.
         </p>
@@ -72,7 +72,7 @@ const Support = () => {
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4">
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-300">Email</p>
-            <a href="mailto:support@preordify.com" className="mt-2 block text-lg font-semibold text-white">support@preordify.com</a>
+            <a href="mailto:support@Wifmart.com" className="mt-2 block text-lg font-semibold text-white">support@Wifmart.com</a>
           </div>
         </div>
       </section>

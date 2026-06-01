@@ -5,7 +5,7 @@ const ContactUs = () => {
     <div className="page-shell">
       <header className="page-header">
         <span className="page-kicker">Support</span>
-        <h1 className="page-title">Contact Preordify</h1>
+        <h1 className="page-title">Contact Wifmart</h1>
         <p className="page-subtitle">We'd love to hear from you! Send us a message and our team will get back to you within 24 hours.</p>
       </header>
 
@@ -60,7 +60,7 @@ const ContactUs = () => {
             <div className="hidden md:block h-8 w-px bg-slate-100"></div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Email Support</p>
-              <p className="text-lg font-black tracking-tight text-slate-950 uppercase">contact@preordify.com</p>
+              <p className="text-lg font-black tracking-tight text-slate-950 uppercase">contact@Wifmart.com</p>
             </div>
           </div>
         </div>

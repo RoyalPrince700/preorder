@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { motion } from "framer-motion";
-import SummaryApi from "../../common"; // Import your API configuration
+import SummaryApi from "../../common";
+import { adminChartCard, adminChartTitle } from "../../common/adminUi";
+
+const tooltipStyle = {
+  backgroundColor: "#FFFFFF",
+  border: "2px solid #0f172a",
+  borderRadius: 0,
+  color: "#0f172a",
+};
 
 const UserGrowthChart = () => {
   const [userGrowthData, setUserGrowthData] = useState([]);
@@ -10,13 +17,13 @@ const UserGrowthChart = () => {
     try {
       const response = await fetch(SummaryApi.userGrowth.url, {
         method: SummaryApi.userGrowth.method,
-        credentials: "include", // Include credentials if required
+        credentials: "include",
       });
 
       const result = await response.json();
 
       if (result.success) {
-        setUserGrowthData(result.data); // Update state with API data
+        setUserGrowthData(result.data);
       } else {
         console.error(result.message);
       }
@@ -26,43 +33,31 @@ const UserGrowthChart = () => {
   };
 
   useEffect(() => {
-    fetchUserGrowth(); // Fetch user growth data on component mount
+    fetchUserGrowth();
   }, []);
 
   return (
-    <motion.div
-      className="bg-white shadow-md rounded-xl p-6 border border-gray-200"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3 }}
-    >
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">User Growth (Last Week)</h2>
+    <div className={adminChartCard}>
+      <h2 className={adminChartTitle}>User Growth (Last Week)</h2>
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={userGrowthData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-            <XAxis dataKey="day" stroke="#6B7280" />
-            <YAxis stroke="#6B7280" />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#FFFFFF",
-                borderColor: "#E5E7EB",
-                color: "#111827"
-              }}
-              itemStyle={{ color: "#374151" }}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+            <XAxis dataKey="day" stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+            <YAxis stroke="#64748b" tick={{ fontSize: 10, fontWeight: 700 }} />
+            <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: "#0f172a" }} />
             <Line
               type="monotone"
               dataKey="users"
-              stroke="#8B5CF6"
+              stroke="#0f172a"
               strokeWidth={2}
-              dot={{ fill: "#8B5CF6", strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 8 }}
+              dot={{ fill: "#ea580c", strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 7 }}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

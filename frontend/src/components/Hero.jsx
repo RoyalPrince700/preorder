@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FaBolt, FaFire, FaStar, FaTruckFast } from 'react-icons/fa6'
-import { getLocalProductById } from '../data/localProducts'
+import fetchHotDealWise from '../helpers/fetchHotDealWise'
+import fetchAllProducts from '../helpers/fetchAllProducts'
 
 const formatPrice = (price) => `NGN ${Number(price || 0).toLocaleString()}`
 
@@ -54,7 +55,7 @@ const DesktopTrustBars = () => (
     <div className='flex items-center justify-between rounded-none bg-green-600 px-4 py-3 text-sm font-black text-white shadow-sm'>
       <span className='inline-flex items-center gap-2'>
         <FaStar className='h-4 w-4' />
-        Why choose Preordify?
+        Why choose Wifmart?
       </span>
       <div className='flex items-center gap-4 text-xs font-bold'>
         <span>Secure privacy</span>
@@ -94,7 +95,7 @@ const MobileTrustFlow = () => (
     <div className='mx-3 mb-3 mt-2 flex items-center justify-between rounded-none bg-green-600 px-3 py-2.5 text-xs font-black text-white'>
       <span className='inline-flex items-center gap-2'>
         <FaStar className='h-3.5 w-3.5' />
-        Why choose Preordify?
+        Why choose Wifmart?
       </span>
       <span>Safe payments</span>
     </div>
@@ -148,11 +149,6 @@ const MobileHero = ({ products }) => (
                 </div>
 
                 <p className='mt-3 truncate text-sm font-black text-slate-950'>{product.productName}</p>
-                <div className='mt-2 flex items-center gap-1 text-xs font-bold text-yellow-500'>
-                  <FaStar className='h-3.5 w-3.5' />
-                  <span>{product.rating}</span>
-                  <span className='text-slate-400'>({product.reviewCount})</span>
-                </div>
                 <p className='mt-2 text-lg font-black text-orange-600'>{formatPrice(product.sellingPrice)}</p>
                 <p className='text-xs font-semibold text-slate-400 line-through'>{formatPrice(product.price)}</p>
               </Link>
@@ -164,7 +160,7 @@ const MobileHero = ({ products }) => (
   </section>
 )
 
-const DesktopHero = ({ featuredDeal, sideDeals }) => {
+const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
   if (!featuredDeal) {
     return null
   }
@@ -189,7 +185,7 @@ const DesktopHero = ({ featuredDeal, sideDeals }) => {
                     Hot deals
                   </span>
                   <span className='rounded-none bg-white/10 px-3 py-1 text-xs font-bold text-yellow-200'>
-                    7 local picks
+                    {dealCount} live picks
                   </span>
                 </div>
 
@@ -202,40 +198,34 @@ const DesktopHero = ({ featuredDeal, sideDeals }) => {
                 <p className='mt-4 text-lg font-bold text-yellow-200'>Grab them before they go.</p>
               </div>
 
-              {featuredDeal && (
-                <Link
-                  to={`/product/${featuredDeal._id}`}
-                  className='mt-8 block rounded-none border border-white/10 bg-white p-4 text-slate-950 transition duration-300 hover:-translate-y-1 hover:shadow-2xl'
-                >
-                  <div className='flex items-center justify-between gap-3'>
-                    <div>
-                      <p className='text-xs font-black uppercase tracking-[0.22em] text-orange-600'>
-                        Mega save {getDiscount(featuredDeal)}%
-                      </p>
-                      <h2 className='mt-2 text-xl font-black'>{featuredDeal.productName}</h2>
-                    </div>
-                    <span className='rounded-none bg-red-100 px-3 py-1 text-xs font-black text-red-600'>
-                      {featuredDeal.soldLabel}
-                    </span>
+              <Link
+                to={`/product/${featuredDeal._id}`}
+                className='mt-8 block rounded-none border border-white/10 bg-white p-4 text-slate-950 transition duration-300 hover:-translate-y-1 hover:shadow-2xl'
+              >
+                <div className='flex items-center justify-between gap-3'>
+                  <div>
+                    <p className='text-xs font-black uppercase tracking-[0.22em] text-orange-600'>
+                      Mega save {getDiscount(featuredDeal)}%
+                    </p>
+                    <h2 className='mt-2 text-xl font-black'>{featuredDeal.productName}</h2>
                   </div>
+                  <span className='rounded-none bg-red-100 px-3 py-1 text-xs font-black text-red-600'>
+                    {featuredDeal.brandName}
+                  </span>
+                </div>
 
-                  <div className='mt-4 flex items-end justify-between gap-4'>
-                    <img
-                      src={featuredDeal.productImage?.[0]}
-                      alt={featuredDeal.productName}
-                      className='h-36 w-40 object-contain drop-shadow-xl sm:h-44'
-                    />
-                    <div className='text-right'>
-                      <p className='text-sm text-slate-400 line-through'>{formatPrice(featuredDeal.price)}</p>
-                      <p className='text-3xl font-black text-orange-600'>{formatPrice(featuredDeal.sellingPrice)}</p>
-                      <p className='mt-2 inline-flex items-center gap-1 text-sm font-bold text-slate-700'>
-                        <FaStar className='h-4 w-4 text-yellow-400' />
-                        {featuredDeal.rating} rating
-                      </p>
-                    </div>
+                <div className='mt-4 flex items-end justify-between gap-4'>
+                  <img
+                    src={featuredDeal.productImage?.[0]}
+                    alt={featuredDeal.productName}
+                    className='h-36 w-40 object-contain drop-shadow-xl sm:h-44'
+                  />
+                  <div className='text-right'>
+                    <p className='text-sm text-slate-400 line-through'>{formatPrice(featuredDeal.price)}</p>
+                    <p className='text-3xl font-black text-orange-600'>{formatPrice(featuredDeal.sellingPrice)}</p>
                   </div>
-                </Link>
-              )}
+                </div>
+              </Link>
             </div>
 
             <div className='grid content-start gap-4'>
@@ -279,18 +269,10 @@ const DesktopHero = ({ featuredDeal, sideDeals }) => {
 
                     <div className='mt-3'>
                       <p className='truncate text-sm font-black text-slate-950'>{product.productName}</p>
-                      <div className='mt-2 flex items-center gap-1 text-xs font-bold text-yellow-500'>
-                        <FaStar className='h-3.5 w-3.5' />
-                        <span>{product.rating}</span>
-                        <span className='text-slate-400'>({product.reviewCount})</span>
-                      </div>
                       <div className='mt-2 flex flex-wrap items-end gap-2'>
                         <p className='text-lg font-black text-orange-600'>{formatPrice(product.sellingPrice)}</p>
                         <p className='text-xs font-semibold text-slate-400 line-through'>{formatPrice(product.price)}</p>
                       </div>
-                      <p className='mt-2 rounded-none bg-orange-50 px-2 py-1 text-center text-[11px] font-bold text-orange-600'>
-                        {product.soldLabel}
-                      </p>
                     </div>
                   </Link>
                 ))}
@@ -298,10 +280,7 @@ const DesktopHero = ({ featuredDeal, sideDeals }) => {
 
               <div className='flex flex-col gap-3 rounded-none bg-white/85 p-4 shadow-sm backdrop-blur sm:flex-row sm:items-center sm:justify-between'>
                 <p className='text-lg font-black text-slate-950'>More hot deals waiting.</p>
-                <Link
-                  to='/product-category?all=true'
-                  className='brand-btn-primary !rounded-none whitespace-nowrap'
-                >
+                <Link to='/product-category?all=true' className='brand-btn-primary !rounded-none whitespace-nowrap'>
                   See all deals
                 </Link>
               </div>
@@ -314,26 +293,42 @@ const DesktopHero = ({ featuredDeal, sideDeals }) => {
 }
 
 const Hero = () => {
-  const hotDeals = useMemo(
-    () => [
-      getLocalProductById('non-stick-cooking-set'),
-      getLocalProductById('gray-knit-sneakers'),
-      getLocalProductById('travel-backpack'),
-      getLocalProductById('coffee-maker-glass-carafe'),
-      getLocalProductById('plain-cotton-tshirt-teal'),
-      getLocalProductById('composite-basketball'),
-      getLocalProductById('women-popover-hoodie-black'),
-    ].filter(Boolean),
-    []
-  )
+  const [hotDeals, setHotDeals] = useState([])
+
+  useEffect(() => {
+    const loadDeals = async () => {
+      try {
+        let products = []
+        const hotDealRes = await fetchHotDealWise('Hot_Deal')
+        products = hotDealRes?.data || []
+
+        if (products.length === 0) {
+          const allRes = await fetchAllProducts()
+          products = (allRes?.data || []).slice(0, 7)
+        } else {
+          products = products.slice(0, 7)
+        }
+
+        setHotDeals(products)
+      } catch {
+        setHotDeals([])
+      }
+    }
+
+    loadDeals()
+  }, [])
 
   const featuredDeal = hotDeals[0]
   const sideDeals = hotDeals.slice(1)
 
+  if (hotDeals.length === 0) {
+    return null
+  }
+
   return (
     <>
-      <MobileHero products={sideDeals} />
-      <DesktopHero featuredDeal={featuredDeal} sideDeals={sideDeals} />
+      <MobileHero products={sideDeals.length > 0 ? sideDeals : hotDeals} />
+      <DesktopHero featuredDeal={featuredDeal} sideDeals={sideDeals} dealCount={hotDeals.length} />
     </>
   )
 }

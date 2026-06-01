@@ -1,20 +1,17 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
 
-const StatCard = ({ name, icon: Icon, value, color }) => {
-	return (
-		<motion.div
-			className='bg-white overflow-hidden shadow-md rounded-xl border border-gray-200'
-			whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1)" }}
-		>
-			<div className='px-4 py-5 sm:p-6'>
-				<span className='flex items-center text-sm font-medium text-gray-600'>
-					<Icon size={20} className='mr-2' style={{ color }} />
-					{name}
-				</span>
-				<p className='mt-1 text-3xl font-semibold text-gray-900'>{value}</p>
-			</div>
-		</motion.div>
-	);
+const StatCard = ({ name, icon: Icon, value }) => {
+  return (
+    <div className="border-2 border-slate-100 bg-white p-5 transition-colors hover:border-orange-500">
+      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
+        <Icon size={16} className="text-orange-600" />
+        {name}
+      </div>
+      <p className="mt-3 text-2xl font-black tracking-tighter text-slate-950 sm:text-3xl">
+        {value}
+      </p>
+    </div>
+  );
 };
+
 export default StatCard;

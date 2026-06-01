@@ -1,6 +1,29 @@
-# Preordify Frontend
+# Wifmart Frontend
 
-Preordify is a modern preorder commerce storefront built for cleaner launches, faster product discovery, and a more conversion-focused shopping experience.
+Wifmart is my personal ecommerce website — a modern preorder storefront where I sell fashion, gadgets, and everyday electronics. The site is built for cleaner launches, faster product discovery, and a smooth shopping experience from browse to checkout.
+
+## About Wifmart
+
+Wifmart brings together style and tech in one place. Whether you are shopping for a sharp outfit or a useful gadget, the storefront is designed to make browsing, ordering, and checkout straightforward.
+
+### What I Sell
+
+**Fashion & Wears**
+- Suits
+- Shirts
+- Ties
+- Kaftans
+- Shoes
+
+**Gadgets**
+- Smart watches
+- Power banks
+- Tablets
+
+**Electronics & Home**
+- Blenders
+- Kitchen appliances
+- Other everyday electronics
 
 ## What It Includes
 - A marketplace-inspired React storefront with responsive navigation, hero, and footer
@@ -33,9 +56,10 @@ VITE_APP_BACKEND_URI=https://your-backend-url
 The backend lives in `backend/` and should be running for authenticated flows, cart actions, checkout, and order data.
 
 ## Branding
-- Product name: `Preordify`
-- Storefront direction: modern preorder marketplace
-- Text logo: `Preordify`
+- Product name: `Wifmart`
+- Storefront direction: personal preorder marketplace for fashion, gadgets, and electronics
+- Text logo: `Wifmart`
+- Social: [@Wifmartofficial on X](https://x.com/Wifmartofficial) · [@wifmartofficial on Instagram](https://www.instagram.com/wifmartofficial)
 
 ## License
-Proprietary. All rights reserved by Preordify.
+Proprietary. All rights reserved by Wifmart.

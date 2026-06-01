@@ -6,12 +6,21 @@ const getProductDetails = async(req,res) =>{
 
         const product = await productModel.findById(productId)
 
-res.json({
-    data : product,
-    message : "OK",
-    success  : true,
-    error : false
-})
+        if (!product) {
+            return res.status(404).json({
+                data: null,
+                message: "Product not found",
+                success: false,
+                error: true
+            })
+        }
+
+        res.json({
+            data : product,
+            message : "OK",
+            success  : true,
+            error : false
+        })
 
     }catch(err){
         res.json({

@@ -44,12 +44,14 @@ const uploadImage = async (req, res) => {
         }
 
         // Upload to Cloudinary from buffer
+        const uploadOptions = { folder: 'products' };
+        if (process.env.CLOUDINARY_UPLOAD_PRESET) {
+            uploadOptions.upload_preset = process.env.CLOUDINARY_UPLOAD_PRESET;
+        }
+
         const result = await new Promise((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
-                {
-                    folder: 'products', // Optional: organize images in a folder
-                    upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
-                },
+                uploadOptions,
                 (error, result) => {
                     if (error) reject(error);
                     else resolve(result);
