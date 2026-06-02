@@ -37,7 +37,7 @@ const quickLinks = [
   { label: 'My Orders', to: '/order', icon: FiShoppingBag },
   { label: 'Notifications', to: '/notifications', icon: FiBell },
   { label: 'Cart', to: '/cart', icon: FiShoppingCart },
-  { label: 'Support', to: '/support', icon: FiHelpCircle },
+  { label: 'FAQs', to: '/faq', icon: FiHelpCircle },
   { label: 'Privacy Policy', to: '/privacy', icon: FiShield },
 ];
 

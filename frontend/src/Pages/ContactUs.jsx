@@ -55,7 +55,10 @@ const ContactUs = () => {
           <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-8 border-t-2 border-slate-50 pt-10 text-center">
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Direct Call</p>
-              <p className="text-lg font-black tracking-tight text-slate-950">07019277357</p>
+              <p className="text-lg font-black tracking-tight text-slate-950">08160881705</p>
+              <p className="mt-1 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                Official WhatsApp checkout line (account details are only shared from this number)
+              </p>
             </div>
             <div className="hidden md:block h-8 w-px bg-slate-100"></div>
             <div>

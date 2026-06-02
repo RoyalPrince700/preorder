@@ -80,7 +80,7 @@ const Privacy = () => {
             </p>
             <div className="mt-6 space-y-3 text-sm">
               <div><span className="page-contact-label">Email:</span> privacy@Wifmart.com</div>
-              <div><span className="page-contact-label">Phone:</span> 07019277357</div>
+              <div><span className="page-contact-label">Phone:</span> 08160881705</div>
               <div><span className="page-contact-label">Address:</span> Lagos, Nigeria</div>
             </div>
           </section>

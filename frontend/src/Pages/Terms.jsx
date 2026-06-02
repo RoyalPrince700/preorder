@@ -49,20 +49,26 @@ const Terms = () => {
               <div className="page-list-item"><span className="page-list-bullet">2</span><span>Payment must be completed before order processing begins.</span></div>
               <div className="page-list-item"><span className="page-list-bullet">3</span><span>We may refuse or cancel an order where necessary.</span></div>
               <div className="page-list-item"><span className="page-list-bullet">4</span><span>Payments are processed through authorized payment providers.</span></div>
+              <div className="page-list-item">
+                <span className="page-list-bullet">5</span>
+                <span>
+                  For WhatsApp checkout and bank transfers, Wifmart will only share account details via the official WhatsApp business line
+                  {' '}08160881705 after you start checkout from the website. Do not send money to any account details shared from other numbers.
+                </span>
+              </div>
             </div>
           </section>
         </section>
 
         <section className="page-card">
-          <h2 className="page-card-title">Delivery, refunds, and conduct</h2>
+          <h2 className="page-card-title">Shipping, delivery, and conduct</h2>
           <div className="page-grid">
             <div className="page-soft-panel">
               <p className="font-semibold text-slate-900">Shipping and delivery</p>
-              <p className="mt-2 text-sm text-slate-600">Delivery timelines are estimates and may vary due to carrier performance, demand cycles, or location.</p>
-            </div>
-            <div className="page-soft-panel">
-              <p className="font-semibold text-slate-900">Returns and refunds</p>
-              <p className="mt-2 text-sm text-slate-600">Returns are handled according to our return policy, including condition checks and processing timelines.</p>
+              <p className="mt-2 text-sm text-slate-600">
+                Shipping and delivery details—including delivery timelines, fees, and method—are agreed directly between Wifmart and each customer
+                before payment, usually during WhatsApp checkout. Any delivery commitment is only valid once both parties have confirmed it.
+              </p>
             </div>
             <div className="page-soft-panel md:col-span-2">
               <p className="font-semibold text-slate-900">User conduct</p>
@@ -77,8 +83,7 @@ const Terms = () => {
             Questions about these terms can be directed to the Wifmart legal and compliance team.
           </p>
           <div className="mt-6 space-y-3 text-sm">
-            <div><span className="page-contact-label">Email:</span> legal@Wifmart.com</div>
-            <div><span className="page-contact-label">Phone:</span> 07019277357</div>
+            <div><span className="page-contact-label">Email:</span> contact@Wifmart.com</div>
             <div><span className="page-contact-label">Address:</span> Lagos, Nigeria</div>
           </div>
         </section>
@@ -88,7 +93,7 @@ const Terms = () => {
           <p className="page-copy max-w-3xl mx-auto">
             These terms may be revised from time to time. Updated versions become effective when published on this page.
           </p>
-          <p className="mt-4 text-sm text-slate-500">Last updated: January 14, 2026</p>
+          <p className="mt-4 text-sm text-slate-500">Last updated: June 2, 2026</p>
         </section>
       </div>
     </div>

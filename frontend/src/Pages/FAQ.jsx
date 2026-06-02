@@ -9,19 +9,19 @@ const FAQ = () => {
       faqs: [
         {
           question: "How do I place an order?",
-          answer: "Browse our fabric collection, add items to your cart, and proceed to checkout. You'll receive a confirmation call to finalize your order details and payment."
+          answer: "Browse our collection, add items to your cart, and proceed to checkout. Checkout is via WhatsApp only — you will be redirected to message us so we can confirm your order details and next steps."
         },
         {
           question: "What payment methods do you accept?",
-          answer: "We accept all major credit/debit cards, bank transfers, and digital payment methods including PayPal, Flutterwave, and direct bank transfers."
+          answer: "Payment is agreed with the Wifmart team, mostly by bank transfer. After checkout on WhatsApp, send payment to 08160881705. Online payment on the website is disabled for now."
         },
         {
           question: "Is it safe to make payments on your website?",
-          answer: "Yes, we use industry-standard SSL encryption and work with trusted payment processors to ensure your payment information is secure."
+          answer: "Website payment is currently disabled. You pay by the method agreed with our team (usually transfer) to 08160881705 after we confirm your order on WhatsApp."
         },
         {
           question: "Can I modify my order after placing it?",
-          answer: "Orders can be modified within 1 hour of placement. Please contact us immediately at 07019277357 to make changes."
+          answer: "Yes, you can modify your order if the product has not been produced yet. Contact us on WhatsApp at 08160881705 as soon as possible."
         }
       ]
     },
@@ -30,61 +30,19 @@ const FAQ = () => {
       faqs: [
         {
           question: "How long does delivery take?",
-          answer: "Standard delivery takes 3-5 business days. Express delivery (1-2 days) is available for ₦5,000 additional fee. Same-day delivery is available in Lagos for ₦10,000."
+          answer: "Delivery time varies depending on the product. Readymade items are usually faster; custom or made-to-order pieces take longer while we produce them. We will give you an expected timeline when we confirm your order."
         },
         {
           question: "Do you offer free shipping?",
-          answer: "Yes! Free standard shipping on all orders over ₦50,000. Orders under this amount have a ₦2,500 shipping fee."
+          answer: "Free shipping is negotiable depending on the nature of the product, your location, and the order. We will discuss shipping fees with you before you pay."
         },
         {
           question: "Can I track my order?",
-          answer: "Yes, you'll receive tracking information via SMS and email once your order ships. You can also track your order through your account dashboard."
+          answer: "Yes. Track your order on the Orders page in your account. You will also receive email updates whenever your order status changes."
         },
         {
           question: "What if my package is damaged during delivery?",
-          answer: "Please take photos of the damaged packaging and contact us immediately. We'll arrange for a replacement or full refund at no cost to you."
-        }
-      ]
-    },
-    {
-      title: "Returns & Exchanges",
-      faqs: [
-        {
-          question: "What is your return policy?",
-          answer: "We accept returns within 14 days of delivery. Items must be unused, in original packaging, and with tags attached. Customer pays return shipping unless the item is defective."
-        },
-        {
-          question: "How do I return an item?",
-          answer: "Contact our customer service team, receive a return authorization, package the item securely, and ship it back using our preferred courier. We'll process your refund within 5-7 business days."
-        },
-        {
-          question: "Can I exchange an item for a different one?",
-          answer: "Yes, exchanges are available within 14 days. There's a ₦2,000 processing fee, but shipping is free. Exchanges are subject to stock availability."
-        },
-        {
-          question: "How long do refunds take to process?",
-          answer: "Refunds are processed within 5-7 business days after we receive your returned item. The time for the refund to appear in your account depends on your payment method."
-        }
-      ]
-    },
-    {
-      title: "Products & Quality",
-      faqs: [
-        {
-          question: "Are your fabrics authentic and high quality?",
-          answer: "Yes, we source our fabrics directly from reputable manufacturers and only sell genuine, high-quality materials. Each fabric undergoes quality control checks before shipping."
-        },
-        {
-          question: "Do you provide fabric samples?",
-          answer: "We offer fabric swatches for most items. You can request samples during checkout or by contacting our customer service team."
-        },
-        {
-          question: "What care instructions do you provide?",
-          answer: "Each fabric comes with detailed care instructions. Our team can also provide guidance on washing, ironing, and maintaining your fabrics."
-        },
-        {
-          question: "Can you help me choose the right fabric for my project?",
-          answer: "Absolutely! Our experienced team can provide recommendations based on your project needs, budget, and preferences. Contact us for personalized advice."
+          answer: "Take photos of the damaged product and packaging, then contact us immediately on WhatsApp at 08160881705 or by email at contact@wifmart.com."
         }
       ]
     }
@@ -100,7 +58,7 @@ const FAQ = () => {
         <span className="page-kicker">Support Center</span>
         <h1 className="page-title">Frequently Asked Questions</h1>
         <p className="page-subtitle">
-          Quick answers about ordering, payments, shipping, returns, and product quality on Wifmart.
+          Quick answers about ordering, payments, shipping, and order issues on Wifmart.
         </p>
       </header>
 
@@ -141,7 +99,7 @@ const FAQ = () => {
       <section className="page-dark-card mt-8">
         <h2 className="text-2xl font-bold mb-4 text-center">Still Have Questions?</h2>
         <p className="mb-6 text-center opacity-80">
-          Can't find what you're looking for? Our customer service team is here to help.
+          Can't find what you're looking for? Reach us by phone, email, or WhatsApp.
         </p>
         <div className="grid md:grid-cols-3 gap-6 text-center">
           <div>
@@ -149,7 +107,7 @@ const FAQ = () => {
               <span className="font-bold text-xl">📞</span>
             </div>
             <h3 className="font-semibold mb-2">Call Us</h3>
-            <p className="opacity-80">07019277357</p>
+            <p className="opacity-80">08160881705</p>
             <p className="text-sm opacity-60">Mon-Fri 9AM-6PM</p>
           </div>
           <div>
@@ -157,16 +115,16 @@ const FAQ = () => {
               <span className="font-bold text-xl">✉️</span>
             </div>
             <h3 className="font-semibold mb-2">Email Us</h3>
-            <p className="opacity-80">support@Wifmart.com</p>
-            <p className="text-sm opacity-60">24/7 response</p>
+            <p className="opacity-80">contact@wifmart.com</p>
+            <p className="text-sm opacity-60">We reply as soon as we can</p>
           </div>
           <div>
             <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500 text-slate-950">
               <span className="font-bold text-xl">💬</span>
             </div>
-            <h3 className="font-semibold mb-2">Live Chat</h3>
-            <p className="opacity-80">Available on website</p>
-            <p className="text-sm opacity-60">Mon-Sat 9AM-8PM</p>
+            <h3 className="font-semibold mb-2">WhatsApp</h3>
+            <p className="opacity-80">08160881705</p>
+            <p className="text-sm opacity-60">Orders & checkout</p>
           </div>
         </div>
       </section>

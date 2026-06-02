@@ -57,8 +57,9 @@ The backend lives in `backend/` and should be running for authenticated flows, c
 
 ## Branding
 - Product name: `Wifmart`
-- Storefront direction: personal preorder marketplace for fashion, gadgets, and electronics
+- Storefront direction: personal preorder store for fashion, gadgets, and electronics
 - Text logo: `Wifmart`
+- Tagline: `Be Confident...`
 - Social: [@Wifmartofficial on X](https://x.com/Wifmartofficial) · [@wifmartofficial on Instagram](https://www.instagram.com/wifmartofficial)
 
 ## License

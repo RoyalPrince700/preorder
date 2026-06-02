@@ -5,9 +5,7 @@ import { FaTwitter, FaInstagram } from 'react-icons/fa';
 const Footer = () => {
   const shopLinks = [
     { label: 'All Products', href: '/product-category' },
-    { label: 'Support Center', href: '/support' },
     { label: 'Shipping & Delivery', href: '/shipping' },
-    { label: 'Returns & Refunds', href: '/returns' },
   ];
 
   const companyLinks = [
@@ -20,7 +18,7 @@ const Footer = () => {
   const policyLinks = [
     { label: 'Privacy Policy', href: '/privacy' },
     { label: 'Terms & Conditions', href: '/terms' },
-    { label: 'Purchase Protection', href: '/purchase-protection' },
+    // { label: 'Purchase Protection', href: '/purchase-protection' },
   ];
 
   return (
@@ -30,7 +28,7 @@ const Footer = () => {
           <div>
             <span className="text-3xl font-black uppercase tracking-tighter text-white sm:text-4xl">Wifmart</span>
             <p className="mt-6 max-w-sm text-xs font-bold uppercase leading-6 tracking-widest text-slate-500">
-              High-energy marketplace for preorder campaigns, limited drops, and exclusive early access.
+              BE CONFIDENT. PERSONAL PREORDER STORE FOR FASHION, GADGETS, AND EVERYDAY ELECTRONICS.
             </p>
             <div className="mt-8 flex items-center gap-4">
               <a className="flex h-10 w-10 items-center justify-center rounded-none border-2 border-slate-800 text-slate-300 transition hover:border-orange-500 hover:text-white" href="https://x.com/Wifmartofficial?t=lrCWxgox2bR5yiHPktXWUw&s=09" target="_blank" rel="noopener noreferrer">

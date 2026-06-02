@@ -25,11 +25,9 @@ import LADashboard from "../Pages/LaPanel";
 import ManageOrders from "../Pages/ManageAssignedLAOrder";
 import HRAllOrders from "../Pages/HRAllOrders";
 import LAAllOrders from "../Pages/LAAllOrders";
-import Support from "../Pages/Support";
 import AboutUs from "../Pages/AboutUs";
 import ContactUs from "../Pages/ContactUs";
 import Shipping from "../Pages/Shipping";
-import Returns from "../Pages/Returns";
 import FAQ from "../Pages/FAQ";
 import Privacy from "../Pages/Privacy";
 import Terms from "../Pages/Terms";
@@ -74,9 +72,6 @@ const router = createBrowserRouter([
             }, {
                 path: "auth/callback",
                 element: <AuthCallback />,
-            },             {
-                path: "support",
-                element: <Support />,
             },{
                 path: "contact-us",
                 element: <ContactUs />,
@@ -86,9 +81,6 @@ const router = createBrowserRouter([
             },{
                 path: "shipping",
                 element: <Shipping />,
-            },{
-                path: "returns",
-                element: <Returns />,
             },{
                 path: "faq",
                 element: <FAQ />,

@@ -15,7 +15,6 @@ import { IoMdArrowDropdown } from "react-icons/io";
 const navLinks = [
   { label: "Home", to: "/" },
   { label: "Shop", to: "/product-category" },
-  { label: "Support", to: "/support" },
 ];
 
 const accountNavLinks = [
@@ -189,9 +188,9 @@ const Header = () => {
           {!hideSearchBar && (
             <div 
               onClick={() => navigate("/search")}
-              className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-none text-slate-700 transition hover:text-orange-600 lg:hidden'
+            className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-none text-slate-900 transition hover:text-orange-600 lg:hidden'
             >
-              <GrSearch className='h-5 w-5' />
+              <GrSearch className='h-6 w-6' />
             </div>
           )}
 
@@ -200,9 +199,13 @@ const Header = () => {
               <>
                 <div className="block cursor-pointer" aria-label="Account menu">
                   {user.avatarUrl ? (
-                    <img src={user.avatarUrl} alt={user.fullName} className='h-9 w-9 rounded-none border-2 border-slate-200 object-cover transition group-hover:border-orange-500' />
+                    <img
+                      src={user.avatarUrl}
+                      alt={user.fullName}
+                      className='h-9 w-9 rounded-full border-2 border-slate-200 object-cover transition group-hover:border-orange-500'
+                    />
                   ) : (
-                    <div className='flex h-9 w-9 items-center justify-center rounded-none border-2 border-slate-200 text-slate-700 transition group-hover:border-orange-500 group-hover:text-slate-950'>
+                    <div className='flex h-9 w-9 items-center justify-center rounded-full border-2 border-slate-200 text-slate-700 transition group-hover:border-orange-500 group-hover:text-slate-950'>
                       <FaRegCircleUser className='h-5 w-5' />
                     </div>
                   )}
@@ -220,7 +223,10 @@ const Header = () => {
                 </div>
               </>
             ) : (
-              <Link to='/login' className='flex h-9 w-9 items-center justify-center rounded-none border-2 border-slate-200 text-slate-700 transition hover:border-orange-500 hover:text-slate-950'>
+              <Link
+                to='/login'
+                className='flex h-9 w-9 items-center justify-center rounded-full border-2 border-slate-200 text-slate-700 transition hover:border-orange-500 hover:text-slate-950'
+              >
                 <FaRegCircleUser className='h-5 w-5' />
               </Link>
             )}
@@ -244,18 +250,25 @@ const Header = () => {
 
           <Link
             to={user ? "/profile" : "/login"}
-            className='flex items-center justify-center text-slate-700 transition hover:text-slate-950 sm:hidden'
+            className='flex h-9 w-9 items-center justify-center rounded-full text-slate-900 transition hover:text-orange-600 sm:hidden'
             aria-label={user ? "My profile" : "Log in"}
           >
             {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user.fullName || "Profile"} className='h-5 w-5 rounded-none object-cover border border-slate-200' />
+              <img
+                src={user.avatarUrl}
+                alt={user.fullName || "Profile"}
+                className='h-6 w-6 rounded-full object-cover border border-slate-200'
+              />
             ) : (
-              <FaRegCircleUser className='h-5 w-5' />
+              <FaRegCircleUser className='h-6 w-6' />
             )}
           </Link>
 
-          <Link to='/cart' className='relative flex items-center justify-center text-slate-700 transition hover:text-slate-950 sm:hidden'>
-            <PiShoppingCartSimpleBold className='h-5 w-5' />
+          <Link
+            to='/cart'
+            className='relative flex h-9 w-9 items-center justify-center rounded-none text-slate-900 transition hover:text-orange-600 sm:hidden'
+          >
+            <PiShoppingCartSimpleBold className='h-6 w-6' />
             <p className='absolute -right-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-none bg-orange-600 px-1 text-[9px] font-black text-white'>
               {getCartCount()}
             </p>
@@ -265,11 +278,11 @@ const Header = () => {
           <button
             type="button"
             onClick={() => setVisible(true)}
-            className="flex h-8 w-8 items-center justify-center xl:hidden"
+            className="flex h-9 w-9 items-center justify-center text-slate-900 xl:hidden"
             aria-label="Open menu"
             aria-expanded={visible}
           >
-            <GiHamburgerMenu className="h-6 w-6 cursor-pointer text-slate-900" />
+            <GiHamburgerMenu className="h-6 w-6 cursor-pointer" />
           </button>
         </div>
       </div>
@@ -374,9 +387,13 @@ const Header = () => {
                     className="mt-4 flex items-center gap-4 rounded-none border-2 border-slate-100 bg-slate-50 p-4 transition hover:border-orange-500"
                   >
                     {user.avatarUrl ? (
-                      <img src={user.avatarUrl} alt={user.fullName} className="h-12 w-12 shrink-0 rounded-none border-2 border-white object-cover shadow-sm" />
+                      <img
+                        src={user.avatarUrl}
+                        alt={user.fullName}
+                        className="h-12 w-12 shrink-0 rounded-full border-2 border-white object-cover shadow-sm"
+                      />
                     ) : (
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-none border-2 border-white bg-white text-slate-700 shadow-sm">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-white bg-white text-slate-700 shadow-sm">
                         <FaRegCircleUser className="h-6 w-6" />
                       </div>
                     )}

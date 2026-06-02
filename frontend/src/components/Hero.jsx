@@ -13,8 +13,8 @@ const HeroBenefits = () => (
   <div className='relative border-b border-orange-100/80 bg-orange-50/80 px-3 py-3 sm:px-5'>
     <div className='flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs font-black text-slate-900 sm:text-sm'>
       {[
-        { icon: FaTruckFast, label: 'Free shipping' },
-        { icon: FaBolt, label: 'Free returns' },
+        { icon: FaTruckFast, label: 'Agreed delivery' },
+        { icon: FaBolt, label: 'WhatsApp checkout' },
         { icon: FaStar, label: 'Best prices' },
         { icon: FaFire, label: 'Secure checkout' },
       ].map((benefit, index) => (
@@ -34,8 +34,8 @@ const DesktopUtilityBar = () => (
   <div className='hidden bg-slate-950 px-5 py-3 text-white lg:block'>
     <div className='grid grid-cols-3 divide-x divide-white/15 text-sm font-bold'>
       {[
-        { icon: FaTruckFast, title: 'Free shipping on all orders', text: 'Limited-time offer' },
-        { icon: FaBolt, title: 'Return within 90 days', text: 'From purchase date' },
+        { icon: FaTruckFast, title: 'Delivery agreed with you', text: 'Before you pay' },
+        { icon: FaBolt, title: 'WhatsApp-only account details', text: 'Sent from 08160881705' },
         { icon: FaFire, title: 'Hot deals every day', text: 'Fresh preorder savings' },
       ].map((item) => (
         <div key={item.title} className='flex items-center justify-center gap-3 px-4'>
@@ -68,7 +68,7 @@ const DesktopTrustBars = () => (
 
     <div className='mt-2 flex items-center justify-between rounded-none border border-green-200 bg-white/90 px-4 py-2 text-xs font-bold text-green-700'>
       <span>Security reminder: Shop safely and confirm every preorder before payment.</span>
-      <Link to='/support' className='text-green-800'>
+      <Link to='/faq' className='text-green-800'>
         View
       </Link>
     </div>
@@ -79,8 +79,8 @@ const MobileTrustFlow = () => (
   <div className='relative mb-1 w-full max-w-full overflow-hidden rounded-none border border-orange-100 bg-orange-50/90 shadow-sm'>
     <div className='grid grid-cols-2 divide-x divide-orange-200 text-xs font-bold text-slate-900'>
       {[
-        { icon: FaTruckFast, title: 'Free shipping', text: 'Limited-time offer' },
-        { icon: FaBolt, title: 'Free returns', text: 'Easy return' },
+        { icon: FaTruckFast, title: 'Agreed delivery', text: 'Based on discussion' },
+        { icon: FaBolt, title: 'WhatsApp checkout', text: 'Official line 08160881705' },
       ].map((item) => (
         <div key={item.title} className='flex items-center gap-2 px-3 py-3'>
           <item.icon className='h-4 w-4 shrink-0 text-orange-500' />
@@ -292,12 +292,84 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
   )
 }
 
+const HeroSkeleton = () => (
+  <>
+    {/* Mobile skeleton */}
+    <section className='w-full px-3 pt-[54px] sm:pt-24 lg:hidden'>
+      <MobileTrustFlow />
+      <div className='overflow-hidden rounded-none bg-gradient-to-br from-orange-200 via-fuchsia-200 to-violet-200 p-1 shadow-[0_18px_45px_rgba(168,85,247,0.08)] animate-pulse'>
+        <div className='relative overflow-hidden rounded-none bg-[#fff7ed]'>
+          <div className='relative px-3 py-5'>
+            <div className='flex items-center justify-between gap-3'>
+              <div className='h-6 w-24 rounded-none bg-slate-200' />
+              <div className='h-4 w-16 rounded-none bg-slate-200' />
+            </div>
+
+            <div className='mt-5 h-8 w-40 rounded-none bg-slate-200' />
+            <div className='mt-2 h-4 w-48 rounded-none bg-slate-100' />
+
+            <div className='-mx-3 mt-5 flex gap-3 overflow-hidden px-3 pb-2'>
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className='relative min-w-[168px] overflow-hidden rounded-none bg-white p-3 shadow-sm ring-1 ring-orange-100'
+                >
+                  <div className='h-32 rounded-none bg-slate-100' />
+                  <div className='mt-3 h-4 w-full rounded-none bg-slate-100' />
+                  <div className='mt-2 h-4 w-20 rounded-none bg-slate-100' />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Desktop skeleton */}
+    <section className='hidden w-full px-4 pt-20 sm:px-6 lg:block lg:px-8'>
+      <div className='relative mx-auto max-w-7xl overflow-hidden rounded-none bg-gradient-to-br from-orange-200 via-fuchsia-200 to-violet-200 p-1 shadow-[0_24px_70px_rgba(148,163,184,0.4)]'>
+        <div className='relative overflow-hidden rounded-none bg-[#fff7ed]'>
+          <div className='animate-pulse'>
+            <div className='h-10 w-full bg-slate-100' />
+            <div className='mt-4 grid gap-5 p-4 sm:p-6 lg:grid-cols-[0.95fr,1.35fr] lg:p-8'>
+              <div className='flex min-h-[440px] flex-col justify-between rounded-none bg-slate-950/90 p-5 sm:p-7'>
+                <div className='space-y-4'>
+                  <div className='h-6 w-32 rounded-none bg-slate-700' />
+                  <div className='h-12 w-64 rounded-none bg-slate-700' />
+                  <div className='h-4 w-40 rounded-none bg-slate-600' />
+                </div>
+                <div className='mt-8 h-40 w-full rounded-none bg-slate-800' />
+              </div>
+
+              <div className='space-y-4'>
+                <div className='flex flex-wrap gap-3'>
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className='h-10 w-28 rounded-none bg-slate-100' />
+                  ))}
+                </div>
+                <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
+                  {Array.from({ length: 3 }).map((_, index) => (
+                    <div key={index} className='h-40 rounded-none bg-slate-100' />
+                  ))}
+                </div>
+                <div className='h-14 w-full rounded-none bg-slate-100' />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </>
+)
+
 const Hero = () => {
   const [hotDeals, setHotDeals] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadDeals = async () => {
       try {
+        setLoading(true)
         let products = []
         const hotDealRes = await fetchHotDealWise('Hot_Deal')
         products = hotDealRes?.data || []
@@ -312,6 +384,8 @@ const Hero = () => {
         setHotDeals(products)
       } catch {
         setHotDeals([])
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -321,7 +395,11 @@ const Hero = () => {
   const featuredDeal = hotDeals[0]
   const sideDeals = hotDeals.slice(1)
 
-  if (hotDeals.length === 0) {
+  if (loading) {
+    return <HeroSkeleton />
+  }
+
+  if (!loading && hotDeals.length === 0) {
     return null
   }
 

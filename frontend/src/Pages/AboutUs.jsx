@@ -7,7 +7,7 @@ const AboutUs = () => {
         <span className="page-kicker">Our Story</span>
         <h1 className="page-title">About Wifmart</h1>
         <p className="page-subtitle">
-          Pioneering a high-energy, marketplace-first approach to preorder campaigns and exclusive limited drops.
+          Be Confident. Wifmart is my personal preorder store for fashion, gadgets, and everyday electronics — built for cleaner launches, faster discovery, and a smooth journey from browse to checkout.
         </p>
       </header>
 
@@ -16,24 +16,21 @@ const AboutUs = () => {
           <section className="page-card">
             <h2 className="page-card-title">Our Mission</h2>
             <p className="page-copy">
-              At Wifmart, our mission is to redefine how exclusive products are launched and discovered. 
-              We provide a high-octane, high-energy shopping experience from first drop to final checkout. 
-              We are committed to empowering creators and brands with a platform built for speed, transparency, 
-              and exclusive access for their most dedicated supporters.
+              At Wifmart, the mission is simple: help you shop confidently for the things you actually use and wear. 
+              From sharp outfits to useful gadgets and home electronics, the store is designed to make browsing, ordering, 
+              and checkout feel clear, modern, and stress-free.
             </p>
           </section>
 
           <section className="page-card-muted">
-            <h2 className="page-card-title">The Marketplace Vibe</h2>
+            <h2 className="page-card-title">The Wifmart Experience</h2>
             <p className="page-copy">
-              Wifmart isn't just an e-commerce store; it's a launchpad for what's next. We curate 
-              the most anticipated preorder drops across multiple categories, ensuring you're 
-              always at the front of the line for the hottest releases.
+              Wifmart brings style and tech together in one personal storefront. You can find fashion, gadgets, and home 
+              electronics in the same place, with a layout that makes it easy to move from category to category.
             </p>
             <p className="mt-4 page-copy">
-              Our platform is designed for the high-energy collector, the trend-setter, and the 
-              early adopter who values being first. Every drop on Wifmart is a limited-time 
-              opportunity to secure a piece of the future.
+              The preorder flow is focused on clarity: see what you’re buying, understand how it will be delivered, and complete 
+              your order through a guided checkout that connects you directly with Wifmart on WhatsApp when it’s time to pay.
             </p>
           </section>
         </div>
@@ -44,23 +41,23 @@ const AboutUs = () => {
             <ul className="page-list">
               <li className="page-list-item">
                 <span className="page-list-bullet">1</span>
-                <span>Exclusive access to limited-run preorder campaigns</span>
+                <span>Fashion & wears — suits, shirts, ties, kaftans, shoes, and more.</span>
               </li>
               <li className="page-list-item">
                 <span className="page-list-bullet">2</span>
-                <span>Real-time drop tracking and campaign updates</span>
+                <span>Gadgets — smart watches, power banks, tablets, and everyday tech accessories.</span>
               </li>
               <li className="page-list-item">
                 <span className="page-list-bullet">3</span>
-                <span>Secure, high-speed checkout optimized for high-traffic launches</span>
+                <span>Electronics & home — blenders, kitchen appliances, and other everyday electronics.</span>
               </li>
               <li className="page-list-item">
                 <span className="page-list-bullet">4</span>
-                <span>Direct-to-brand preorder fulfillment and buyer protection</span>
+                <span>Modern preorder storefront with product discovery, categories, search, and detailed product pages.</span>
               </li>
               <li className="page-list-item">
                 <span className="page-list-bullet">5</span>
-                <span>A curated marketplace of the most innovative upcoming products</span>
+                <span>A smooth cart, checkout, and order history experience connected to the Wifmart backend.</span>
               </li>
             </ul>
           </section>
@@ -71,7 +68,7 @@ const AboutUs = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <span className="page-contact-label">Phone</span>
-                <span className="text-sm font-bold">07019277357</span>
+                <span className="text-sm font-bold">08160881705</span>
               </div>
               <div className="flex items-center gap-4">
                 <span className="page-contact-label">Email</span>
