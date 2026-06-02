@@ -27,7 +27,7 @@ const corsOptions = {
             'https://www.wifmart.com',
             'https://wifmart.com',
             'https://wifmart.vercel.app',
-            'https://wifmart-backend.vercel.app', // Backend domain (in case of same-origin requests)
+            'https://preorder-q1b7.vercel.app', // Backend domain on Vercel
             'http://localhost:5173',
             'http://localhost:3000',
             'http://localhost:8080'
