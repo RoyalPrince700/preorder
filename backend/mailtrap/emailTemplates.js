@@ -7,14 +7,14 @@ const VERIFICATION_EMAIL_TEMPLATE = `
   <title>Verify Your Email</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4B5563, #1F2937); padding: 20px; text-align: center;">
+  <div style="background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center;">
     <h1 style="color: white; margin: 0;">Verify Your Email</h1>
   </div>
   <div style="background-color: #F3F4F6; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <p>Hello,</p>
     <p>Thank you for signing up! Your verification code is:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #1F2937;">{verificationCode}</span>
+      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #F97316;">{verificationCode}</span>
     </div>
     <p>Enter this code on the verification page to complete your registration.</p>
     <p>This code will expire in 15 minutes for security reasons.</p>
@@ -37,14 +37,14 @@ const PASSWORD_RESET_SUCCESS_TEMPLATE = `
   <title>Password Reset Successful</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4B5563, #1F2937); padding: 20px; text-align: center;">
+  <div style="background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center;">
     <h1 style="color: white; margin: 0;">Password Reset Successful</h1>
   </div>
   <div style="background-color: #F3F4F6; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <p>Hello,</p>
     <p>We're writing to confirm that your password has been successfully reset.</p>
     <div style="text-align: center; margin: 30px 0;">
-      <div style="background-color: #4B5563; color: white; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; display: inline-block; font-size: 30px;">
+      <div style="background-color: #F97316; color: white; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; display: inline-block; font-size: 30px;">
         ✓
       </div>
     </div>
@@ -68,7 +68,7 @@ const PASSWORD_RESET_REQUEST_TEMPLATE = `
   <title>Reset Your Password</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4B5563, #1F2937); padding: 20px; text-align: center;">
+  <div style="background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center;">
     <h1 style="color: white; margin: 0;">Password Reset</h1>
   </div>
   <div style="background-color: #F3F4F6; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
@@ -76,7 +76,7 @@ const PASSWORD_RESET_REQUEST_TEMPLATE = `
     <p>We received a request to reset your password. If you didn't make this request, please ignore this email.</p>
     <p>To reset your password, click the button below:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <a href="{resetURL}" style="background-color: #4B5563; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+      <a href="{resetURL}" style="background-color: #F97316; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
     </div>
     <p>This link will expire in 1 hour for security reasons.</p>
     <p>Best regards,<br>The Wifmart Team</p>
@@ -88,16 +88,16 @@ const PASSWORD_RESET_REQUEST_TEMPLATE = `
 </html>
 `;
 
-const ORDER_CONFIRMATION_EMAIL_TEMPLATE = `
+const ORDER_RECEIVED_EMAIL_TEMPLATE = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Confirmation</title>
+  <title>Order Received</title>
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(to right, #4B5563, #1F2937); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
+    .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
     .content { background-color: #F9FAFB; padding: 20px; border-radius: 0 0 8px 8px; }
     .order-details { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; }
     table { width: 100%; border-collapse: collapse; margin: 10px 0; }
@@ -109,11 +109,12 @@ const ORDER_CONFIRMATION_EMAIL_TEMPLATE = `
 </head>
 <body>
   <div class="header">
-    <h1>Order Confirmed!</h1>
+    <h1>Order Received!</h1>
     <p>Thank you for your order, {name}!</p>
   </div>
 
   <div class="content">
+    <p>We have received your order and our team is currently reviewing it. You will receive another email once your order is confirmed.</p>
     <div class="order-details">
       <h3>Order Details</h3>
       <p><strong>Order ID:</strong> {orderId}</p>
@@ -141,8 +142,53 @@ const ORDER_CONFIRMATION_EMAIL_TEMPLATE = `
       </div>
     </div>
 
-    <p>We'll process your order shortly and send you updates on the delivery status.</p>
     <p>If you have any questions, feel free to contact our support team.</p>
+
+    <p>Best regards,<br>The Wifmart Team</p>
+  </div>
+
+  <div class="footer">
+    <p>This is an automated message from Wifmart. Please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;
+
+const ORDER_CONFIRMATION_EMAIL_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
+    .content { background-color: #F9FAFB; padding: 20px; border-radius: 0 0 8px 8px; }
+    .order-details { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #F97316; }
+    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 20px; }
+    .action-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Order Confirmed! 🎉</h1>
+    <p>Great news! Your order has been confirmed.</p>
+  </div>
+
+  <div class="content">
+    <p>Hello,</p>
+    <p>Your order <strong>#{orderId}</strong> has been confirmed by our team and is now being processed for shipment.</p>
+    
+    <div class="order-details">
+      <p>We are getting everything ready. You can keep tabs on your order status directly from your account dashboard.</p>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{frontendUrl}/order" class="action-button">Track My Order</a>
+    </div>
+
+    <p>We will notify you again once your order has been shipped!</p>
 
     <p>Best regards,<br>The Wifmart Team</p>
   </div>
@@ -163,14 +209,14 @@ const PAYMENT_SUCCESS_EMAIL_TEMPLATE = `
   <title>Payment Successful</title>
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(to right, #10B981, #059669); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
+    .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
     .content { background-color: #F0FDF4; padding: 20px; border-radius: 0 0 8px 8px; }
-    .payment-details { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #10B981; }
+    .payment-details { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #F97316; }
     table { width: 100%; border-collapse: collapse; margin: 10px 0; }
     th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E5E7EB; }
     th { background-color: #F3F4F6; font-weight: bold; }
-    .total { font-weight: bold; color: #059669; font-size: 18px; }
-    .success-icon { font-size: 48px; color: #10B981; text-align: center; margin: 10px 0; }
+    .total { font-weight: bold; color: #F97316; font-size: 18px; }
+    .success-icon { font-size: 48px; color: #F97316; text-align: center; margin: 10px 0; }
     .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 20px; }
   </style>
 </head>
@@ -191,7 +237,7 @@ const PAYMENT_SUCCESS_EMAIL_TEMPLATE = `
 
       {orderDetails}
 
-      <p><strong>Status:</strong> <span style="color: #10B981; font-weight: bold;">Payment Completed Successfully</span></p>
+      <p><strong>Status:</strong> <span style="color: #F97316; font-weight: bold;">Payment Completed Successfully</span></p>
     </div>
 
     <p>Thank you for your payment! Your order is now being processed.</p>
@@ -267,16 +313,16 @@ const ORDER_STATUS_UPDATE_EMAIL_TEMPLATE = `
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
     .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    .header { background: linear-gradient(to right, #3B82F6, #1D4ED8); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
+    .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
     .status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-transform: uppercase; font-size: 12px; margin: 10px 0; }
     .status-pending { background-color: #FEF3C7; color: #92400E; }
     .status-processing { background-color: #DBEAFE; color: #1E40AF; }
     .status-shipped { background-color: #D1FAE5; color: #065F46; }
-    .status-delivered { background-color: #10B981; color: #FFFFFF; }
+    .status-delivered { background-color: #F97316; color: #FFFFFF; }
     .status-cancelled { background-color: #FEE2E2; color: #991B1B; }
-    .order-details { background: #F8FAFC; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3B82F6; }
+    .order-details { background: #F8FAFC; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F97316; }
     .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
-    .action-button { display: inline-block; padding: 12px 24px; background-color: #3B82F6; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+    .action-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; }
   </style>
 </head>
 <body>
@@ -293,7 +339,7 @@ const ORDER_STATUS_UPDATE_EMAIL_TEMPLATE = `
       <p><strong>Status:</strong> <span class="status-badge status-{statusClass}">{status}</span></p>
     </div>
 
-    <div style="background: #F0F9FF; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #0EA5E9;">
+    <div style="background: #F0F9FF; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F97316;">
       <h4 style="margin-top: 0; color: #0F172A;">What's Next?</h4>
       {nextSteps}
     </div>
@@ -317,12 +363,65 @@ const ORDER_STATUS_UPDATE_EMAIL_TEMPLATE = `
 </html>
 `;
 
+const ORDER_DELIVERED_THANK_YOU_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You For Your Order</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
+    .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
+    .welcome-icon { font-size: 48px; color: #F97316; text-align: center; margin: 10px 0; }
+    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
+    .action-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="welcome-icon">🎁</div>
+      <h1>Order Delivered!</h1>
+      <p>Thank you for shopping with Wifmart</p>
+    </div>
+
+    <h2>Hi there!</h2>
+
+    <p>We are thrilled to let you know that your order <strong>#{orderId}</strong> has been successfully delivered!</p>
+
+    <p>We hope you love your new purchase. At Wifmart, we strive to bring you the best in fashion, gadgets, and electronics, and we're so glad you chose us.</p>
+
+    <div style="background: #F8FAFC; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F97316;">
+      <h4 style="margin-top: 0; color: #0F172A;">How did we do?</h4>
+      <p style="margin-bottom: 0;">Your feedback means the world to us. If you have a moment, we'd love to hear about your experience.</p>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{frontendUrl}" class="action-button">Continue Shopping</a>
+    </div>
+
+    <p>If there are any issues with your order, please reply to this email or contact our support team. We're always here to help.</p>
+
+    <p>Thank you once again,<br>The Wifmart Team</p>
+  </div>
+
+  <div class="footer">
+    <p>This is an automated message from Wifmart. Please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;
+
 module.exports = {
   VERIFICATION_EMAIL_TEMPLATE,
   PASSWORD_RESET_SUCCESS_TEMPLATE,
   PASSWORD_RESET_REQUEST_TEMPLATE,
   ORDER_NOTIFICATION_TEMPLATE,
+  ORDER_RECEIVED_EMAIL_TEMPLATE,
   ORDER_CONFIRMATION_EMAIL_TEMPLATE,
   PAYMENT_SUCCESS_EMAIL_TEMPLATE,
-  ORDER_STATUS_UPDATE_EMAIL_TEMPLATE
+  ORDER_STATUS_UPDATE_EMAIL_TEMPLATE,
+  ORDER_DELIVERED_THANK_YOU_TEMPLATE
 };

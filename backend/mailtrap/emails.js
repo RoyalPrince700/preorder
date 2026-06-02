@@ -1,5 +1,5 @@
 const { transporter, sender } = require('./mailtrap.config');
-const { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE, ORDER_NOTIFICATION_TEMPLATE, ORDER_CONFIRMATION_EMAIL_TEMPLATE, PAYMENT_SUCCESS_EMAIL_TEMPLATE, ORDER_STATUS_UPDATE_EMAIL_TEMPLATE } = require('./emailTemplates');
+const { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE, ORDER_NOTIFICATION_TEMPLATE, ORDER_RECEIVED_EMAIL_TEMPLATE, ORDER_CONFIRMATION_EMAIL_TEMPLATE, PAYMENT_SUCCESS_EMAIL_TEMPLATE, ORDER_STATUS_UPDATE_EMAIL_TEMPLATE, ORDER_DELIVERED_THANK_YOU_TEMPLATE } = require('./emailTemplates');
 
 // Utility function to get the correct frontend URL
 const getFrontendUrl = () => {
@@ -83,9 +83,9 @@ const sendWelcomeEmail = async (email, name = 'there') => {
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
     .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    .header { background: linear-gradient(to right, #10B981, #059669); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
-    .welcome-icon { font-size: 48px; color: #10B981; text-align: center; margin: 10px 0; }
-    .cta-button { display: inline-block; padding: 12px 24px; background-color: #10B981; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+    .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
+    .welcome-icon { font-size: 48px; color: #F97316; text-align: center; margin: 10px 0; }
+    .cta-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
     .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
   </style>
 </head>
@@ -94,7 +94,7 @@ const sendWelcomeEmail = async (email, name = 'there') => {
     <div class="header">
       <div class="welcome-icon">🎉</div>
       <h1>Welcome to Wifmart!</h1>
-      <p>Your journey to finding the perfect fabrics starts here</p>
+      <p>Be Confident... Your journey to the best fashion, gadgets, and electronics starts here.</p>
     </div>
 
     <h2>${personalizedGreeting}</h2>
@@ -104,10 +104,10 @@ const sendWelcomeEmail = async (email, name = 'there') => {
     <p>Here's what you can do to get started:</p>
 
     <ul>
-      <li><strong>Browse our catalog</strong> - Discover premium fabrics for all your tailoring and fashion needs</li>
-      <li><strong>Shop by category</strong> - Find high-quality materials, colors, and fabric types</li>
-      <li><strong>Track your orders</strong> - Real-time updates on your purchases and shipping status</li>
-      <li><strong>Manage your account</strong> - Update your profile and view your order history</li>
+      <li><strong>Browse our catalog</strong> - Discover premium fashion, smart gadgets, and everyday electronics.</li>
+      <li><strong>Shop by category</strong> - Find exactly what you need quickly and easily.</li>
+      <li><strong>Track your orders</strong> - Real-time updates on your purchases and shipping status.</li>
+      <li><strong>Manage your account</strong> - Update your profile and view your order history.</li>
     </ul>
 
     <div style="text-align: center; margin: 30px 0;">
@@ -226,8 +226,8 @@ const sendOrderNotificationEmail = async (recipients, payload) => {
     }
 };
 
-// User order confirmation email
-const sendUserOrderConfirmationEmail = async (userEmail, payload) => {
+// User order received email (Sent immediately at checkout)
+const sendUserOrderReceivedEmail = async (userEmail, payload) => {
     const itemsRows = (payload.cartItems || [])
         .map((it) => {
             const productObj = it?.productId || {};
@@ -240,7 +240,7 @@ const sendUserOrderConfirmationEmail = async (userEmail, payload) => {
         })
         .join('');
 
-    const html = ORDER_CONFIRMATION_EMAIL_TEMPLATE
+    const html = ORDER_RECEIVED_EMAIL_TEMPLATE
         .replace('{name}', payload.name)
         .replace('{orderId}', payload._id)
         .replace('{address}', payload.address)
@@ -253,7 +253,31 @@ const sendUserOrderConfirmationEmail = async (userEmail, payload) => {
         const mailOptions = {
             from: `"${sender.name}" <${sender.email}>`,
             to: userEmail,
-            subject: "Order Confirmation - Wifmart",
+            subject: "Order Received - Wifmart",
+            html,
+        };
+
+        logMailSend('user order received', mailOptions);
+        const response = await transporter.sendMail(mailOptions);
+        logMailResult('user order received', response);
+        return response;
+    } catch (error) {
+        logMailError('user order received', error);
+        throw error;
+    }
+};
+
+// User order confirmation email (Sent when admin confirms)
+const sendUserOrderConfirmationEmail = async (userEmail, orderId) => {
+    const html = ORDER_CONFIRMATION_EMAIL_TEMPLATE
+        .replace('{orderId}', orderId)
+        .replace('{frontendUrl}', getFrontendUrl());
+
+    try {
+        const mailOptions = {
+            from: `"${sender.name}" <${sender.email}>`,
+            to: userEmail,
+            subject: "Order Confirmed! - Wifmart",
             html,
         };
 
@@ -263,7 +287,6 @@ const sendUserOrderConfirmationEmail = async (userEmail, payload) => {
         return response;
     } catch (error) {
         logMailError('user order confirmation', error);
-        // Throw so callers can log/report; callers already catch so it won't block user flow
         throw error;
     }
 };
@@ -397,14 +420,40 @@ const sendOrderStatusUpdateEmail = async (userEmail, orderData) => {
     }
 };
 
+// Order Delivered Thank You Email
+const sendOrderDeliveredEmail = async (userEmail, orderId) => {
+    const html = ORDER_DELIVERED_THANK_YOU_TEMPLATE
+        .replace('{orderId}', orderId)
+        .replace('{frontendUrl}', getFrontendUrl());
+
+    try {
+        const mailOptions = {
+            from: `"${sender.name}" <${sender.email}>`,
+            to: userEmail,
+            subject: "Your Order has been Delivered! - Wifmart",
+            html,
+        };
+
+        logMailSend('order delivered thank you', mailOptions);
+        const response = await transporter.sendMail(mailOptions);
+        logMailResult('order delivered thank you', response);
+        return response;
+    } catch (error) {
+        logMailError('order delivered thank you', error);
+        throw error;
+    }
+};
+
 module.exports = {
     sendVerificationEmail,
     sendWelcomeEmail,
     sendPasswordResetEmail,
     sendResetSuccessfulEmail,
     sendOrderNotificationEmail,
+    sendUserOrderReceivedEmail,
     sendUserOrderConfirmationEmail,
     sendPaymentSuccessEmail,
     sendPaymentSuccessNotificationToAdmin,
-    sendOrderStatusUpdateEmail
+    sendOrderStatusUpdateEmail,
+    sendOrderDeliveredEmail
 };

@@ -2,7 +2,7 @@ const addToCartModel = require('../../models/cartProduct');
 const checkoutModel = require('../../models/checkoutModel'); // Adjust the path if needed
 const NotificationModel = require('../../models/notification'); // Import notification model
 const UserModel = require('../../models/userModel'); // Import user model to fetch HR users
-const { sendUserOrderConfirmationEmail, sendOrderNotificationEmail } = require('../../mailtrap/emails'); // Import email function
+const { sendUserOrderReceivedEmail, sendOrderNotificationEmail } = require('../../mailtrap/emails'); // Import email function
 
 const createCheckout = async (req, res) => {
   try {
@@ -80,7 +80,7 @@ const createCheckout = async (req, res) => {
         const user = await UserModel.findById(req.userId);
         console.log('[CHECKOUT] 👤 User lookup for order confirmation:', { userId: req.userId, userEmail: user?.email, userFound: !!user });
         if (user && user.email) {
-          await sendUserOrderConfirmationEmail(user.email, savedCheckout);
+          await sendUserOrderReceivedEmail(user.email, savedCheckout);
           console.log('[CHECKOUT] ✅ Order confirmation email sent to user:', user.email);
         } else {
           console.log('[CHECKOUT] ⚠️ User not found or no email, skipping order confirmation');
