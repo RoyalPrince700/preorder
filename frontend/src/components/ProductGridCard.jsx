@@ -26,6 +26,7 @@ const ProductGridCard = ({ product }) => {
             <img
               src={product?.productImage?.[0]}
               alt={product?.productName}
+              loading="lazy"
               className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-110"
             />
           </div>

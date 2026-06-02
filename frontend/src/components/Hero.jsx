@@ -144,6 +144,7 @@ const MobileHero = ({ products }) => (
                   <img
                     src={product.productImage?.[0]}
                     alt={product.productName}
+                    fetchpriority="high"
                     className='h-28 w-full object-contain transition duration-300 group-hover:scale-110'
                   />
                 </div>
@@ -218,6 +219,7 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
                   <img
                     src={featuredDeal.productImage?.[0]}
                     alt={featuredDeal.productName}
+                    fetchpriority="high"
                     className='h-36 w-40 object-contain drop-shadow-xl sm:h-44'
                   />
                   <div className='text-right'>
@@ -263,6 +265,7 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
                       <img
                         src={product.productImage?.[0]}
                         alt={product.productName}
+                        loading="lazy"
                         className='h-28 w-full object-contain transition duration-300 group-hover:scale-110 sm:h-32'
                       />
                     </div>

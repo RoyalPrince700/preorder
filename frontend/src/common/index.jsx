@@ -221,11 +221,7 @@ const SummaryApi = {
     }, markAsRead : {
         url : `${backendDomain}/api/mark-as-read`,
         method : 'post'
-    },  countUnreadNotifications : {
-        url : `${backendDomain}/api/unread-count`,
-        method : 'get'
-    }, 
-    
+    }    
 };
 
 export default SummaryApi;

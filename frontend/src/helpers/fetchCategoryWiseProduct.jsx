@@ -1,7 +1,13 @@
 import SummaryApi from "../common";
 
+const cache = new Map();
+
 const fetchCategoryWiseProduct = async (category) => {
-  const response = await fetch(SummaryApi.categoryWiseProduct.url, {
+  if (cache.has(category)) {
+    return cache.get(category);
+  }
+
+  const promise = fetch(SummaryApi.categoryWiseProduct.url, {
     method: SummaryApi.categoryWiseProduct.method,
     headers: {
       "Content-Type": "application/json",
@@ -9,10 +15,15 @@ const fetchCategoryWiseProduct = async (category) => {
     body: JSON.stringify({
       category: category,
     }),
-  });
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      cache.delete(category);
+      throw err;
+    });
 
-  const dataResponse = await response.json();
-  return dataResponse;
+  cache.set(category, promise);
+  return promise;
 };
 
 export default fetchCategoryWiseProduct;

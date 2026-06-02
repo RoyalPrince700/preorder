@@ -60,7 +60,6 @@ const assignedOrdersController = require('../controller/order/assignedOrder');
 const createNotification = require('../controller/notifications/createNotification');
 const getNotifications = require('../controller/notifications/getNotification');
 const markAsRead = require('../controller/notifications/markAsRead');
-const countUnreadNotifications = require('../controller/user/countNotification');
 const notifyAdminsOnOrder = require('../controller/order/notifyAdminsOnOrder');
 const { upload, uploadImage } = require('../controller/uploadImage');
 
@@ -114,7 +113,6 @@ router.get("/auth/verify", authToken, (req, res) => {
 router.post("/create-notification", authToken,createNotification);
 router.get("/get-notification",authToken, getNotifications);
 router.post("/mark-as-read",authToken, markAsRead);
-router.get( "/unread-count",authToken, countUnreadNotifications);
 // Admin panel
 router.get("/all-users", authToken, requireRole('ADMIN'), allUsers);
 router.get("/user-growth", authToken, requireRole('ADMIN'), userGrowth);

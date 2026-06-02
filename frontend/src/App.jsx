@@ -17,7 +17,6 @@ function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const [cartProductCount, setCartProductCount] = useState(0);
-  const [notificationCount, setNotificationCount] = useState(0);
   const [authReady, setAuthReady] = useState(false);
 
   const shouldHideHeaderFooter = location.pathname.startsWith('/admin-overview') ||
@@ -68,37 +67,11 @@ function App() {
     }
   }, []);
 
-  // Fetch notification count
-  const fetchUserNotification = useCallback(async () => {
-    if (!SummaryApi.isBackendConfigured) return;
-    try {
-      const dataResponse = await fetch(SummaryApi.countUnreadNotifications.url, {
-        method: SummaryApi.countUnreadNotifications.method,
-        credentials: 'include',
-      });
-
-      const dataApi = await dataResponse.json();
-      if (dataApi.success) {
-        setNotificationCount(dataApi.unreadCount);
-      } else {
-        console.error('Failed to fetch notification count:', dataApi.message);
-      }
-    } catch (error) {
-      console.error('Failed to fetch notification count:', error.message);
-    }
-  }, []);
-
   // Fetch necessary data on component render
   useEffect(() => {
     fetchUserDetails();
     fetchUserAddToCart();
-    fetchUserNotification();
-  }, [fetchUserDetails, fetchUserAddToCart, fetchUserNotification]);
-
-  // Log notification count updates
-  useEffect(() => {
-    console.log('Notification Count Updated:', notificationCount);
-  }, [notificationCount]);
+  }, [fetchUserDetails, fetchUserAddToCart]);
 
   const signInWithGoogle = useCallback(() => {
     const backendBase = import.meta.env.VITE_APP_BACKEND_URI;
@@ -116,18 +89,14 @@ function App() {
       fetchUserDetails,
       authReady,
       cartProductCount,
-      notificationCount,
       fetchUserAddToCart,
-      fetchUserNotification,
       signInWithGoogle,
     }),
     [
       authReady,
       fetchUserDetails,
       cartProductCount,
-      notificationCount,
       fetchUserAddToCart,
-      fetchUserNotification,
       signInWithGoogle,
     ]
   );

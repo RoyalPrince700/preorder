@@ -1,7 +1,13 @@
 import SummaryApi from "../common";
 
+const cache = new Map();
+
 const fetchHotDealWiseProduct = async (hotDeal) => {
-  const response = await fetch(SummaryApi.hotDealWiseProduct.url, {
+  if (cache.has(hotDeal)) {
+    return cache.get(hotDeal);
+  }
+
+  const promise = fetch(SummaryApi.hotDealWiseProduct.url, {
     method: SummaryApi.hotDealWiseProduct.method,
     headers: {
       "Content-Type": "application/json",
@@ -9,10 +15,15 @@ const fetchHotDealWiseProduct = async (hotDeal) => {
     body: JSON.stringify({
       hotDeal: hotDeal,
     }),
-  });
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      cache.delete(hotDeal);
+      throw err;
+    });
 
-  const dataResponse = await response.json();
-  return dataResponse;
+  cache.set(hotDeal, promise);
+  return promise;
 };
 
 export default fetchHotDealWiseProduct;
