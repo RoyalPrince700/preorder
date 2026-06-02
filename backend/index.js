@@ -11,8 +11,9 @@ const router = require('./routes');
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to DB'))
     .catch(err => {
+        // On serverless providers like Vercel, exiting the process will crash the function.
+        // Instead, just log the error so other routes (that don't depend on DB) can still respond.
         console.error('MongoDB connection error:', err);
-        process.exit(1); // Exit if unable to connect
     });
 
 const app = express();
