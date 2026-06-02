@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import SummaryApi from '../common'
 import moment from 'moment'
 import displayNARCurrency from '../helpers/displayCurrency'
 import { useSocket } from '../context/SocketContext'
+import Context from '../context'
 import { toast } from 'react-toastify'
 
 const statusClass = (status) => {
@@ -28,6 +29,7 @@ const OrderPage = () => {
   const { socket } = useSocket()
   const navigate = useNavigate()
   const user = useSelector((state) => state?.user?.user)
+  const { authReady } = useContext(Context)
 
   const fetchOrderDetails = async () => {
     setLoading(true)
@@ -56,12 +58,14 @@ const OrderPage = () => {
   }
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login')
-      return
+    if (authReady) {
+      if (!user) {
+        navigate('/login')
+        return
+      }
+      fetchOrderDetails()
     }
-    fetchOrderDetails()
-  }, [user, navigate])
+  }, [user, navigate, authReady])
 
   useEffect(() => {
     if (!socket) return

@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AiOutlineMenu } from 'react-icons/ai';
 import ROLE from '../common/role';
 import SummaryApi from '../common';
+import Context from '../context';
 
 const HRPanel = () => {
     const user = useSelector(state => state?.user?.user);
     const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { authReady } = useContext(Context);
 
     useEffect(() => {
+        if (!authReady) return;
         if (!user || user?.role !== ROLE.HR) {
             navigate("/");
         }
-    }, [user, navigate]);
+    }, [user, navigate, authReady]);
 
     const closeMobileMenu = () => setIsMobileMenuOpen(false);
 

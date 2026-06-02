@@ -1,18 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { FaRegCircleUser } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import ROLE from '../common/role';
+import Context from '../context';
 
 const AdminPanel = () => {
     const user = useSelector(state => state?.user?.user);
     const navigate = useNavigate();
+    const { authReady } = useContext(Context);
 
     useEffect(() => {
+        if (!authReady) return;
         if (user?.role !== ROLE.ADMIN) {
             navigate("/");
         }
-    }, [user]);
+    }, [user, navigate, authReady]);
 
     return (
         <div className='min-h-[calc(100vh-120px)] flex pt-[90px]'> 

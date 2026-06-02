@@ -155,10 +155,10 @@ const Cart = () => {
               : data.map((product) => (
                   <div
                     key={product?._id}
-                    className="relative my-6 grid w-full grid-cols-[140px,1fr] p-4 border-2 border-slate-100 bg-white group hover:border-orange-500 transition-colors"
+                    className="relative my-6 flex flex-col sm:grid w-full sm:grid-cols-[140px,1fr] p-3 sm:p-4 border-2 border-slate-100 bg-white group hover:border-orange-500 transition-colors"
                   >
                     {/* Product Image */}
-                    <div className="h-[140px] w-full bg-white flex items-center justify-center p-2">
+                    <div className="h-[120px] sm:h-[140px] w-full bg-white flex items-center justify-center p-2 mb-2 sm:mb-0">
                       <img
                         src={product?.productId?.productImage[0]}
                         alt={product?.productId?.productName}
@@ -167,7 +167,7 @@ const Cart = () => {
                     </div>
       
                     {/* Product Details */}
-                    <div className="px-6 flex flex-col justify-between py-1">
+                    <div className="px-2 sm:px-6 flex flex-col justify-between py-1">
                       <div>
                         <h2 className="line-clamp-2 text-xs font-black uppercase tracking-widest text-slate-950 leading-tight">
                           {product?.productId?.productName}
@@ -177,9 +177,9 @@ const Cart = () => {
                         </p>
                       </div>
 
-                      <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center border-2 border-slate-900 bg-white">
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between mt-4 gap-4 lg:gap-0">
+                        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+                          <div className="flex items-center border-2 border-slate-900 bg-white shrink-0">
                             <button
                               className="flex h-8 w-8 items-center justify-center text-xs font-black text-slate-950 transition hover:bg-slate-950 hover:text-white"
                               onClick={() => decreaseQty(product?._id, product?.quantity)}
@@ -195,9 +195,9 @@ const Cart = () => {
                             </button>
                           </div>
                           
-                          <div className="h-8 w-px bg-slate-100"></div>
+                          <div className="hidden sm:block h-8 w-px bg-slate-100"></div>
 
-                          <div>
+                          <div className="shrink-0">
                             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Unit</p>
                             <p className="text-sm font-black text-slate-950">
                               {displayNARCurrency(product?.productId?.sellingPrice)}
@@ -205,7 +205,7 @@ const Cart = () => {
                           </div>
                         </div>
 
-                        <div className="text-right">
+                        <div className="text-left lg:text-right border-t border-slate-100 pt-3 lg:border-0 lg:pt-0">
                           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Subtotal</p>
                           <p className="text-base font-black tracking-tighter text-orange-600">
                             {displayNARCurrency(

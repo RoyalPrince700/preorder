@@ -1,7 +1,7 @@
 # Design Learning System - Admin Dashboard Integration
 
 ## Overview
-This document outlines the design and structure of the comprehensive design learning system integrated into the admin dashboard of Ronniesfabrics. The system provides a structured 30-day learning path for mastering Figma and Framer, with detailed lessons, tasks, examples, and resources.
+This document outlines the design and structure of the comprehensive design learning system integrated into the admin dashboard of Wifmart. The system provides a structured 30-day learning path for mastering Figma and Framer, with detailed lessons, tasks, examples, and resources.
 
 ## System Architecture
 

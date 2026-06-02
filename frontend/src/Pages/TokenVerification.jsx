@@ -116,7 +116,7 @@ const TokenVerificationPage = () => {
         className="backdrop-blur-md bg-gray-700/50 mx-auto p-6 w-full max-w-md rounded-lg shadow-xl"
       >
         <div className="flex justify-center mb-8">
-          <img src={LogoImg} alt="Ronniesfabrics" className="w-[120px] h-[20px] object-contain select-none" draggable={false} />
+          <img src={LogoImg} alt="Wifmart" className="w-[120px] h-[20px] object-contain select-none" draggable={false} />
         </div>
   
         <h2 className="text-2xl font-bold mb-6 text-center">Verify Your Token</h2>

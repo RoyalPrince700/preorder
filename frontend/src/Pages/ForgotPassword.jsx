@@ -55,7 +55,7 @@ const ForgotPassword = () => {
     >
       <div className="flex justify-center mb-8">
         <Link to="/">
-          <img src={LogoImg} alt="Ronniesfabrics" className="w-[120px] h-[20px] object-contain select-none" draggable={false} />
+          <img src={LogoImg} alt="Wifmart" className="w-[120px] h-[20px] object-contain select-none" draggable={false} />
         </Link>
       </div>
       <p className="text-center text-gray-300 mb-6">Forgot your password? Enter your email to reset it.</p>
