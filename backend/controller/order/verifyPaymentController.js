@@ -6,6 +6,15 @@ const UserModel = require('../../models/userModel');
 const { sendPaymentSuccessEmail, sendPaymentSuccessNotificationToAdmin, sendUserOrderConfirmationEmail, sendOrderNotificationEmail } = require('../../mailtrap/emails');
 
 const verifyPaymentController = async (request, response) => {
+    // Temporarily disable payment verification unless explicitly enabled
+    if (process.env.ENABLE_ONLINE_PAYMENT !== 'true') {
+        return response.status(503).json({
+            message: 'Online card payments are currently disabled. Please use the WhatsApp checkout.',
+            success: false,
+            error: false
+        });
+    }
+
     try {
         const { transaction_id } = request.body;
 
@@ -75,7 +84,7 @@ const verifyPaymentController = async (request, response) => {
                 if (process.env.ADMIN_NOTIFICATION_EMAIL && !adminRecipients.includes(process.env.ADMIN_NOTIFICATION_EMAIL)) {
                     adminRecipients.push(process.env.ADMIN_NOTIFICATION_EMAIL);
                 }
-                if (adminRecipients.length === 0) adminRecipients.push('ronniesfabrics05@gmail.com');
+                if (adminRecipients.length === 0) adminRecipients.push('admin@wifmart.com');
 
                 await sendOrderNotificationEmail(adminRecipients, {
                     name: existingCheckout.name,
@@ -216,7 +225,7 @@ const verifyPaymentController = async (request, response) => {
                 if (process.env.ADMIN_NOTIFICATION_EMAIL && !adminRecipients.includes(process.env.ADMIN_NOTIFICATION_EMAIL)) {
                     adminRecipients.push(process.env.ADMIN_NOTIFICATION_EMAIL);
                 }
-                if (adminRecipients.length === 0) adminRecipients.push('ronniesfabrics05@gmail.com');
+                if (adminRecipients.length === 0) adminRecipients.push('admin@wifmart.com');
 
                 await sendOrderNotificationEmail(adminRecipients, {
                     name: savedCheckout.name,

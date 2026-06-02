@@ -3,6 +3,15 @@ const userModel = require('../../models/userModel')
 
 const paymentController = async(request,response)=>{
 
+        // Temporarily disable online payments unless explicitly enabled
+        if (process.env.ENABLE_ONLINE_PAYMENT !== 'true') {
+            return response.status(503).json({
+                message: 'Online card payments are currently disabled. Please use the WhatsApp checkout.',
+                error: false,
+                success: false
+            })
+        }
+
         try{
             const { cartItems, shippingDetails } = request.body
 
@@ -15,7 +24,7 @@ const paymentController = async(request,response)=>{
 
             // Prepare payment payload for Flutterwave
             const payload = {
-                tx_ref: `ronniesfabrics-${Date.now()}-${request.userId}`,
+                tx_ref: `wifmart-${Date.now()}-${request.userId}`,
                 amount: totalAmount,
                 currency: 'NGN',
                 redirect_url: `${process.env.FRONTEND_URL}/success`,
@@ -26,7 +35,7 @@ const paymentController = async(request,response)=>{
                     phone_number: shippingDetails?.number || user.number || ''
                 },
                 customizations: {
-                    title: 'Ronniesfabrics Payment',
+                    title: 'Wifmart Payment',
                     description: `Payment for ${cartItems.length} item(s)`,
                     logo: process.env.FRONTEND_URL + '/logo.png'
                 },

@@ -6,8 +6,6 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 require('./config/passport');
 const router = require('./routes');
-const { createServer } = require('http');
-const initializeSocket = require('./config/socket');
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
@@ -18,32 +16,28 @@ mongoose.connect(process.env.MONGODB_URI)
     });
 
 const app = express();
-const server = createServer(app);
-
-// Initialize Socket.IO
-const io = initializeSocket(server);
 
 // Middleware
 const corsOptions = {
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
-        
+
         const allowedOrigins = [
-            'https://www.ronniesfabrics.com',
-            'https://ronniesfabrics.com',
-            'https://ronniesfabrics.vercel.app',
-            'https://ronniesfabrics-backend.vercel.app', // Backend domain (in case of same-origin requests)
+            'https://www.wifmart.com',
+            'https://wifmart.com',
+            'https://wifmart.vercel.app',
+            'https://wifmart-backend.vercel.app', // Backend domain (in case of same-origin requests)
             'http://localhost:5173',
             'http://localhost:3000',
             'http://localhost:8080'
         ];
-        
+
         // Add environment variable origin if it exists
         if (process.env.FRONTEND_URL) {
             allowedOrigins.push(process.env.FRONTEND_URL);
         }
-        
+
         if (allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -63,9 +57,9 @@ app.use(cors(corsOptions));
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     const allowedOrigins = [
-        'https://www.ronniesfabrics.com',
-        'https://ronniesfabrics.com',
-        'https://ronniesfabrics.vercel.app',
+        'https://www.wifmart.com',
+        'https://wifmart.com',
+        'https://wifmart.vercel.app',
         'http://localhost:5173',
         process.env.FRONTEND_URL
     ].filter(Boolean);
@@ -73,11 +67,11 @@ app.use((req, res, next) => {
     if (allowedOrigins.includes(origin)) {
         res.header('Access-Control-Allow-Origin', origin);
     }
-    
+
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie');
-    
+
     if (req.method === 'OPTIONS') {
         res.sendStatus(200);
     } else {
@@ -89,14 +83,15 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
-// Make io available to routes
-app.set('io', io);
 app.use("/api", router);
 
-// Start the server
-const PORT = process.env.PORT || 8080;
+// Start the server only in non-Vercel environments
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}
 
-
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+// Export the Express app for Vercel (`@vercel/node`) to handle
+module.exports = app;

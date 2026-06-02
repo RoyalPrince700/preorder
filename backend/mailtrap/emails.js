@@ -10,7 +10,7 @@ const getFrontendUrl = () => {
         !!process.env.VERCEL;
 
     return process.env.FRONTEND_URL ||
-        (isProdLike ? 'https://www.ronniesfabrics.com' : 'http://localhost:5173');
+        (isProdLike ? 'https://www.wifmart.com' : 'http://localhost:5173');
 };
 
 const logMailSend = (tag, mailOptions) => {
@@ -79,7 +79,7 @@ const sendWelcomeEmail = async (email, name = 'there') => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Ronniesfabrics!</title>
+  <title>Welcome to Wifmart!</title>
   <style>
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
     .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -93,13 +93,13 @@ const sendWelcomeEmail = async (email, name = 'there') => {
   <div class="container">
     <div class="header">
       <div class="welcome-icon">🎉</div>
-      <h1>Welcome to Ronniesfabrics!</h1>
+      <h1>Welcome to Wifmart!</h1>
       <p>Your journey to finding the perfect fabrics starts here</p>
     </div>
 
     <h2>${personalizedGreeting}</h2>
 
-    <p>Thank you for joining the Ronniesfabrics community! We're thrilled to have you with us.</p>
+    <p>Thank you for joining the Wifmart community! We're thrilled to have you with us.</p>
 
     <p>Here's what you can do to get started:</p>
 
@@ -116,11 +116,11 @@ const sendWelcomeEmail = async (email, name = 'there') => {
 
     <p>If you have any questions, feel free to reach out to our support team. We're here to help!</p>
 
-    <p>Welcome aboard,<br>The Ronniesfabrics Team</p>
+    <p>Welcome aboard,<br>The Wifmart Team</p>
   </div>
 
   <div class="footer">
-    <p>This is an automated welcome message from Ronniesfabrics. Please do not reply to this email.</p>
+    <p>This is an automated welcome message from Wifmart. Please do not reply to this email.</p>
   </div>
 </body>
 </html>`;
@@ -128,7 +128,7 @@ const sendWelcomeEmail = async (email, name = 'there') => {
         const mailOptions = {
             from: `"${sender.name}" <${sender.email}>`,
             to: email,
-            subject: "🎉 Welcome to Ronniesfabrics - Your Fabric Journey Begins!",
+            subject: "🎉 Welcome to Wifmart - Your Shopping Journey Begins!",
             html,
         };
 
@@ -253,7 +253,7 @@ const sendUserOrderConfirmationEmail = async (userEmail, payload) => {
         const mailOptions = {
             from: `"${sender.name}" <${sender.email}>`,
             to: userEmail,
-            subject: "Order Confirmation - Ronniesfabrics",
+            subject: "Order Confirmation - Wifmart",
             html,
         };
 
@@ -287,7 +287,7 @@ const sendPaymentSuccessEmail = async (userEmail, paymentData) => {
         const mailOptions = {
             from: `"${sender.name}" <${sender.email}>`,
             to: userEmail,
-            subject: "Payment Successful - Ronniesfabrics",
+            subject: "Payment Successful - Wifmart",
             html,
         };
 
@@ -310,9 +310,9 @@ const sendPaymentSuccessNotificationToAdmin = async (paymentData) => {
         adminRecipients.push(process.env.ADMIN_NOTIFICATION_EMAIL);
     }
 
-    // Fallback to the user's requested admin email if none configured
+    // Fallback to a default admin email if none configured
     if (adminRecipients.length === 0) {
-        adminRecipients.push('ronniesfabrics05@gmail.com');
+        adminRecipients.push('admin@wifmart.com');
     }
 
     const orderDetails = paymentData.orderId ? `
@@ -330,10 +330,10 @@ const sendPaymentSuccessNotificationToAdmin = async (paymentData) => {
         .replace('{orderDetails}', orderDetails);
 
     try {
-        const mailOptions = {
+    const mailOptions = {
             from: `"${sender.name}" <${sender.email}>`,
             to: adminRecipients.join(', '),
-            subject: `New Payment Received - ₦${paymentData.amount} | Ronniesfabrics`,
+            subject: `New Payment Received - ₦${paymentData.amount} | Wifmart`,
             html,
         };
 
@@ -383,7 +383,7 @@ const sendOrderStatusUpdateEmail = async (userEmail, orderData) => {
         const mailOptions = {
             from: `"${sender.name}" <${sender.email}>`,
             to: userEmail,
-            subject: `Order Status Update - ${orderData.status} | Ronniesfabrics`,
+            subject: `Order Status Update - ${orderData.status} | Wifmart`,
             html,
         };
 

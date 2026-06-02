@@ -16,7 +16,7 @@ const googleAuthCallback = (req, res, next) => {
 
   const frontendUrl =
     process.env.FRONTEND_URL ||
-    (isProdLike ? 'https://www.ronniesfabrics.com' : 'http://localhost:5173');
+    (isProdLike ? 'https://www.wifmart.com' : 'http://localhost:5173');
 
   passport.authenticate('google', { session: false }, (err, data, info) => {
     if (err) {

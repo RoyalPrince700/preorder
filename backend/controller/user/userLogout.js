@@ -1,4 +1,4 @@
-// filepath: /c:/Users/HP/Desktop/ecom/ronniesfabrics/backend/controller/user/userLogout.js
+// filepath: /c:/Users/HP/Desktop/ecom/preorder/backend/controller/user/userLogout.js
 async function userLogout(req, res) {
     try {
       const tokenOptions = {
