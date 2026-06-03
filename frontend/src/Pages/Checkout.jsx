@@ -128,6 +128,25 @@ const Checkout = () => {
         paymentMethod: 'WhatsApp',
       };
 
+      let message = `*New Order Details*\n\n`;
+
+      message += `*Products:*\n`;
+      cartItems.forEach((item, index) => {
+        const product = item?.productId || {};
+        const name = product?.productName || item?.name || 'Item';
+        const qty = item?.quantity || 1;
+        const price = product?.sellingPrice || item?.price || 0;
+
+        const productLink = `${window.location.origin}/product/${product?._id || item?._id}`;
+
+        message += `${index + 1}. ${name}\n   Qty: ${qty} | Price: ${displayNARCurrency(price * qty)}\n   Link: ${productLink}\n`;
+      });
+
+      message += `\n*Total Amount:* ${displayNARCurrency(totalPrice)}\n`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/2348160881705?text=${encodedMessage}`;
+
       const response = await fetch(SummaryApi.checkout.url, {
         method: SummaryApi.checkout.method,
         credentials: 'include',
@@ -139,26 +158,9 @@ const Checkout = () => {
       if (!response.ok) throw new Error(data.message || 'Failed to process order');
 
       toast.success('Your order has been recorded! Redirecting to WhatsApp...');
-      await fetchUserAddToCart();
-
-      let message = `*New Order Details*\n\n`;
-
-      message += `*Products:*\n`;
-      cartItems.forEach((item, index) => {
-        const product = item?.productId || {};
-        const name = product?.productName || item?.name || 'Item';
-        const qty = item?.quantity || 1;
-        const price = product?.sellingPrice || item?.price || 0;
-        
-        const productLink = `${window.location.origin}/product/${product?._id || item?._id}`;
-
-        message += `${index + 1}. ${name}\n   Qty: ${qty} | Price: ${displayNARCurrency(price * qty)}\n   Link: ${productLink}\n`;
+      fetchUserAddToCart().catch((error) => {
+        console.error('Error refreshing cart after WhatsApp checkout:', error);
       });
-
-      message += `\n*Total Amount:* ${displayNARCurrency(totalPrice)}\n`;
-
-      const encodedMessage = encodeURIComponent(message);
-      const whatsappUrl = `https://wa.me/2348160881705?text=${encodedMessage}`;
 
       // Update the current route so that when they come back, they are on the orders page
       navigate('/order', { replace: true });
