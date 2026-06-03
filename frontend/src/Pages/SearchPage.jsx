@@ -67,8 +67,8 @@ const SearchPage = () => {
               name="q"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="SEARCH DROPS, BRANDS, COLLECTIONS..."
-              className="w-full min-w-0 bg-transparent text-base font-black uppercase tracking-widest outline-none placeholder:text-slate-300"
+              placeholder="Search drops, brands, collections..."
+              className="w-full min-w-0 bg-transparent text-base font-bold outline-none placeholder:text-slate-300"
               autoComplete="off"
               autoFocus
             />

@@ -128,16 +128,24 @@ const Header = () => {
     <>
       <header className='fixed top-0 left-0 right-0 z-50 border-b-2 border-slate-100 bg-white/95 backdrop-blur'>
         <div className='relative mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-2 sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
-        <Link to='/' className='shrink-0'>
-          <div className='flex flex-col'>
-            <span className='select-none text-xl font-black uppercase tracking-tighter text-slate-950 sm:text-3xl'>
-              Wifmart
-            </span>
-            <span className='hidden text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 sm:block'>
-              Shop smarter, preorder sooner
-            </span>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <button
+              type="button"
+              onClick={() => setVisible(true)}
+              className="flex h-9 w-9 shrink-0 items-center justify-center text-slate-900 xl:hidden"
+              aria-label="Open menu"
+              aria-expanded={visible}
+            >
+              <GiHamburgerMenu className="h-6 w-6 cursor-pointer" />
+            </button>
+            <Link to="/" className="shrink-0">
+              <div className="flex flex-col">
+                <span className="select-none text-xl font-black uppercase tracking-tighter text-slate-950 sm:text-3xl">
+                  Wifmart
+                </span>
+              </div>
+            </Link>
           </div>
-        </Link>
 
         {!hideSearchBar && (
           <div className='hidden flex-1 items-center px-4 lg:flex'>
@@ -274,16 +282,6 @@ const Header = () => {
             </p>
           </Link>
 
-          {/* Mobile Hamburger Menu */}
-          <button
-            type="button"
-            onClick={() => setVisible(true)}
-            className="flex h-9 w-9 items-center justify-center text-slate-900 xl:hidden"
-            aria-label="Open menu"
-            aria-expanded={visible}
-          >
-            <GiHamburgerMenu className="h-6 w-6 cursor-pointer" />
-          </button>
         </div>
       </div>
     </header>
@@ -301,13 +299,13 @@ const Header = () => {
             onClick={() => setVisible(false)}
             aria-label="Close menu"
           />
-          <div className="absolute right-0 top-0 flex h-full w-full max-w-[280px] flex-col overflow-y-auto border-l-2 border-slate-900 bg-white shadow-2xl">
+          <div className="absolute left-0 top-0 flex h-full w-full max-w-[280px] flex-col overflow-y-auto border-r-2 border-slate-900 bg-white shadow-2xl">
             <div className="flex shrink-0 cursor-pointer items-center justify-between border-b-2 border-slate-900 p-5" onClick={() => setVisible(false)}>
-              <p className="text-xs font-black uppercase tracking-widest text-slate-950">Menu</p>
               <div className="flex items-center gap-2">
+                <IoMdArrowDropdown className="h-4 w-4 -rotate-90" />
                 <p className="text-[10px] font-bold uppercase text-slate-500">Close</p>
-                <IoMdArrowDropdown className="h-4 w-4 rotate-180" />
               </div>
+              <p className="text-xs font-black uppercase tracking-widest text-slate-950">Menu</p>
             </div>
 
             <div className="border-b border-slate-100 px-6 py-6">
