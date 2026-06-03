@@ -1,5 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import SummaryApi from '../common';
 import displayNARCurrency from '../helpers/displayCurrency';
 import { toast } from 'react-toastify';
@@ -11,10 +12,21 @@ const inputClass =
 const Checkout = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { fetchUserAddToCart } = useContext(Context);
+  const { authReady, fetchUserAddToCart } = useContext(Context);
+  const user = useSelector((state) => state?.user?.user);
 
-  const cartItems = location.state?.cartItems || [];
-  const totalPrice = location.state?.totalPrice || 0;
+  const initialCartItems = location.state?.cartItems || [];
+  const initialTotalPrice = location.state?.totalPrice;
+  const [fallbackCartItems, setFallbackCartItems] = useState([]);
+  const [isCartLoading, setIsCartLoading] = useState(false);
+  const cartItems = initialCartItems.length ? initialCartItems : fallbackCartItems;
+  const totalPrice =
+    typeof initialTotalPrice === 'number' && initialCartItems.length
+      ? initialTotalPrice
+      : fallbackCartItems.reduce(
+          (prev, curr) => prev + (curr.quantity || 1) * (curr?.productId?.sellingPrice || 0),
+          0
+        );
 
   const [shippingDetails, setShippingDetails] = useState({
     name: '',
@@ -29,6 +41,40 @@ const Checkout = () => {
     (sum, item) => sum + (item?.quantity || 1),
     0
   );
+
+  useEffect(() => {
+    if (!authReady) return;
+
+    if (!user) {
+      sessionStorage.setItem('authReturnTo', '/checkout');
+      navigate('/login', { replace: true, state: { from: '/checkout' } });
+      return;
+    }
+
+    if (initialCartItems.length || fallbackCartItems.length) return;
+
+    const fetchCheckoutCart = async () => {
+      setIsCartLoading(true);
+      try {
+        const response = await fetch(SummaryApi.addToCartProductView.url, {
+          method: SummaryApi.addToCartProductView.method,
+          credentials: 'include',
+          headers: { 'content-type': 'application/json' },
+        });
+        const responseData = await response.json();
+
+        if (responseData.success) {
+          setFallbackCartItems(responseData.data || []);
+        }
+      } catch (error) {
+        console.error('Failed to load checkout cart:', error);
+      } finally {
+        setIsCartLoading(false);
+      }
+    };
+
+    fetchCheckoutCart();
+  }, [authReady, fallbackCartItems.length, initialCartItems.length, navigate, user]);
 
   const handleChange = (e) => {
     setShippingDetails({
@@ -174,6 +220,18 @@ const Checkout = () => {
       setIsLoading(false);
     }
   };
+
+  if (!authReady || !user || isCartLoading) {
+    return (
+      <div className="container mx-auto mt-4 px-4 pt-20 max-w-7xl">
+        <div className="border-2 border-slate-100 bg-white py-20 text-center">
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">
+            Loading checkout...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (cartItems.length === 0) {
     return (

@@ -8,14 +8,17 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import SummaryApi from './common';
 import Context from './context';
 import { SocketProvider } from './context/SocketContext';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from './store/userSlice';
 import ScrollToTop from './components/ScrollTop';
 import { matchPath } from 'react-router-dom';
+import { getLocalCartItemCount } from './helpers/localAddToCart';
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const user = useSelector((state) => state?.user?.user);
+  const userId = user?._id;
   const [cartProductCount, setCartProductCount] = useState(0);
   const [authReady, setAuthReady] = useState(false);
 
@@ -52,8 +55,11 @@ function App() {
   }, [dispatch]);
 
   // Fetch cart product count
-  const fetchUserAddToCart = useCallback(async () => {
-    if (!SummaryApi.isBackendConfigured) return;
+  const fetchUserAddToCart = useCallback(async ({ forceServer = false } = {}) => {
+    if (!SummaryApi.isBackendConfigured || (!userId && !forceServer)) {
+      setCartProductCount(getLocalCartItemCount());
+      return;
+    }
     try {
       const dataResponse = await fetch(SummaryApi.addToCartProductCount.url, {
         method: SummaryApi.addToCartProductCount.method,
@@ -61,25 +67,46 @@ function App() {
       });
 
       const dataApi = await dataResponse.json();
-      setCartProductCount(dataApi?.data?.count);
+      setCartProductCount(dataApi?.success ? dataApi?.data?.count : getLocalCartItemCount());
     } catch (error) {
       console.error('Failed to fetch cart product count:', error.message);
+      setCartProductCount(getLocalCartItemCount());
     }
-  }, []);
+  }, [userId]);
 
-  // Fetch necessary data on component render
+  // Fetch auth once on app load. Keep this separate from cart count to avoid
+  // refetching the user every time the cart callback changes after login.
   useEffect(() => {
     fetchUserDetails();
-    fetchUserAddToCart();
-  }, [fetchUserDetails, fetchUserAddToCart]);
+  }, [fetchUserDetails]);
 
-  const signInWithGoogle = useCallback(() => {
+  useEffect(() => {
+    if (authReady) {
+      fetchUserAddToCart();
+    }
+  }, [authReady, fetchUserAddToCart]);
+
+  useEffect(() => {
+    const handleLocalCartChange = () => {
+      if (!userId) {
+        setCartProductCount(getLocalCartItemCount());
+      }
+    };
+
+    window.addEventListener('preorderLocalCartChange', handleLocalCartChange);
+    return () => window.removeEventListener('preorderLocalCartChange', handleLocalCartChange);
+  }, [userId]);
+
+  const signInWithGoogle = useCallback((returnTo) => {
     const backendBase = import.meta.env.VITE_APP_BACKEND_URI;
     if (!backendBase) {
       console.error(
         '[Auth] Missing VITE_APP_BACKEND_URI. Cannot start Google sign-in without the backend base URL.'
       );
       return;
+    }
+    if (returnTo) {
+      sessionStorage.setItem('authReturnTo', returnTo);
     }
     window.location.href = `${backendBase.replace(/\/$/, '')}/api/auth/google`;
   }, []);

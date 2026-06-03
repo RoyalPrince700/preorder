@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify';
 
 const STORAGE_KEY = 'preorderLocalCartV1';
+let mergeLocalCartPromise = null;
 
 const dispatchChange = () => {
   window.dispatchEvent(new CustomEvent('preorderLocalCartChange'));
@@ -24,6 +25,82 @@ export const getLocalCartItemCount = () => {
 const saveLocalCart = (items) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   dispatchChange();
+};
+
+export const clearLocalCart = () => {
+  localStorage.removeItem(STORAGE_KEY);
+  dispatchChange();
+};
+
+export const updateLocalCartQuantity = (productId, quantity) => {
+  const id = String(productId);
+  const nextCart = getLocalCart()
+    .map((line) =>
+      String(line.productId) === id
+        ? { ...line, quantity: Math.max(1, Number(quantity) || 1) }
+        : line
+    );
+
+  saveLocalCart(nextCart);
+  return nextCart;
+};
+
+export const removeLocalCartItem = (productId) => {
+  const id = String(productId);
+  const nextCart = getLocalCart().filter((line) => String(line.productId) !== id);
+  saveLocalCart(nextCart);
+  return nextCart;
+};
+
+export const toCartPageItems = (items = getLocalCart()) =>
+  items.map((item) => ({
+    _id: item.productId,
+    quantity: item.quantity || 1,
+    productId: {
+      _id: item.productId,
+      productName: item.productName,
+      sellingPrice: item.sellingPrice,
+      price: item.price,
+      category: item.category,
+      productImage: item.productImage ? [item.productImage] : [],
+    },
+  }));
+
+export const mergeLocalCartToAccount = async (addToCartUrl, method = 'post') => {
+  if (mergeLocalCartPromise) return mergeLocalCartPromise;
+
+  const localCart = getLocalCart();
+  if (!localCart.length || !addToCartUrl) return false;
+
+  mergeLocalCartPromise = Promise.allSettled(
+    localCart.map((item) =>
+      fetch(addToCartUrl, {
+        method,
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          productId: item.productId,
+          quantity: item.quantity || 1,
+        }),
+      })
+    )
+  )
+    .then((results) => {
+      const allSynced = results.every(
+        (result) => result.status === 'fulfilled' && result.value.ok
+      );
+
+      if (allSynced) {
+        clearLocalCart();
+      }
+
+      return allSynced;
+    })
+    .finally(() => {
+      mergeLocalCartPromise = null;
+    });
+
+  return mergeLocalCartPromise;
 };
 
 /**
@@ -54,12 +131,14 @@ const localAddToCart = (e, product) => {
       quantity: 1,
       productName: product?.productName,
       sellingPrice: product?.sellingPrice,
+      price: product?.price,
+      category: product?.category,
       productImage: product?.productImage?.[0],
     });
   }
 
   saveLocalCart(cart);
-  toast.success('Added to cart (preview — saved on this device only)');
+  toast.success('Added to cart');
 };
 
 export default localAddToCart;

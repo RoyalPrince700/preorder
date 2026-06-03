@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FaStar, FaCartPlus } from 'react-icons/fa6';
 import displayNARCurrency from '../helpers/displayCurrency';
 import scrollTop from '../helpers/scrollTop';
-import localAddToCart from '../helpers/localAddToCart';
+import addToCart from '../helpers/addToCart';
+import Context from '../context';
 
 const ProductGridCard = ({ product }) => {
+  const { fetchUserAddToCart } = useContext(Context);
   const statusRaw = product?.productStatus;
   const statusLabel =
     statusRaw && String(statusRaw).toLowerCase() !== 'preorder' ? statusRaw : '';
 
-  const handleAddToCart = (e) => {
-    localAddToCart(e, product);
+  const handleAddToCart = async (e) => {
+    await addToCart(e, product?._id, product);
+    fetchUserAddToCart();
   };
 
   return (

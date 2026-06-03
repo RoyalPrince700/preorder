@@ -4,6 +4,7 @@ const productModel = require("../../models/productModel"); // Assuming a product
 const addToCartController = async (req, res) => {
   try {
     const { productId } = req.body; // Get productId from the request body
+    const quantity = Math.max(1, Number(req.body.quantity) || 1);
     const currentUser = req.userId; // Get userId from the request (set by authToken middleware)
 
     // If user is not authenticated, send login prompt
@@ -52,17 +53,21 @@ const addToCartController = async (req, res) => {
     });
 
     if (isProductAvailable) {
-      return res.status(400).json({
-        message: "Already added to cart.",
-        success: false,
-        error: true,
+      isProductAvailable.quantity = (isProductAvailable.quantity || 1) + quantity;
+      const updatedProduct = await isProductAvailable.save();
+
+      return res.status(200).json({
+        data: updatedProduct,
+        message: "Product quantity updated in cart.",
+        success: true,
+        error: false,
       });
     }
 
     // Create a payload to add the product to the cart
     const payload = {
       productId,
-      quantity: 1,
+      quantity,
       userId: currentUser,
     };
 

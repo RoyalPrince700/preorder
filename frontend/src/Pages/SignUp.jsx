@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from 'framer-motion';
@@ -12,6 +12,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { fetchUserDetails, fetchUserAddToCart, signInWithGoogle } = useContext(Context);
+  const location = useLocation();
+  const returnTo = location.state?.from || new URLSearchParams(location.search).get('from') || '/';
 
   const [data, setData] = useState({
     email: '',
@@ -102,7 +104,7 @@ const SignUp = () => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={signInWithGoogle}
+            onClick={() => signInWithGoogle(returnTo)}
             className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 px-4 rounded-md shadow-md border border-gray-300 transition-all"
           >
             <FcGoogle className="text-2xl" />
@@ -202,6 +204,7 @@ const SignUp = () => {
           Already have an account?{" "}
           <Link
             to="/login"
+            state={{ from: returnTo }}
             className="text-black hover:underline hover:text-black"
           >
             Login

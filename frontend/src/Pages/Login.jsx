@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   FaShirt,
   FaShoePrints,
@@ -20,6 +20,8 @@ const perks = [
 
 const Login = () => {
   const { signInWithGoogle } = useContext(Context);
+  const location = useLocation();
+  const returnTo = location.state?.from || new URLSearchParams(location.search).get('from') || '/';
 
   return (
     <section
@@ -105,7 +107,7 @@ const Login = () => {
 
             <button
               type="button"
-              onClick={signInWithGoogle}
+              onClick={() => signInWithGoogle(returnTo)}
               className="mt-8 flex w-full items-center justify-center gap-3 border-2 border-slate-900 bg-white py-5 text-sm font-black uppercase tracking-[0.15em] text-slate-950 transition-colors hover:bg-slate-950 hover:text-white"
             >
               <FcGoogle className="h-6 w-6 shrink-0" />
@@ -133,6 +135,7 @@ const Login = () => {
             New here?{' '}
             <Link
               to="/sign-up"
+              state={{ from: returnTo }}
               className="text-slate-950 underline decoration-2 underline-offset-4 transition-colors hover:text-orange-600"
             >
               Create account

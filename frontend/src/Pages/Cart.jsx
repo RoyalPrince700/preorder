@@ -1,18 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import SummaryApi from '../common';
 import Context from '../context';
 import displayNARCurrency from '../helpers/displayCurrency';
 import { MdDelete } from 'react-icons/md';
+import {
+    removeLocalCartItem,
+    toCartPageItems,
+    updateLocalCartQuantity,
+} from '../helpers/localAddToCart';
 
 const Cart = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const context = useContext(Context); // data of cart is coming from here
+    const user = useSelector((state) => state?.user?.user);
     const loadingCart = new Array(context.cartProductCount).fill(null);
     const navigate = useNavigate();
 
     const fetchData = async () => {
+        if (!user) {
+            setData(toCartPageItems());
+            return;
+        }
+
         const response = await fetch(SummaryApi.addToCartProductView.url, {
             method: SummaryApi.addToCartProductView.method,
             credentials: 'include',
@@ -34,11 +46,26 @@ const Cart = () => {
 
     useEffect(() => {
         setLoading(true);
-        handleLoading();
-        setLoading(false);
-    }, []);
+        handleLoading().finally(() => setLoading(false));
+    }, [user]);
+
+    useEffect(() => {
+        if (user) return undefined;
+
+        const handleLocalCartChange = () => {
+            setData(toCartPageItems());
+        };
+
+        window.addEventListener('preorderLocalCartChange', handleLocalCartChange);
+        return () => window.removeEventListener('preorderLocalCartChange', handleLocalCartChange);
+    }, [user]);
 
     const increaseQty = async (id, qty) => {
+        if (!user) {
+            setData(toCartPageItems(updateLocalCartQuantity(id, qty + 1)));
+            return;
+        }
+
         const response = await fetch(SummaryApi.updateCartProduct.url, {
             method: SummaryApi.updateCartProduct.method,
             credentials: 'include',
@@ -58,6 +85,11 @@ const Cart = () => {
     };
 
     const decreaseQty = async (id, qty) => {
+        if (!user) {
+            setData(toCartPageItems(updateLocalCartQuantity(id, Math.max(1, qty - 1))));
+            return;
+        }
+
         if (qty >= 2) {
             const response = await fetch(SummaryApi.updateCartProduct.url, {
                 method: SummaryApi.updateCartProduct.method,
@@ -79,6 +111,11 @@ const Cart = () => {
     };
 
     const deleteCartProduct = async (id) => {
+        if (!user) {
+            setData(toCartPageItems(removeLocalCartItem(id)));
+            return;
+        }
+
         try {
             const response = await fetch(SummaryApi.deleteCartProduct.url, {
                 method: SummaryApi.deleteCartProduct.method,
@@ -112,6 +149,12 @@ const Cart = () => {
     
     const handleCheckout = () => {
         if (data.length > 0) {
+            if (!user) {
+                sessionStorage.setItem('authReturnTo', '/checkout');
+                navigate('/login', { state: { from: '/checkout' } });
+                return;
+            }
+
             navigate('/checkout', {
                 state: {
                     cartItems: data,

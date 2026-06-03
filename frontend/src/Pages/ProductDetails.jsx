@@ -53,12 +53,12 @@ const ProductDetails = () => {
   }, [params]); // Re-fetch data when the product ID changes
 
   const handleAddToCart = async (e, id) => {
-    await addToCart(e, id);
+    await addToCart(e, id, data);
     fetchUserAddToCart();
   };
 
   const handleBuyProduct = async (e, id) => {
-    await addToCart(e, id);
+    await addToCart(e, id, data);
     fetchUserAddToCart();
     navigate('/cart');
   };

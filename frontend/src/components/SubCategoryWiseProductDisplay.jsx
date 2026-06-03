@@ -14,9 +14,9 @@ const SubCategoryWiseProductDisplay = ({ subCategory, heading }) => {
 
   const { fetchUserAddToCart } = useContext(Context);
 
-  const handleAddToCart = async (e, id) => {
+  const handleAddToCart = async (e, product) => {
     e.preventDefault(); // Prevent navigation when button is clicked
-    await addToCart(e, id);
+    await addToCart(e, product?._id, product);
     fetchUserAddToCart();
   };
 
@@ -107,7 +107,7 @@ const SubCategoryWiseProductDisplay = ({ subCategory, heading }) => {
                   className="absolute top-2 right-2 text-sm text-yellow-600 
                   hover:bg-yellow-700 hover:shadow-sm hover:text-white transition-all p-1
                   py-0.5 rounded-full"
-                  onClick={(e) => handleAddToCart(e, product?._id)}
+                  onClick={(e) => handleAddToCart(e, product)}
                 >
                   <LiaCartPlusSolid className="text-xl" />
                 </button>

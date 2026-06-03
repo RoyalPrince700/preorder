@@ -1,7 +1,13 @@
 import SummaryApi from "../common";
 import { toast } from 'react-toastify';
+import localAddToCart from './localAddToCart';
 
-const addToCart = async (e, id) => {
+const isLoginRequired = (response, responseData) =>
+  response.status === 401 ||
+  (!responseData?.success &&
+    /login|unauthorized/i.test(responseData?.message || ''));
+
+const addToCart = async (e, id, product) => {
   e?.stopPropagation();
   e?.preventDefault();
 
@@ -13,11 +19,17 @@ const addToCart = async (e, id) => {
         "content-type": 'application/json'
       },
       body: JSON.stringify({
-        productId: id
+        productId: id,
+        quantity: 1
       })
     });
 
     const responseData = await response.json();
+
+    if (isLoginRequired(response, responseData) && product?._id) {
+      localAddToCart(e, product);
+      return { success: true, local: true };
+    }
 
     // If response is not okay, show error and stop further execution
     if (!response.ok) {

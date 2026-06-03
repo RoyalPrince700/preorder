@@ -4,9 +4,8 @@ const countAddToCartProduct = async (req,res)=>{
     try{
         const userId = req.userId
 
-        const count = await addToCartModel.countDocuments({
-            userId : userId
-        })
+        const cartItems = await addToCartModel.find({ userId: userId }).select("quantity")
+        const count = cartItems.reduce((total, item) => total + (item.quantity || 0), 0)
 
         res.json({
 

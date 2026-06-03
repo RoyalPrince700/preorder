@@ -2,9 +2,10 @@ import React, { useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Context from '../context';
 import SummaryApi from '../common';
+import { mergeLocalCartToAccount } from '../helpers/localAddToCart';
 
 function AuthCallback() {
-  const { fetchUserDetails } = useContext(Context);
+  const { fetchUserDetails, fetchUserAddToCart } = useContext(Context);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -21,7 +22,15 @@ function AuthCallback() {
           
           // Fetch user profile to get user data and update Redux store
           await fetchUserDetails();
-          navigate('/');
+          await mergeLocalCartToAccount(
+            SummaryApi.addToCartProduct.url,
+            SummaryApi.addToCartProduct.method
+          );
+          await fetchUserAddToCart({ forceServer: true });
+
+          const returnTo = sessionStorage.getItem('authReturnTo') || '/';
+          sessionStorage.removeItem('authReturnTo');
+          navigate(returnTo, { replace: true });
         } catch (error) {
           console.error('Auth callback error:', error);
           navigate('/login');
@@ -32,7 +41,7 @@ function AuthCallback() {
     };
 
     handleAuth();
-  }, [location, fetchUserDetails, navigate]);
+  }, [location, fetchUserAddToCart, fetchUserDetails, navigate]);
 
   return (
     <div className="flex justify-center items-center min-h-screen">
