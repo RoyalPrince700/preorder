@@ -6,22 +6,22 @@ const VERIFICATION_EMAIL_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Verify Your Email</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+<body style="font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc;">
   <div style="background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center;">
     <h1 style="color: white; margin: 0;">Verify Your Email</h1>
   </div>
-  <div style="background-color: #F3F4F6; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+  <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 5px 5px; border: 1px solid #e2e8f0;">
     <p>Hello,</p>
     <p>Thank you for signing up! Your verification code is:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #F97316;">{verificationCode}</span>
+      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #f59e0b;">{verificationCode}</span>
     </div>
     <p>Enter this code on the verification page to complete your registration.</p>
     <p>This code will expire in 15 minutes for security reasons.</p>
     <p>If you didn't create an account with us, please ignore this email.</p>
     <p>Best regards,<br>The Wifmart Team</p>
   </div>
-  <div style="text-align: center; margin-top: 20px; color: #6B7280; font-size: 0.8em;">
+  <div style="text-align: center; margin-top: 20px; color: #64748b; font-size: 0.8em;">
     <p>This is an automated message, please do not reply to this email.</p>
   </div>
 </body>
@@ -36,15 +36,15 @@ const PASSWORD_RESET_SUCCESS_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Password Reset Successful</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+<body style="font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc;">
   <div style="background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center;">
     <h1 style="color: white; margin: 0;">Password Reset Successful</h1>
   </div>
-  <div style="background-color: #F3F4F6; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+  <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 5px 5px; border: 1px solid #e2e8f0;">
     <p>Hello,</p>
     <p>We're writing to confirm that your password has been successfully reset.</p>
     <div style="text-align: center; margin: 30px 0;">
-      <div style="background-color: #F97316; color: white; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; display: inline-block; font-size: 30px;">
+      <div style="background-color: #f59e0b; color: #000000; width: 50px; height: 50px; line-height: 50px; border-radius: 0; display: inline-block; font-size: 30px;">
         ✓
       </div>
     </div>
@@ -52,7 +52,7 @@ const PASSWORD_RESET_SUCCESS_TEMPLATE = `
     <p>Thank you for helping us keep your account secure.</p>
     <p>Best regards,<br>The Wifmart Team</p>
   </div>
-  <div style="text-align: center; margin-top: 20px; color: #6B7280; font-size: 0.8em;">
+  <div style="text-align: center; margin-top: 20px; color: #64748b; font-size: 0.8em;">
     <p>This is an automated message, please do not reply to this email.</p>
   </div>
 </body>
@@ -67,21 +67,21 @@ const PASSWORD_RESET_REQUEST_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reset Your Password</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+<body style="font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc;">
   <div style="background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center;">
     <h1 style="color: white; margin: 0;">Password Reset</h1>
   </div>
-  <div style="background-color: #F3F4F6; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+  <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 5px 5px; border: 1px solid #e2e8f0;">
     <p>Hello,</p>
     <p>We received a request to reset your password. If you didn't make this request, please ignore this email.</p>
     <p>To reset your password, click the button below:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <a href="{resetURL}" style="background-color: #F97316; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+      <a href="{resetURL}" style="background-color: #f59e0b; color: #000000; padding: 12px 20px; text-decoration: none; border-radius: 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">Reset Password</a>
     </div>
     <p>This link will expire in 1 hour for security reasons.</p>
     <p>Best regards,<br>The Wifmart Team</p>
   </div>
-  <div style="text-align: center; margin-top: 20px; color: #6B7280; font-size: 0.8em;">
+  <div style="text-align: center; margin-top: 20px; color: #64748b; font-size: 0.8em;">
     <p>This is an automated message, please do not reply to this email.</p>
   </div>
 </body>
@@ -96,15 +96,16 @@ const ORDER_RECEIVED_EMAIL_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Received</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; }
     .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
-    .content { background-color: #F9FAFB; padding: 20px; border-radius: 0 0 8px 8px; }
-    .order-details { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; }
+    .content { background-color: #ffffff; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #e2e8f0; }
+    .order-details { background: #f8fafc; padding: 15px; border-radius: 0; margin: 20px 0; border: 1px solid #e2e8f0; }
     table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E5E7EB; }
-    th { background-color: #F3F4F6; font-weight: bold; }
-    .total { font-weight: bold; color: #1F2937; }
-    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 20px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background-color: #f1f5f9; font-weight: bold; }
+    .total { font-weight: bold; color: #0f172a; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 20px; }
+    .action-button { display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: #000000; text-decoration: none; border-radius: 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   </style>
 </head>
 <body>
@@ -162,12 +163,12 @@ const ORDER_CONFIRMATION_EMAIL_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Confirmed</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; }
     .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
-    .content { background-color: #F9FAFB; padding: 20px; border-radius: 0 0 8px 8px; }
-    .order-details { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #F97316; }
-    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 20px; }
-    .action-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+    .content { background-color: #ffffff; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #e2e8f0; }
+    .order-details { background: #f8fafc; padding: 15px; border-radius: 0; margin: 20px 0; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 20px; }
+    .action-button { display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: #000000; text-decoration: none; border-radius: 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   </style>
 </head>
 <body>
@@ -208,16 +209,16 @@ const PAYMENT_SUCCESS_EMAIL_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Payment Successful</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+    body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; }
     .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; }
-    .content { background-color: #F0FDF4; padding: 20px; border-radius: 0 0 8px 8px; }
-    .payment-details { background: white; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #F97316; }
+    .content { background-color: #ffffff; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #e2e8f0; }
+    .payment-details { background: #f8fafc; padding: 15px; border-radius: 0; margin: 20px 0; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b; }
     table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #E5E7EB; }
-    th { background-color: #F3F4F6; font-weight: bold; }
-    .total { font-weight: bold; color: #F97316; font-size: 18px; }
-    .success-icon { font-size: 48px; color: #F97316; text-align: center; margin: 10px 0; }
-    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 20px; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background-color: #f1f5f9; font-weight: bold; }
+    .total { font-weight: bold; color: #f59e0b; font-size: 18px; }
+    .success-icon { font-size: 48px; color: #f59e0b; text-align: center; margin: 10px 0; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -262,11 +263,11 @@ const ORDER_NOTIFICATION_TEMPLATE = `
   <title>New Order Notification</title>
   <style>
     table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e5e7eb; }
-    th { background: #f9fafb; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f1f5f9; font-weight: bold; }
   </style>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827; max-width: 700px; margin: 0 auto; padding: 20px;">
+<body style="font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 700px; margin: 0 auto; padding: 20px; background: #f8fafc;">
   <h2 style="margin-top: 0;">New Order Placed</h2>
   <p>A customer just initiated an order. Here are the details:</p>
 
@@ -298,7 +299,7 @@ const ORDER_NOTIFICATION_TEMPLATE = `
     <strong>Total:</strong> {total}
   </p>
 
-  <p style="color:#6b7280; font-size: 12px;">This message was sent automatically by Wifmart backend.</p>
+  <p style="color:#64748b; font-size: 12px;">This message was sent automatically by Wifmart backend.</p>
 </body>
 </html>
 `;
@@ -311,18 +312,18 @@ const ORDER_STATUS_UPDATE_EMAIL_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Order Status Update - Wifmart</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
-    .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; }
+    .container { background: white; padding: 30px; border-radius: 0; border: 1px solid #e2e8f0; }
     .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
-    .status-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; text-transform: uppercase; font-size: 12px; margin: 10px 0; }
+    .status-badge { display: inline-block; padding: 8px 16px; border-radius: 0; font-weight: bold; text-transform: uppercase; font-size: 12px; margin: 10px 0; letter-spacing: 0.05em; }
     .status-pending { background-color: #FEF3C7; color: #92400E; }
     .status-processing { background-color: #DBEAFE; color: #1E40AF; }
     .status-shipped { background-color: #D1FAE5; color: #065F46; }
-    .status-delivered { background-color: #F97316; color: #FFFFFF; }
+    .status-delivered { background-color: #f59e0b; color: #000000; }
     .status-cancelled { background-color: #FEE2E2; color: #991B1B; }
-    .order-details { background: #F8FAFC; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F97316; }
-    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
-    .action-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+    .order-details { background: #f8fafc; padding: 20px; border-radius: 0; margin: 20px 0; border: 1px solid #e2e8f0; border-left: 4px solid #f59e0b; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+    .action-button { display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: #000000; text-decoration: none; border-radius: 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   </style>
 </head>
 <body>
@@ -371,12 +372,12 @@ const ORDER_DELIVERED_THANK_YOU_TEMPLATE = `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thank You For Your Order</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
-    .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; }
+    .container { background: white; padding: 30px; border-radius: 0; border: 1px solid #e2e8f0; }
     .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
-    .welcome-icon { font-size: 48px; color: #F97316; text-align: center; margin: 10px 0; }
-    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
-    .action-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 10px 0; font-weight: bold; }
+    .welcome-icon { font-size: 48px; color: #f59e0b; text-align: center; margin: 10px 0; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+    .action-button { display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: #000000; text-decoration: none; border-radius: 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
   </style>
 </head>
 <body>

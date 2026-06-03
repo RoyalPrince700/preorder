@@ -29,7 +29,8 @@ async function forgotPassword(req, res) {
             console.log(`Reset token generated: ${resetToken}`);
 
             
-            await sendPasswordResetEmail(user.email, `${process.env.FRONTEND_URL}/reset-password/${resetToken}`);
+            const base = (process.env.FRONTEND_URL || 'https://www.wifmart.com').replace(/\/$/, '');
+            await sendPasswordResetEmail(user.email, `${base}/reset-password/${resetToken}`);
         } catch (emailError) {
             console.error("Error sending password reset email:", emailError);
             return res.status(500).json({ success: false, message: "Failed to send password reset email." });

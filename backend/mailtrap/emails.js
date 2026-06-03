@@ -3,14 +3,7 @@ const { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_R
 
 // Utility function to get the correct frontend URL
 const getFrontendUrl = () => {
-    const isProdLike =
-        process.env.NODE_ENV === 'production' ||
-        !!process.env.RENDER_EXTERNAL_URL ||
-        !!process.env.RENDER ||
-        !!process.env.BACKEND_URL;
-
-    return process.env.FRONTEND_URL ||
-        (isProdLike ? 'https://www.wifmart.com' : 'http://localhost:5173');
+    return process.env.FRONTEND_URL || 'https://www.wifmart.com';
 };
 
 const logMailSend = (tag, mailOptions) => {
@@ -81,12 +74,12 @@ const sendWelcomeEmail = async (email, name = 'there') => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Wifmart!</title>
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4; }
-    .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    body { font-family: 'Inter', Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; }
+    .container { background: white; padding: 30px; border-radius: 0; border: 1px solid #e2e8f0; }
     .header { background: linear-gradient(to right, #1F2937, #111827); padding: 20px; text-align: center; color: white; border-radius: 8px 8px 0 0; margin: -30px -30px 20px -30px; }
-    .welcome-icon { font-size: 48px; color: #F97316; text-align: center; margin: 10px 0; }
-    .cta-button { display: inline-block; padding: 12px 24px; background-color: #F97316; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; font-weight: bold; }
-    .footer { text-align: center; color: #6B7280; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #E5E7EB; }
+    .welcome-icon { font-size: 48px; color: #f59e0b; text-align: center; margin: 10px 0; }
+    .cta-button { display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: #000000; text-decoration: none; border-radius: 0; margin: 20px 0; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+    .footer { text-align: center; color: #64748b; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
   </style>
 </head>
 <body>
