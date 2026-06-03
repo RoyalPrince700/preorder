@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: preorder-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BACKEND_URL
+        value: https://preorder-g9ne.onrender.com
+      - key: FRONTEND_URL
+        value: https://www.wifmart.com
+      - key: CORS_ORIGINS
+        value: https://www.wifmart.com,https://wifmart.com,https://wifmart.vercel.app,https://preorder-g9ne.onrender.com
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: MAILTRAP_TOKEN
+        sync: false
+      - key: MAILTRAP_ENDPOINT
+        sync: false
+      - key: FLW_PUBLIC_KEY
+        sync: false
+      - key: FLW_SECRET_KEY
+        sync: false
+      - key: FLW_ENCRYPTION_KEY
+        sync: false

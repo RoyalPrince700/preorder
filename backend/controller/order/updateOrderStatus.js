@@ -40,7 +40,7 @@ async function updateOrderStatus(req, res) {
         const userNotification = new NotificationModel({
             userId: updatedOrder.userId,
             type: "Order Status Update",
-            message: \`The status of your order #\${updatedOrder._id} has been updated to: \${status}.\`,
+            message: `The status of your order #${updatedOrder._id} has been updated to: ${status}.`,
             isRead: false,
             createdAt: new Date(),
         });

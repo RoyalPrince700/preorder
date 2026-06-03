@@ -7,16 +7,85 @@ const passport = require('passport');
 require('./config/passport');
 const router = require('./routes');
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to DB'))
-    .catch(err => {
-        // On serverless providers like Vercel, exiting the process will crash the function.
-        // Instead, just log the error so other routes (that don't depend on DB) can still respond.
+const DEFAULT_ALLOWED_ORIGINS = [
+    'https://www.wifmart.com',
+    'https://wifmart.com',
+    'https://wifmart.vercel.app',
+    'https://preorder-g9ne.onrender.com',
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'http://localhost:8080'
+];
+
+let connectionPromise = null;
+
+const normalizeOrigin = (value) => value?.trim().replace(/\/$/, '');
+
+const getAllowedOrigins = () => {
+    const configuredOrigins = (process.env.CORS_ORIGINS || '')
+        .split(',')
+        .map(normalizeOrigin)
+        .filter(Boolean);
+
+    const frontendOrigin = normalizeOrigin(process.env.FRONTEND_URL);
+
+    return [...new Set([
+        ...DEFAULT_ALLOWED_ORIGINS.map(normalizeOrigin),
+        frontendOrigin,
+        ...configuredOrigins
+    ].filter(Boolean))];
+};
+
+const connectDB = async () => {
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection;
+    }
+
+    if (connectionPromise) {
+        return connectionPromise;
+    }
+
+    try {
+        if (!process.env.MONGODB_URI) {
+            throw new Error('MONGODB_URI is not defined');
+        }
+
+        connectionPromise = mongoose.connect(process.env.MONGODB_URI, {
+            serverSelectionTimeoutMS: 5000,
+        });
+
+        await connectionPromise;
+        console.log('Connected to DB');
+    } catch (err) {
         console.error('MongoDB connection error:', err);
-    });
+    } finally {
+        connectionPromise = null;
+    }
+};
+
+// Connect initially
+connectDB().catch(() => {});
 
 const app = express();
+
+app.set('trust proxy', 1);
+
+// Reconnect only when Mongo drops, instead of reconnecting on every request.
+app.use(async (req, res, next) => {
+    if (mongoose.connection.readyState === 1) {
+        return next();
+    }
+
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        res.status(503).json({
+            success: false,
+            message: 'Database connection unavailable.',
+        });
+    }
+});
 
 // Middleware
 const corsOptions = {
@@ -24,26 +93,14 @@ const corsOptions = {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
 
-        const allowedOrigins = [
-            'https://www.wifmart.com',
-            'https://wifmart.com',
-            'https://wifmart.vercel.app',
-            'https://preorder-q1b7.vercel.app', // Backend domain on Vercel
-            'http://localhost:5173',
-            'http://localhost:3000',
-            'http://localhost:8080'
-        ];
+        const allowedOrigins = getAllowedOrigins();
+        const originToMatch = normalizeOrigin(origin);
 
-        // Add environment variable origin if it exists
-        if (process.env.FRONTEND_URL) {
-            allowedOrigins.push(process.env.FRONTEND_URL);
-        }
-
-        if (allowedOrigins.includes(origin)) {
+        if (allowedOrigins.includes(originToMatch)) {
             callback(null, true);
         } else {
             console.log('CORS blocked origin:', origin);
-            callback(new Error('Not allowed by CORS'));
+            callback(null, false);
         }
     },
     credentials: true,
@@ -54,45 +111,29 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Additional CORS headers middleware (backup)
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    const allowedOrigins = [
-        'https://www.wifmart.com',
-        'https://wifmart.com',
-        'https://wifmart.vercel.app',
-        'http://localhost:5173',
-        process.env.FRONTEND_URL
-    ].filter(Boolean);
-
-    if (allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
-    }
-
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cookie');
-
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-    } else {
-        next();
-    }
-});
-
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
 
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Preorder backend is running.',
+    });
+});
+
+// Health check endpoint for UptimeRobot / Render pinging
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
 app.use("/api", router);
 
-// Start the server only in non-Vercel environments
-if (!process.env.VERCEL) {
+if (require.main === module) {
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
 }
 
-// Export the Express app for Vercel (`@vercel/node`) to handle
 module.exports = app;

@@ -7,7 +7,7 @@ const getFrontendUrl = () => {
         process.env.NODE_ENV === 'production' ||
         !!process.env.RENDER_EXTERNAL_URL ||
         !!process.env.RENDER ||
-        !!process.env.VERCEL;
+        !!process.env.BACKEND_URL;
 
     return process.env.FRONTEND_URL ||
         (isProdLike ? 'https://www.wifmart.com' : 'http://localhost:5173');
