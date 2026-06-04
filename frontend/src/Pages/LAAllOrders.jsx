@@ -127,18 +127,11 @@ const LAAllOrders = () => {
               <p>
                 <strong>Quantity:</strong> {item.quantity}
               </p>
-              <p>
-                <strong>Seller Name:</strong>{" "}
-                {item.productId?.sellerName || "N/A"}
-              </p>
-              <p>
-                <strong>Seller Brand Name:</strong>{" "}
-                {item.productId?.sellerBrandName || "N/A"}
-              </p>
-              <p>
-                <strong>Seller Phone Number:</strong>{" "}
-                {item.productId?.sellerPhoneNumber || "N/A"}
-              </p>
+              {item.productId?.brandName && (
+                <p>
+                  <strong>Brand:</strong> {item.productId.brandName}
+                </p>
+              )}
             </li>
           ))}
         </ul>

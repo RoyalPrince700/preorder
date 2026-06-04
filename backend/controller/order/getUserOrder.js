@@ -19,7 +19,7 @@ const getUserOrders = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate({
         path: "cartItems.productId",
-        select: "productName productImage sellingPrice sellerName sellerBrandName sellerPhoneNumber"
+        select: "productName productImage sellingPrice brandName"
       })
       .populate("userId", "name number address email"); // Populate user details
 

@@ -27,3 +27,29 @@ export const adminBtnConfirm =
   'border-2 border-green-700 bg-green-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-green-800 transition-colors hover:bg-green-700 hover:text-white';
 
 export const CHART_COLORS = ['#ea580c', '#0f172a', '#64748b', '#f97316', '#94a3b8', '#cbd5e1'];
+
+export const adminModalOverlay =
+  'fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm';
+
+export const adminModalPanel =
+  'flex w-full max-w-md flex-col border-2 border-slate-900 bg-white shadow-2xl';
+
+export const adminModalPanelLg =
+  'flex max-h-[90vh] w-full max-w-2xl flex-col border-2 border-slate-900 bg-white shadow-2xl';
+
+export const adminModalHeader =
+  'flex shrink-0 items-center justify-between border-b-2 border-slate-900 bg-slate-950 px-6 py-4 text-white';
+
+export const adminModalCloseBtn =
+  'flex h-10 w-10 items-center justify-center border-2 border-white/20 transition hover:border-orange-500';
+
+export const adminModalBody = 'space-y-4 p-6';
+
+export const adminModalFooter =
+  'flex shrink-0 gap-3 border-t-2 border-slate-100 bg-slate-50 p-4';
+
+export const adminInput =
+  'w-full rounded-none border-2 border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-950 outline-none focus:border-orange-500';
+
+export const adminLabel =
+  'mb-1 block text-[10px] font-bold uppercase tracking-wide text-slate-500';

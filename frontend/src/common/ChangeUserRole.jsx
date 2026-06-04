@@ -3,6 +3,16 @@ import ROLE from "../common/role";
 import { IoMdClose } from "react-icons/io";
 import SummaryApi from "../common";
 import { toast } from "react-toastify";
+import {
+  adminModalOverlay,
+  adminModalPanel,
+  adminModalHeader,
+  adminModalCloseBtn,
+  adminModalBody,
+  adminModalFooter,
+  adminInput,
+  adminLabel,
+} from "./adminUi";
 
 const ChangeUserRole = ({
   name,
@@ -10,63 +20,83 @@ const ChangeUserRole = ({
   role,
   userId,
   onClose,
-  callFunc, // This line reruns the API so changes reflect immediately
+  callFunc,
 }) => {
   const [userRole, setUserRole] = useState(role);
+  const [saving, setSaving] = useState(false);
 
   const handleOnChangeSelect = (e) => {
     setUserRole(e.target.value);
   };
 
   const updateUserRole = async () => {
-    const fetchResponse = await fetch(SummaryApi.updateUser.url, {
-      method: SummaryApi.updateUser.method,
-      credentials: "include",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: userId,
-        role: userRole,
-      }),
-    });
-    const responseData = await fetchResponse.json();
+    setSaving(true);
+    try {
+      const fetchResponse = await fetch(SummaryApi.updateUser.url, {
+        method: SummaryApi.updateUser.method,
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          role: userRole,
+        }),
+      });
+      const responseData = await fetchResponse.json();
 
-    if (responseData.success) {
-      toast.success(responseData.message);
-      onClose();
-      callFunc(); // Rerun the API to reflect changes immediately
-    } else {
-      toast.error(responseData.message);
+      if (responseData.success) {
+        toast.success(responseData.message);
+        onClose();
+        callFunc();
+      } else {
+        toast.error(responseData.message);
+      }
+    } catch {
+      toast.error("Failed to update user role.");
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-gray-800 text-white w-full max-w-md mx-4 rounded-lg shadow-lg p-6 relative">
-        <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-200"
-          onClick={onClose}
-        >
-          <IoMdClose size={24} />
-        </button>
-        <h2 className="text-xl font-semibold mb-4 text-center">Change User Role</h2>
+    <div className={adminModalOverlay}>
+      <div className={adminModalPanel}>
+        <div className={adminModalHeader}>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400">
+              User management
+            </p>
+            <h2 className="mt-1 text-sm font-black uppercase tracking-widest">
+              Change role
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className={adminModalCloseBtn}
+            aria-label="Close"
+          >
+            <IoMdClose className="h-6 w-6" />
+          </button>
+        </div>
 
-        <div className="space-y-4">
-          <p className="text-sm">
-            <span className="font-medium">Name:</span> {name}
-          </p>
-          <p className="text-sm">
-            <span className="font-medium">Email:</span> {email}
-          </p>
-
-          <div className="flex flex-col space-y-2">
-            <label htmlFor="role" className="text-sm font-medium">
+        <div className={adminModalBody}>
+          <div>
+            <p className={adminLabel}>Name</p>
+            <p className="text-xs font-bold text-slate-950">{name}</p>
+          </div>
+          <div>
+            <p className={adminLabel}>Email</p>
+            <p className="text-xs font-bold text-slate-950 break-all">{email}</p>
+          </div>
+          <div>
+            <label htmlFor="role" className={adminLabel}>
               Role
             </label>
             <select
               id="role"
-              className="bg-gray-700 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={adminInput}
               value={userRole}
               onChange={handleOnChangeSelect}
             >
@@ -79,12 +109,23 @@ const ChangeUserRole = ({
           </div>
         </div>
 
-        <button
-          className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition"
-          onClick={updateUserRole}
-        >
-          Change Role
-        </button>
+        <div className={adminModalFooter}>
+          <button
+            type="button"
+            disabled={saving}
+            className="flex-1 bg-slate-950 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:bg-orange-600 disabled:opacity-60"
+            onClick={updateUserRole}
+          >
+            {saving ? "Saving…" : "Change role"}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="border-2 border-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-950"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -4,83 +4,133 @@ import { toast } from "react-toastify";
 import SummaryApi from "../common";
 import ORDER_STATUS from "../common/orderStatus";
 import { useSocket } from "../context/SocketContext";
+import {
+  adminModalOverlay,
+  adminModalPanel,
+  adminModalHeader,
+  adminModalCloseBtn,
+  adminModalBody,
+  adminModalFooter,
+  adminInput,
+  adminLabel,
+} from "../common/adminUi";
 
 const ChangeOrderStatus = ({ orderId, currentStatus, onClose, callFunc }) => {
-    const [orderStatus, setOrderStatus] = useState(currentStatus);
-    const { socket } = useSocket();
+  const [orderStatus, setOrderStatus] = useState(currentStatus);
+  const [saving, setSaving] = useState(false);
+  const { socket } = useSocket();
 
-    const handleStatusChange = (e) => {
-        setOrderStatus(e.target.value);
-    };
+  const handleStatusChange = (e) => {
+    setOrderStatus(e.target.value);
+  };
 
-    const updateOrderStatus = async () => {
-        try {
-            const response = await fetch(SummaryApi.updateOrder.url, {
-                method: SummaryApi.updateOrder.method,
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ orderId, status: orderStatus }),
-            });
+  const updateOrderStatus = async () => {
+    setSaving(true);
+    try {
+      const response = await fetch(SummaryApi.updateOrder.url, {
+        method: SummaryApi.updateOrder.method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderId, status: orderStatus }),
+      });
 
-            const responseData = await response.json();
+      const responseData = await response.json();
 
-            if (responseData.success) {
-                toast.success(responseData.message);
+      if (responseData.success) {
+        toast.success(responseData.message);
 
-                // Emit real-time update event
-                if (socket) {
-                    socket.emit('order-status-updated', {
-                        orderId,
-                        newStatus: orderStatus,
-                        message: `Order #${orderId} status changed to ${orderStatus}`
-                    });
-                }
-
-                onClose();
-                callFunc(); // Refresh the orders list
-            } else {
-                toast.error(responseData.message);
-            }
-        } catch (error) {
-            toast.error("Failed to update order status.");
+        if (socket) {
+          socket.emit("order-status-updated", {
+            orderId,
+            newStatus: orderStatus,
+            message: `Order #${orderId} status changed to ${orderStatus}`,
+          });
         }
-    };
 
-    return (
-        <div className="fixed inset-0 w-full h-full z-10 flex justify-center items-center bg-black bg-opacity-60">
-            <div className="mx-auto bg-gray-800 text-white shadow-md p-6 w-full max-w-sm rounded-lg">
-                <button className="block ml-auto text-white hover:text-red-500" onClick={onClose}>
-                    <IoMdClose size={24} />
-                </button>
-                <h1 className="pb-4 text-xl font-semibold text-yellow-500">Change Order Status</h1>
-                <p className="text-gray-300 mb-4">Order ID: <span className="text-white">{orderId}</span></p>
+        onClose();
+        callFunc();
+      } else {
+        toast.error(responseData.message);
+      }
+    } catch {
+      toast.error("Failed to update order status.");
+    } finally {
+      setSaving(false);
+    }
+  };
 
-                <div className="flex items-center justify-between my-4">
-                    <p className="text-gray-300">Status</p>
-                    <select
-                        className="border border-gray-600 bg-gray-700 text-white px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-yellow-500"
-                        value={orderStatus}
-                        onChange={handleStatusChange}
-                    >
-                        {Object.values(ORDER_STATUS).map((status) => (
-                            <option value={status} key={status}>
-                                {status}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+  const shortOrderId = orderId ? orderId.slice(-12).toUpperCase() : "—";
 
-                <button
-                    className="w-full text-white bg-yellow-600 hover:bg-yellow-700 py-2 px-4 rounded-md mt-4"
-                    onClick={updateOrderStatus}
-                >
-                    Change Status
-                </button>
-            </div>
+  return (
+    <div className={adminModalOverlay}>
+      <div className={adminModalPanel}>
+        <div className={adminModalHeader}>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400">
+              Order management
+            </p>
+            <h2 className="mt-1 text-sm font-black uppercase tracking-widest">
+              Change status
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className={adminModalCloseBtn}
+            aria-label="Close"
+          >
+            <IoMdClose className="h-6 w-6" />
+          </button>
         </div>
-    );
+
+        <div className={adminModalBody}>
+          <div>
+            <p className={adminLabel}>Order ID</p>
+            <p className="font-mono text-xs font-bold text-slate-950">
+              #{shortOrderId}
+            </p>
+          </div>
+          <div>
+            <label htmlFor="order-status" className={adminLabel}>
+              Status
+            </label>
+            <select
+              id="order-status"
+              className={adminInput}
+              value={orderStatus}
+              onChange={handleStatusChange}
+            >
+              {Object.values(ORDER_STATUS).map((status) => (
+                <option value={status} key={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className={adminModalFooter}>
+          <button
+            type="button"
+            disabled={saving}
+            className="flex-1 bg-slate-950 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:bg-orange-600 disabled:opacity-60"
+            onClick={updateOrderStatus}
+          >
+            {saving ? "Saving…" : "Change status"}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="border-2 border-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-950"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ChangeOrderStatus;
