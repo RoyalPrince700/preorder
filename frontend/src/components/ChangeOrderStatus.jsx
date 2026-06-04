@@ -13,6 +13,9 @@ import {
   adminModalFooter,
   adminInput,
   adminLabel,
+  adminBtnPrimary,
+  adminBtnSecondary,
+  adminBtnDisabled,
 } from "../common/adminUi";
 
 const ChangeOrderStatus = ({ orderId, currentStatus, onClose, callFunc }) => {
@@ -25,6 +28,7 @@ const ChangeOrderStatus = ({ orderId, currentStatus, onClose, callFunc }) => {
   };
 
   const updateOrderStatus = async () => {
+    if (saving) return;
     setSaving(true);
     try {
       const response = await fetch(SummaryApi.updateOrder.url, {
@@ -78,7 +82,8 @@ const ChangeOrderStatus = ({ orderId, currentStatus, onClose, callFunc }) => {
           <button
             type="button"
             onClick={onClose}
-            className={adminModalCloseBtn}
+            disabled={saving}
+            className={`${adminModalCloseBtn} ${adminBtnDisabled}`}
             aria-label="Close"
           >
             <IoMdClose className="h-6 w-6" />
@@ -101,6 +106,7 @@ const ChangeOrderStatus = ({ orderId, currentStatus, onClose, callFunc }) => {
               className={adminInput}
               value={orderStatus}
               onChange={handleStatusChange}
+              disabled={saving}
             >
               {Object.values(ORDER_STATUS).map((status) => (
                 <option value={status} key={status}>
@@ -115,15 +121,16 @@ const ChangeOrderStatus = ({ orderId, currentStatus, onClose, callFunc }) => {
           <button
             type="button"
             disabled={saving}
-            className="flex-1 bg-slate-950 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:bg-orange-600 disabled:opacity-60"
+            className={`${adminBtnPrimary} flex-1 py-3 ${adminBtnDisabled}`}
             onClick={updateOrderStatus}
           >
-            {saving ? "Saving…" : "Change status"}
+            {saving ? "Updating…" : "Change status"}
           </button>
           <button
             type="button"
+            disabled={saving}
             onClick={onClose}
-            className="border-2 border-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-950"
+            className={`${adminBtnSecondary} px-6 py-3 ${adminBtnDisabled}`}
           >
             Cancel
           </button>

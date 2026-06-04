@@ -3,6 +3,16 @@ import { IoMdClose } from 'react-icons/io';
 import { toast } from 'react-toastify';
 import SummaryApi from '../common';
 import { MEASUREMENT_SECTIONS, emptyMeasurements, SHIRT_SIZES } from '../constants/measurementFields';
+import {
+  adminModalOverlay,
+  adminModalPanelLg,
+  adminModalHeader,
+  adminModalCloseBtn,
+  adminModalFooter,
+  adminBtnPrimary,
+  adminBtnSecondary,
+  adminBtnDisabled,
+} from '../common/adminUi';
 
 const inputClass =
   'w-full rounded-none border-2 border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-950 outline-none focus:border-orange-500';
@@ -57,6 +67,7 @@ const AdminUserMeasurements = ({ user, onClose, onSaved }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return;
     setSaving(true);
     try {
       const res = await fetch(SummaryApi.updateUserMeasurements.url, {
@@ -86,9 +97,9 @@ const AdminUserMeasurements = ({ user, onClose, onSaved }) => {
   const displayName = user.fullName || user.email;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm">
-      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col border-2 border-slate-900 bg-white shadow-2xl">
-        <div className="flex shrink-0 items-center justify-between border-b-2 border-slate-900 bg-slate-950 px-6 py-4 text-white">
+    <div className={adminModalOverlay}>
+      <div className={adminModalPanelLg}>
+        <div className={adminModalHeader}>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400">
               Customer measurements
@@ -101,7 +112,8 @@ const AdminUserMeasurements = ({ user, onClose, onSaved }) => {
           <button
             type="button"
             onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center border-2 border-white/20 transition hover:border-orange-500"
+            disabled={saving}
+            className={`${adminModalCloseBtn} ${adminBtnDisabled}`}
             aria-label="Close"
           >
             <IoMdClose className="h-6 w-6" />
@@ -136,6 +148,7 @@ const AdminUserMeasurements = ({ user, onClose, onSaved }) => {
                               handleFieldChange(section.key, field.key, e.target.value)
                             }
                             className={inputClass}
+                            disabled={saving}
                           >
                             <option value="">— Select size —</option>
                             {(field.options || SHIRT_SIZES).map((size) => (
@@ -154,6 +167,7 @@ const AdminUserMeasurements = ({ user, onClose, onSaved }) => {
                             }
                             className={inputClass}
                             placeholder="—"
+                            disabled={saving}
                           />
                         )}
                       </div>
@@ -162,18 +176,19 @@ const AdminUserMeasurements = ({ user, onClose, onSaved }) => {
                 </div>
               ))}
             </div>
-            <div className="flex shrink-0 gap-3 border-t-2 border-slate-100 bg-slate-50 p-4">
+            <div className={adminModalFooter}>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 bg-slate-950 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:bg-orange-600 disabled:opacity-60"
+                className={`${adminBtnPrimary} flex-1 py-3 ${adminBtnDisabled}`}
               >
                 {saving ? 'Saving…' : 'Save measurements'}
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="border-2 border-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-950"
+                disabled={saving}
+                className={`${adminBtnSecondary} px-6 py-3 ${adminBtnDisabled}`}
               >
                 Cancel
               </button>

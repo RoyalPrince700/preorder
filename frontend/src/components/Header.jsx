@@ -11,6 +11,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { PiShoppingCartSimpleBold } from "react-icons/pi";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { FiBell } from "react-icons/fi";
 
 const navLinks = [
   { label: "Home", to: "/" },
@@ -30,6 +31,9 @@ const goSearch = (navigate, value) => {
   }
 };
 
+const mobileHeaderIconBox =
+  "h-9 w-9 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 text-slate-700 transition hover:border-orange-500 hover:text-slate-950";
+
 const Header = () => {
   const [menuDisplay, setMenuDisplay] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -44,6 +48,26 @@ const Header = () => {
 
   const getCartCount = () => {
     return context?.cartProductCount || 0;
+  };
+
+  const getNotificationCount = () => {
+    if (!user) return 0;
+    return context?.unreadNotificationCount ?? 0;
+  };
+
+  const renderCountBadge = (count, size = "md") => {
+    const isSmall = size === "sm";
+    return (
+      <p
+        className={`absolute -right-2 -top-2 flex items-center justify-center rounded-none bg-orange-600 font-black text-white ${
+          isSmall
+            ? "h-4 min-w-[16px] px-1 text-[9px]"
+            : "h-5 min-w-[20px] px-1 text-[10px]"
+        }`}
+      >
+        {count > 99 ? "99+" : count}
+      </p>
+    );
   };
 
   useEffect(() => {
@@ -194,11 +218,11 @@ const Header = () => {
 
         <div className='ml-auto flex shrink-0 items-center gap-2 sm:gap-5'>
           {!hideSearchBar && (
-            <div 
+            <div
               onClick={() => navigate("/search")}
-            className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-none text-slate-900 transition hover:text-orange-600 lg:hidden'
+              className={`flex cursor-pointer lg:hidden ${mobileHeaderIconBox}`}
             >
-              <GrSearch className='h-6 w-6' />
+              <GrSearch className="h-5 w-5" />
             </div>
           )}
 
@@ -249,6 +273,17 @@ const Header = () => {
             </button>
           )}
 
+          {user && (
+            <Link
+              to="/notifications"
+              className="relative hidden h-9 w-9 items-center justify-center rounded-none border-2 border-slate-200 text-slate-700 transition hover:border-orange-500 hover:text-slate-950 sm:flex"
+              aria-label="Notifications"
+            >
+              <FiBell className="h-5 w-5" />
+              {renderCountBadge(getNotificationCount())}
+            </Link>
+          )}
+
           <Link to='/cart' className='relative hidden h-9 w-9 items-center justify-center rounded-none border-2 border-slate-200 text-slate-700 transition hover:border-orange-500 hover:text-slate-950 sm:flex'>
             <PiShoppingCartSimpleBold className='h-5 w-5' />
             <p className='absolute -right-2 -top-2 flex h-5 min-w-[20px] items-center justify-center rounded-none bg-orange-600 px-1 text-[10px] font-black text-white'>
@@ -256,27 +291,38 @@ const Header = () => {
             </p>
           </Link>
 
+          {user && (
+            <Link
+              to="/notifications"
+              className={`relative flex sm:hidden ${mobileHeaderIconBox}`}
+              aria-label="Notifications"
+            >
+              <FiBell className="h-5 w-5" />
+              {renderCountBadge(getNotificationCount(), "sm")}
+            </Link>
+          )}
+
           <Link
             to={user ? "/profile" : "/login"}
-            className='flex h-9 w-9 items-center justify-center rounded-full text-slate-900 transition hover:text-orange-600 sm:hidden'
+            className={`flex sm:hidden ${mobileHeaderIconBox}`}
             aria-label={user ? "My profile" : "Log in"}
           >
             {user?.avatarUrl ? (
               <img
                 src={user.avatarUrl}
                 alt={user.fullName || "Profile"}
-                className='h-6 w-6 rounded-full object-cover border border-slate-200'
+                className="h-6 w-6 rounded-full object-cover"
               />
             ) : (
-              <FaRegCircleUser className='h-6 w-6' />
+              <FaRegCircleUser className="h-5 w-5" />
             )}
           </Link>
 
           <Link
-            to='/cart'
-            className='relative flex h-9 w-9 items-center justify-center rounded-none text-slate-900 transition hover:text-orange-600 sm:hidden'
+            to="/cart"
+            className={`relative flex sm:hidden ${mobileHeaderIconBox}`}
           >
-            <PiShoppingCartSimpleBold className='h-6 w-6' />
+            <PiShoppingCartSimpleBold className="h-5 w-5" />
             <p className='absolute -right-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-none bg-orange-600 px-1 text-[9px] font-black text-white'>
               {getCartCount()}
             </p>

@@ -59,8 +59,11 @@ const salesTrendController = require('../controller/order/salesTrendController')
 const assignedOrdersController = require('../controller/order/assignedOrder');
 const createNotification = require('../controller/notifications/createNotification');
 const getNotifications = require('../controller/notifications/getNotification');
+const getNotificationById = require('../controller/notifications/getNotificationById');
+const getUnreadNotificationCount = require('../controller/notifications/getUnreadNotificationCount');
 const markAsRead = require('../controller/notifications/markAsRead');
 const notifyAdminsOnOrder = require('../controller/order/notifyAdminsOnOrder');
+const contactUsController = require('../controller/contact/contactUsController');
 const { upload, uploadImage } = require('../controller/uploadImage');
 
 const { googleAuth, googleAuthCallback } = require('../controller/user/authController');
@@ -112,6 +115,8 @@ router.get("/auth/verify", authToken, (req, res) => {
 
 router.post("/create-notification", authToken,createNotification);
 router.get("/get-notification",authToken, getNotifications);
+router.get("/get-notification/:id", authToken, getNotificationById);
+router.get("/notification-unread-count", authToken, getUnreadNotificationCount);
 router.post("/mark-as-read",authToken, markAsRead);
 // Admin panel
 router.get("/all-users", authToken, requireRole('ADMIN'), allUsers);
@@ -150,6 +155,7 @@ router.post("/product-status", getProductStatusWise);
 router.post("/product-details", getProductDetails);
 router.post('/checkout', authToken, createCheckout); // Create checkout
 router.post('/notify-admins-order', notifyAdminsOnOrder);
+router.post('/contact-us', contactUsController);
 // User add to cart
 router.post("/addtocart", authToken, addToCartController);
 router.get("/countAddToCartProduct", authToken, countAddToCartProduct);

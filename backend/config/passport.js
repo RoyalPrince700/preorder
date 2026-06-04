@@ -62,7 +62,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
               console.log('[GOOGLE SIGNUP] 👤 User details - Email:', recipientEmail, 'Name:', recipientName);
 
               // Send email synchronously to ensure it's logged properly
-              sendWelcomeEmail(recipientEmail, recipientName)
+              sendWelcomeEmail(recipientEmail, recipientName, { userId: user._id })
                 .then((result) => {
                   console.log('[GOOGLE SIGNUP] ✅ Welcome email sent successfully to', recipientEmail, 'Result:', result?.messageId || 'OK');
                 })

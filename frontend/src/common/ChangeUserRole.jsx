@@ -12,6 +12,9 @@ import {
   adminModalFooter,
   adminInput,
   adminLabel,
+  adminBtnPrimary,
+  adminBtnSecondary,
+  adminBtnDisabled,
 } from "./adminUi";
 
 const ChangeUserRole = ({
@@ -30,6 +33,7 @@ const ChangeUserRole = ({
   };
 
   const updateUserRole = async () => {
+    if (saving) return;
     setSaving(true);
     try {
       const fetchResponse = await fetch(SummaryApi.updateUser.url, {
@@ -74,7 +78,8 @@ const ChangeUserRole = ({
           <button
             type="button"
             onClick={onClose}
-            className={adminModalCloseBtn}
+            disabled={saving}
+            className={`${adminModalCloseBtn} ${adminBtnDisabled}`}
             aria-label="Close"
           >
             <IoMdClose className="h-6 w-6" />
@@ -99,6 +104,7 @@ const ChangeUserRole = ({
               className={adminInput}
               value={userRole}
               onChange={handleOnChangeSelect}
+              disabled={saving}
             >
               {Object.values(ROLE).map((el) => (
                 <option value={el} key={el}>
@@ -113,15 +119,16 @@ const ChangeUserRole = ({
           <button
             type="button"
             disabled={saving}
-            className="flex-1 bg-slate-950 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-white transition hover:bg-orange-600 disabled:opacity-60"
+            className={`${adminBtnPrimary} flex-1 py-3 ${adminBtnDisabled}`}
             onClick={updateUserRole}
           >
-            {saving ? "Saving…" : "Change role"}
+            {saving ? "Updating…" : "Change role"}
           </button>
           <button
             type="button"
+            disabled={saving}
             onClick={onClose}
-            className="border-2 border-slate-900 px-6 py-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-950"
+            className={`${adminBtnSecondary} px-6 py-3 ${adminBtnDisabled}`}
           >
             Cancel
           </button>

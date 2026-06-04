@@ -36,6 +36,7 @@ const OrdersTable = () => {
     orderId: "",
     currentStatus: "",
   });
+  const [loadingOrderId, setLoadingOrderId] = useState(null);
   const { socket } = useSocket();
 
   const fetchAllOrders = async () => {
@@ -90,12 +91,15 @@ const OrdersTable = () => {
   }, [socket]);
 
   const updateOrderStatus = async (orderId, newStatus, adminConfirmed = undefined) => {
+    if (loadingOrderId) return;
+
+    setLoadingOrderId(orderId);
     try {
       const payload = { orderId, status: newStatus };
       if (adminConfirmed !== undefined) {
         payload.adminConfirmed = adminConfirmed;
       }
-      
+
       const response = await fetch(SummaryApi.updateOrder.url, {
         method: SummaryApi.updateOrder.method,
         credentials: "include",
@@ -116,8 +120,12 @@ const OrdersTable = () => {
     } catch (error) {
       console.error("Update Error:", error);
       toast.error("Failed to update order.");
+    } finally {
+      setLoadingOrderId(null);
     }
   };
+
+  const isOrderActionLoading = (orderId) => loadingOrderId === orderId;
 
   return (
     <div>
@@ -162,14 +170,16 @@ const OrdersTable = () => {
                         <button
                           type="button"
                           className={adminBtnConfirm}
+                          disabled={isOrderActionLoading(order._id)}
                           onClick={() => updateOrderStatus(order._id, order.status, true)}
                         >
-                          Confirm
+                          {isOrderActionLoading(order._id) ? "Confirming…" : "Confirm"}
                         </button>
                       )}
                       <button
                         type="button"
                         className={adminBtnSecondary}
+                        disabled={isOrderActionLoading(order._id)}
                         onClick={() =>
                           setExpandedOrderId(
                             expandedOrderId === order._id ? null : order._id
@@ -181,6 +191,7 @@ const OrdersTable = () => {
                       <button
                         type="button"
                         className={adminBtnSecondary}
+                        disabled={isOrderActionLoading(order._id)}
                         onClick={() => {
                           setCurrentOrderDetails({
                             orderId: order._id,

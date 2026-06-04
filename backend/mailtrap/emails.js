@@ -1,5 +1,7 @@
 const { transporter, sender } = require('./mailtrap.config');
 const { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE, ORDER_NOTIFICATION_TEMPLATE, ORDER_RECEIVED_EMAIL_TEMPLATE, ORDER_CONFIRMATION_EMAIL_TEMPLATE, PAYMENT_SUCCESS_EMAIL_TEMPLATE, ORDER_STATUS_UPDATE_EMAIL_TEMPLATE, ORDER_DELIVERED_THANK_YOU_TEMPLATE } = require('./emailTemplates');
+const sendUserNotification = require('../helpers/sendUserNotification');
+const { NOTIFICATION_TEMPLATE_KEYS } = require('../helpers/notificationTemplates');
 
 // Utility function to get the correct frontend URL
 const getFrontendUrl = () => {
@@ -61,7 +63,7 @@ const sendVerificationEmail = async (email, token) => {
     }
 };
 
-const sendWelcomeEmail = async (email, name = 'there') => {
+const sendWelcomeEmail = async (email, name = 'there', options = {}) => {
     try {
         const personalizedGreeting = name !== 'there' ? `Hi ${name}!` : 'Hello there!';
         const frontendUrl = getFrontendUrl();
@@ -128,6 +130,9 @@ const sendWelcomeEmail = async (email, name = 'there') => {
         logMailSend('welcome email', mailOptions);
         const response = await transporter.sendMail(mailOptions);
         logMailResult('welcome email', response);
+        if (options.userId) {
+            await sendUserNotification(options.userId, NOTIFICATION_TEMPLATE_KEYS.WELCOME, { name });
+        }
         return response;
     } catch (error) {
         logMailError('welcome email', error);
@@ -261,7 +266,7 @@ const sendUserOrderReceivedEmail = async (userEmail, payload) => {
 };
 
 // User order confirmation email (Sent when admin confirms)
-const sendUserOrderConfirmationEmail = async (userEmail, orderId) => {
+const sendUserOrderConfirmationEmail = async (userEmail, orderId, options = {}) => {
     const html = ORDER_CONFIRMATION_EMAIL_TEMPLATE
         .replace('{orderId}', orderId)
         .replace('{frontendUrl}', getFrontendUrl());
@@ -277,6 +282,9 @@ const sendUserOrderConfirmationEmail = async (userEmail, orderId) => {
         logMailSend('user order confirmation', mailOptions);
         const response = await transporter.sendMail(mailOptions);
         logMailResult('user order confirmation', response);
+        if (options.userId) {
+            await sendUserNotification(options.userId, NOTIFICATION_TEMPLATE_KEYS.ORDER_CONFIRMED, { orderId });
+        }
         return response;
     } catch (error) {
         logMailError('user order confirmation', error);
@@ -364,7 +372,7 @@ const sendPaymentSuccessNotificationToAdmin = async (paymentData) => {
 };
 
 // Order Status Update Email
-const sendOrderStatusUpdateEmail = async (userEmail, orderData) => {
+const sendOrderStatusUpdateEmail = async (userEmail, orderData, options = {}) => {
     const getStatusClass = (status) => {
         const statusClasses = {
             'Pending': 'pending',
@@ -406,6 +414,12 @@ const sendOrderStatusUpdateEmail = async (userEmail, orderData) => {
         logMailSend('order status update', mailOptions);
         const response = await transporter.sendMail(mailOptions);
         logMailResult('order status update', response);
+        if (options.userId) {
+            await sendUserNotification(options.userId, NOTIFICATION_TEMPLATE_KEYS.ORDER_STATUS_UPDATE, {
+                orderId: orderData.orderId,
+                status: orderData.status,
+            });
+        }
         return response;
     } catch (error) {
         logMailError('order status update', error);
@@ -413,8 +427,65 @@ const sendOrderStatusUpdateEmail = async (userEmail, orderData) => {
     }
 };
 
+const escapeHtml = (value) =>
+    String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
+// Contact form — notify admin
+const sendContactFormEmail = async (adminEmail, { name, email, message }) => {
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact form message</title>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #0f172a; max-width: 600px; margin: 0 auto; padding: 20px; background: #f8fafc; }
+    .container { background: white; padding: 24px; border: 1px solid #e2e8f0; }
+    .label { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; color: #64748b; margin-bottom: 4px; }
+    .value { margin-bottom: 16px; }
+    .message { white-space: pre-wrap; background: #f8fafc; padding: 16px; border: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>New contact form message</h2>
+    <p class="label">From</p>
+    <p class="value">${escapeHtml(name)}</p>
+    <p class="label">Email</p>
+    <p class="value"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
+    <p class="label">Message</p>
+    <div class="message">${escapeHtml(message)}</div>
+  </div>
+</body>
+</html>`;
+
+    try {
+        const mailOptions = {
+            from: `"${sender.name}" <${sender.email}>`,
+            to: adminEmail,
+            replyTo: email,
+            subject: `Contact form: ${name}`,
+            html,
+        };
+
+        logMailSend('contact form', mailOptions);
+        const response = await transporter.sendMail(mailOptions);
+        logMailResult('contact form', response);
+        return response;
+    } catch (error) {
+        logMailError('contact form', error);
+        throw error;
+    }
+};
+
 // Order Delivered Thank You Email
-const sendOrderDeliveredEmail = async (userEmail, orderId) => {
+const sendOrderDeliveredEmail = async (userEmail, orderId, options = {}) => {
     const html = ORDER_DELIVERED_THANK_YOU_TEMPLATE
         .replace('{orderId}', orderId)
         .replace('{frontendUrl}', getFrontendUrl());
@@ -430,6 +501,9 @@ const sendOrderDeliveredEmail = async (userEmail, orderId) => {
         logMailSend('order delivered thank you', mailOptions);
         const response = await transporter.sendMail(mailOptions);
         logMailResult('order delivered thank you', response);
+        if (options.userId) {
+            await sendUserNotification(options.userId, NOTIFICATION_TEMPLATE_KEYS.ORDER_DELIVERED, { orderId });
+        }
         return response;
     } catch (error) {
         logMailError('order delivered thank you', error);
@@ -448,5 +522,6 @@ module.exports = {
     sendPaymentSuccessEmail,
     sendPaymentSuccessNotificationToAdmin,
     sendOrderStatusUpdateEmail,
-    sendOrderDeliveredEmail
+    sendOrderDeliveredEmail,
+    sendContactFormEmail,
 };

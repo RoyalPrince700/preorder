@@ -79,6 +79,10 @@ const SummaryApi = {
     notifyAdminsOrder : {
         url : `${backendDomain}/api/notify-admins-order`,
         method : 'post'
+    },
+    contactUs : {
+        url : `${backendDomain}/api/contact-us`,
+        method : 'post'
     }, 
     allOrders : {
         url : `${backendDomain}/api/all-orders`,
@@ -218,7 +222,13 @@ const SummaryApi = {
     }, getNotification : {
         url : `${backendDomain}/api/get-notification`,
         method : 'get'
-    }, markAsRead : {
+    }, notificationUnreadCount : {
+        url : `${backendDomain}/api/notification-unread-count`,
+        method : 'get'
+    }, getNotificationById : (id) => ({
+        url : `${backendDomain}/api/get-notification/${id}`,
+        method : 'get'
+    }), markAsRead : {
         url : `${backendDomain}/api/mark-as-read`,
         method : 'post'
     }    

@@ -62,7 +62,7 @@ const verifyPaymentController = async (request, response) => {
 
                         // Also send order confirmation email
                         console.log('[SUCCESS PAGE] 📧 Sending order confirmation email to user for existing order:', user.email);
-                        await sendUserOrderConfirmationEmail(user.email, existingCheckout);
+                        await sendUserOrderConfirmationEmail(user.email, existingCheckout._id, { userId });
 
                         console.log('[SUCCESS PAGE] ✅ Existing order - User emails (payment + confirmation) sent successfully');
                     } else {
@@ -203,7 +203,7 @@ const verifyPaymentController = async (request, response) => {
                         
                         // Also send order confirmation email
                         console.log('[SUCCESS PAGE] 📧 Sending order confirmation email to user:', user.email);
-                        await sendUserOrderConfirmationEmail(user.email, savedCheckout);
+                        await sendUserOrderConfirmationEmail(user.email, savedCheckout._id, { userId });
                         
                         console.log('[SUCCESS PAGE] ✅ User emails (payment + confirmation) sent successfully');
                     } else {

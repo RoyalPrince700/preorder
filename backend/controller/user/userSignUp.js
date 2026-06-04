@@ -1,8 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const userModel = require("../../models/userModel");
-const NotificationModel = require("../../models/notification"); // Import the notification model
 const { sendVerificationEmail } = require("../../mailtrap/emails");
+const sendUserNotification = require("../../helpers/sendUserNotification");
+const { NOTIFICATION_TEMPLATE_KEYS } = require("../../helpers/notificationTemplates");
 
 async function userSignUpController(req, res) {
   const { email, password } = req.body;
@@ -44,16 +45,9 @@ async function userSignUpController(req, res) {
     // Send verification email
     await sendVerificationEmail(newUser.email, verificationToken);
 
-    // Create a welcome notification
-    const welcomeNotification = new NotificationModel({
-      userId: newUser._id,
-      type: "Welcome Message",
-      message: `Welcome to our platform, ${newUser.email}! We're thrilled to have you here.`,
-      isRead: false,
-      createdAt: new Date(),
+    await sendUserNotification(newUser._id, NOTIFICATION_TEMPLATE_KEYS.WELCOME, {
+      name: newUser.fullName || newUser.email.split("@")[0],
     });
-
-    await welcomeNotification.save();
 
     res.status(201).json({
       success: true,

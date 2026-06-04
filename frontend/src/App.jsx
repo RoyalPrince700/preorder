@@ -20,6 +20,7 @@ function App() {
   const user = useSelector((state) => state?.user?.user);
   const userId = user?._id;
   const [cartProductCount, setCartProductCount] = useState(0);
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
   const [authReady, setAuthReady] = useState(false);
 
   const shouldHideHeaderFooter = location.pathname.startsWith('/admin-overview') ||
@@ -74,6 +75,24 @@ function App() {
     }
   }, [userId]);
 
+  const fetchUnreadNotificationCount = useCallback(async () => {
+    if (!SummaryApi.isBackendConfigured || !userId) {
+      setUnreadNotificationCount(0);
+      return;
+    }
+    try {
+      const dataResponse = await fetch(SummaryApi.notificationUnreadCount.url, {
+        method: SummaryApi.notificationUnreadCount.method,
+        credentials: 'include',
+      });
+      const dataApi = await dataResponse.json();
+      setUnreadNotificationCount(dataApi?.success ? dataApi.count : 0);
+    } catch (error) {
+      console.error('Failed to fetch notification count:', error.message);
+      setUnreadNotificationCount(0);
+    }
+  }, [userId]);
+
   // Fetch auth once on app load. Keep this separate from cart count to avoid
   // refetching the user every time the cart callback changes after login.
   useEffect(() => {
@@ -83,8 +102,18 @@ function App() {
   useEffect(() => {
     if (authReady) {
       fetchUserAddToCart();
+      fetchUnreadNotificationCount();
     }
-  }, [authReady, fetchUserAddToCart]);
+  }, [authReady, fetchUserAddToCart, fetchUnreadNotificationCount]);
+
+  useEffect(() => {
+    const handleNotificationsChange = () => {
+      fetchUnreadNotificationCount();
+    };
+    window.addEventListener('preorderNotificationsChange', handleNotificationsChange);
+    return () =>
+      window.removeEventListener('preorderNotificationsChange', handleNotificationsChange);
+  }, [fetchUnreadNotificationCount]);
 
   useEffect(() => {
     const handleLocalCartChange = () => {
@@ -117,6 +146,8 @@ function App() {
       authReady,
       cartProductCount,
       fetchUserAddToCart,
+      unreadNotificationCount,
+      fetchUnreadNotificationCount,
       signInWithGoogle,
     }),
     [
@@ -124,6 +155,8 @@ function App() {
       fetchUserDetails,
       cartProductCount,
       fetchUserAddToCart,
+      unreadNotificationCount,
+      fetchUnreadNotificationCount,
       signInWithGoogle,
     ]
   );

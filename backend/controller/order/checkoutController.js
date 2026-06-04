@@ -13,19 +13,6 @@ const runCheckoutSideEffects = async ({ savedCheckout, userId, name }) => {
   }
 
   try {
-    const userNotification = new NotificationModel({
-      userId,
-      type: 'Order Confirmation',
-      message: `Your order #${savedCheckout._id} has been placed successfully.`,
-      isRead: false,
-      createdAt: new Date(),
-    });
-    await userNotification.save();
-  } catch (error) {
-    console.error('[CHECKOUT] ❌ Error creating user notification:', error);
-  }
-
-  try {
     const hrUsers = await UserModel.find({ role: 'HR' });
     const hrNotifications = hrUsers.map((hr) => ({
       userId: hr._id,
