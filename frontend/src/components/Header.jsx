@@ -32,7 +32,7 @@ const goSearch = (navigate, value) => {
 };
 
 const mobileHeaderIconBox =
-  "relative flex h-9 w-9 shrink-0 items-center justify-center text-slate-700 transition hover:text-orange-600";
+  "relative flex h-8 w-8 shrink-0 items-center justify-center text-slate-700 transition hover:text-orange-600";
 
 const Header = () => {
   const [menuDisplay, setMenuDisplay] = useState(false);
@@ -124,6 +124,10 @@ const Header = () => {
     goSearch(navigate, value);
   };
 
+  const openMobileSearch = () => {
+    navigate("/search");
+  };
+
   useEffect(() => {
     if (!visible) {
       return undefined;
@@ -151,7 +155,7 @@ const Header = () => {
   return (
     <>
       <header className='fixed top-0 left-0 right-0 z-50 border-b-2 border-slate-100 bg-white/95 backdrop-blur'>
-        <div className='relative mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-3.5 sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
+        <div className='relative mx-auto flex w-full max-w-7xl items-center gap-1.5 px-3 py-3.5 sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <button
               type="button"
@@ -216,17 +220,29 @@ const Header = () => {
             ))}
         </nav>
 
-        <div className='ml-auto flex shrink-0 items-center gap-2 sm:gap-5'>
+        <div className='ml-auto flex shrink-0 items-center gap-0.5 sm:gap-5'>
           {!hideSearchBar && (
-            <div
-              onClick={() => navigate("/search")}
-              className={`cursor-pointer lg:hidden ${mobileHeaderIconBox}`}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === "Enter" && navigate("/search")}
-              aria-label="Search"
-            >
-              <GrSearch className="h-5 w-5" />
+            <div className="mr-1.5 w-[6.75rem] shrink-0 sm:w-[5.25rem] lg:hidden">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={openMobileSearch}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openMobileSearch();
+                  }
+                }}
+                className="flex h-6 w-full cursor-pointer items-center rounded-lg border border-slate-200 bg-slate-50 px-2 transition-colors hover:border-orange-500 focus-within:border-orange-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500/30"
+                aria-label="Open search page"
+              >
+                <GrSearch className="mr-1 h-3 w-3 shrink-0 text-slate-400" />
+                <span className="min-w-0 truncate text-[11px] font-semibold leading-none text-slate-400">
+                  {location.pathname === "/search" && search.trim()
+                    ? search
+                    : "Search here"}
+                </span>
+              </div>
             </div>
           )}
 
