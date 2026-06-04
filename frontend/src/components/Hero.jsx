@@ -103,7 +103,7 @@ const MobileTrustFlow = () => (
 )
 
 const MobileHero = ({ products }) => (
-  <section className='w-full px-3 pt-[54px] sm:pt-24 lg:hidden'>
+  <section className='w-full px-3 pt-[62px] sm:pt-24 lg:hidden'>
     <MobileTrustFlow />
     <div className='overflow-hidden rounded-none bg-gradient-to-br from-orange-500 via-fuchsia-500 to-violet-700 p-1 shadow-[0_18px_45px_rgba(168,85,247,0.25)]'>
       <div className='relative overflow-hidden rounded-none bg-[#fff7ed]'>
@@ -298,7 +298,7 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
 const HeroSkeleton = () => (
   <>
     {/* Mobile skeleton */}
-    <section className='w-full px-3 pt-[54px] sm:pt-24 lg:hidden'>
+    <section className='w-full px-3 pt-[62px] sm:pt-24 lg:hidden'>
       <MobileTrustFlow />
       <div className='overflow-hidden rounded-none bg-gradient-to-br from-orange-200 via-fuchsia-200 to-violet-200 p-1 shadow-[0_18px_45px_rgba(168,85,247,0.08)] animate-pulse'>
         <div className='relative overflow-hidden rounded-none bg-[#fff7ed]'>

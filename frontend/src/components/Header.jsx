@@ -32,7 +32,7 @@ const goSearch = (navigate, value) => {
 };
 
 const mobileHeaderIconBox =
-  "h-9 w-9 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 text-slate-700 transition hover:border-orange-500 hover:text-slate-950";
+  "relative flex h-9 w-9 shrink-0 items-center justify-center text-slate-700 transition hover:text-orange-600";
 
 const Header = () => {
   const [menuDisplay, setMenuDisplay] = useState(false);
@@ -151,7 +151,7 @@ const Header = () => {
   return (
     <>
       <header className='fixed top-0 left-0 right-0 z-50 border-b-2 border-slate-100 bg-white/95 backdrop-blur'>
-        <div className='relative mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-2 sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
+        <div className='relative mx-auto flex w-full max-w-7xl items-center gap-2 px-3 py-3.5 sm:gap-4 sm:px-6 sm:py-3 lg:px-8'>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <button
               type="button"
@@ -220,7 +220,11 @@ const Header = () => {
           {!hideSearchBar && (
             <div
               onClick={() => navigate("/search")}
-              className={`flex cursor-pointer lg:hidden ${mobileHeaderIconBox}`}
+              className={`cursor-pointer lg:hidden ${mobileHeaderIconBox}`}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && navigate("/search")}
+              aria-label="Search"
             >
               <GrSearch className="h-5 w-5" />
             </div>
@@ -291,17 +295,6 @@ const Header = () => {
             </p>
           </Link>
 
-          {user && (
-            <Link
-              to="/notifications"
-              className={`relative flex sm:hidden ${mobileHeaderIconBox}`}
-              aria-label="Notifications"
-            >
-              <FiBell className="h-5 w-5" />
-              {renderCountBadge(getNotificationCount(), "sm")}
-            </Link>
-          )}
-
           <Link
             to={user ? "/profile" : "/login"}
             className={`flex sm:hidden ${mobileHeaderIconBox}`}
@@ -320,12 +313,11 @@ const Header = () => {
 
           <Link
             to="/cart"
-            className={`relative flex sm:hidden ${mobileHeaderIconBox}`}
+            className={`sm:hidden ${mobileHeaderIconBox}`}
+            aria-label="Cart"
           >
             <PiShoppingCartSimpleBold className="h-5 w-5" />
-            <p className='absolute -right-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-none bg-orange-600 px-1 text-[9px] font-black text-white'>
-              {getCartCount()}
-            </p>
+            {renderCountBadge(getCartCount(), "sm")}
           </Link>
 
         </div>
@@ -385,6 +377,18 @@ const Header = () => {
                   <span>Cart</span>
                   <span className="rounded-none bg-orange-600 px-2.5 py-1 text-[10px] font-black text-white">{getCartCount()}</span>
                 </NavLink>
+                {user && (
+                  <NavLink
+                    onClick={() => setVisible(false)}
+                    to="/notifications"
+                    className="flex items-center justify-between text-sm font-black uppercase tracking-widest text-slate-950 transition hover:text-orange-600"
+                  >
+                    <span>Notifications</span>
+                    <span className="rounded-none bg-orange-600 px-2.5 py-1 text-[10px] font-black text-white">
+                      {getNotificationCount() > 99 ? "99+" : getNotificationCount()}
+                    </span>
+                  </NavLink>
+                )}
                 {user ? (
                   <>
                     <NavLink
@@ -472,13 +476,6 @@ const Header = () => {
                   className="block border-b border-slate-100 px-6 py-4 text-xs font-black uppercase tracking-widest transition hover:bg-slate-50 hover:text-orange-600"
                 >
                   My Orders
-                </NavLink>
-                <NavLink
-                  onClick={() => setVisible(false)}
-                  to="/notifications"
-                  className="block border-b border-slate-100 px-6 py-4 text-xs font-black uppercase tracking-widest transition hover:bg-slate-50 hover:text-orange-600"
-                >
-                  Notifications
                 </NavLink>
               </>
             ) : (
