@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import fetchCategoryWiseProduct from '../helpers/fetchCategoryWiseProduct';
 import fetchAllProducts from '../helpers/fetchAllProducts';
 import ProductGridCard from './ProductGridCard';
@@ -23,6 +23,21 @@ const VerticalCardProduct = ({ category, heading, showHeading = true }) => {
   useEffect(() => {
     fetchData();
   }, [category]);
+
+  const displayData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    if (category !== 'all') return data;
+
+    const priority = { electronics: 0, gadgets: 1, wears: 2 };
+    return [...data].sort((a, b) => {
+      const ca = (a?.category || '').toLowerCase().trim();
+      const cb = (b?.category || '').toLowerCase().trim();
+      const pa = priority[ca] ?? 99;
+      const pb = priority[cb] ?? 99;
+      if (pa !== pb) return pa - pb;
+      return 0; // preserve original relative order within each category group (stable sort)
+    });
+  }, [data, category]);
 
   return (
     <div className={`w-full px-1.5 sm:px-10 lg:px-16 ${showHeading ? 'py-5 sm:py-10' : 'pb-5 pt-0 sm:pb-10 sm:pt-0'}`}>
@@ -54,7 +69,7 @@ const VerticalCardProduct = ({ category, heading, showHeading = true }) => {
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5">
-          {data?.map((product) => (
+          {displayData.map((product) => (
             <ProductGridCard key={product?._id} product={product} />
           ))}
         </div>

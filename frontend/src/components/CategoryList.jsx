@@ -47,7 +47,21 @@ const CategoryList = ({ activeCategory, onCategoryClick }) => {
           })),
         ];
 
-        setCategoryRows(rows);
+        // Reorder for home: All first, then electronics, gadgets, wears, then other categories alphabetically
+        const desiredCategoryOrder = ['electronics', 'gadgets', 'wears'];
+        const allRow = rows.find((r) => r.key === 'all');
+        const catRows = rows.filter((r) => r.key !== 'all');
+        const orderedCats = [
+          ...desiredCategoryOrder
+            .map((key) => catRows.find((r) => r.key === key))
+            .filter(Boolean),
+          ...catRows
+            .filter((r) => !desiredCategoryOrder.includes(r.key))
+            .sort((a, b) => a.name.localeCompare(b.name)),
+        ];
+        const orderedRows = allRow ? [allRow, ...orderedCats] : orderedCats;
+
+        setCategoryRows(orderedRows);
       } catch {
         setCategoryRows([
           {
