@@ -79,6 +79,10 @@ const ProductGridCard = ({ product }) => {
           onClick={handleAddToCart}
           className="text-slate-950 transition-colors hover:text-orange-600"
           title="Add to Cart"
+          aria-label="Add to cart"
+          data-gtm="home-add-to-cart"
+          data-product-id={product?._id}
+          data-product-name={product?.productName}
         >
           <FaCartPlus size={20} />
         </button>
