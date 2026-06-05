@@ -234,7 +234,7 @@ const CategoryProduct = () => {
                           className='group bg-white border-2 border-slate-100 hover:border-orange-500 transition-all overflow-hidden text-center flex flex-col'
                           onClick={() => setSelectCategory({ [category.category]: true })}
                         >
-                          <div className='aspect-square overflow-hidden bg-white p-4 flex items-center justify-center relative'>
+                          <div className='aspect-square overflow-hidden bg-white p-2 sm:p-3 flex items-center justify-center relative'>
                             <img
                               src={category?.productImage?.[0]}
                               alt={category.category}
@@ -242,7 +242,7 @@ const CategoryProduct = () => {
                             />
                             <div className="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                           </div>
-                          <div className='p-4 mt-auto'>
+                          <div className='p-3 mt-auto'>
                             <h3 className='text-xs font-black uppercase tracking-widest text-slate-950 group-hover:text-orange-600 transition-colors truncate'>
                               {category.category}
                             </h3>

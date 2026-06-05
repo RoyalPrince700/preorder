@@ -31,18 +31,18 @@ const HeroBenefits = () => (
 )
 
 const DesktopUtilityBar = () => (
-  <div className='hidden bg-slate-950 px-5 py-3 text-white lg:block'>
-    <div className='grid grid-cols-3 divide-x divide-white/15 text-sm font-bold'>
+  <div className='hidden bg-slate-950 px-4 py-2 text-white lg:block'>
+    <div className='grid grid-cols-3 divide-x divide-white/15 text-xs font-bold'>
       {[
         { icon: FaTruckFast, title: 'Delivery agreed with you', text: 'Before you pay' },
         { icon: FaBolt, title: 'WhatsApp-only account details', text: 'Sent from 08160881705' },
         { icon: FaFire, title: 'Hot deals every day', text: 'Fresh preorder savings' },
       ].map((item) => (
-        <div key={item.title} className='flex items-center justify-center gap-3 px-4'>
-          <item.icon className='h-5 w-5 text-orange-400' />
+        <div key={item.title} className='flex items-center justify-center gap-2 px-3'>
+          <item.icon className='h-4 w-4 text-orange-400' />
           <div>
-            <p className='leading-5 text-white'>{item.title}</p>
-            <p className='text-xs font-semibold text-orange-200'>{item.text}</p>
+            <p className='leading-4 text-white'>{item.title}</p>
+            <p className='text-[10px] font-semibold text-orange-200'>{item.text}</p>
           </div>
         </div>
       ))}
@@ -51,13 +51,13 @@ const DesktopUtilityBar = () => (
 )
 
 const DesktopTrustBars = () => (
-  <div className='relative px-4 pt-4 sm:px-6 lg:px-8'>
-    <div className='flex items-center justify-between rounded-none bg-green-600 px-4 py-3 text-sm font-black text-white shadow-sm'>
-      <span className='inline-flex items-center gap-2'>
-        <FaStar className='h-4 w-4' />
+  <div className='relative px-3 pt-2 sm:px-4 lg:px-6'>
+    <div className='flex items-center justify-between rounded-none bg-green-600 px-3 py-2 text-xs font-black text-white shadow-sm'>
+      <span className='inline-flex items-center gap-1.5'>
+        <FaStar className='h-3 w-3' />
         Why choose Wifmart?
       </span>
-      <div className='flex items-center gap-4 text-xs font-bold'>
+      <div className='flex items-center gap-3 text-[10px] font-bold'>
         <span>Secure privacy</span>
         <span className='text-green-200'>|</span>
         <span>Safe payments</span>
@@ -66,8 +66,8 @@ const DesktopTrustBars = () => (
       </div>
     </div>
 
-    <div className='mt-2 flex items-center justify-between rounded-none border border-green-200 bg-white/90 px-4 py-2 text-xs font-bold text-green-700'>
-      <span>Security reminder: Shop safely and confirm every preorder before payment.</span>
+    <div className='mt-1 flex items-center justify-between rounded-none border border-green-200 bg-white/90 px-3 py-1.5 text-[10px] font-bold text-green-700'>
+      <span>Shop safely and confirm every preorder before payment.</span>
       <Link to='/faq' className='text-green-800'>
         View
       </Link>
@@ -77,24 +77,24 @@ const DesktopTrustBars = () => (
 
 const MobileTrustFlow = () => (
   <div className='relative mb-1 w-full max-w-full overflow-hidden rounded-none border border-orange-100 bg-orange-50/90 shadow-sm'>
-    <div className='grid grid-cols-2 divide-x divide-orange-200 text-xs font-bold text-slate-900'>
+    <div className='grid grid-cols-2 divide-x divide-orange-200 text-[10px] font-bold text-slate-900'>
       {[
         { icon: FaTruckFast, title: 'Agreed delivery', text: 'Based on discussion' },
         { icon: FaBolt, title: 'WhatsApp checkout', text: 'Official line 08160881705' },
       ].map((item) => (
-        <div key={item.title} className='flex items-center gap-2 px-3 py-3'>
-          <item.icon className='h-4 w-4 shrink-0 text-orange-500' />
+        <div key={item.title} className='flex items-center gap-1.5 px-2 py-2'>
+          <item.icon className='h-3.5 w-3.5 shrink-0 text-orange-500' />
           <div className='min-w-0'>
             <p className='truncate font-black'>{item.title}</p>
-            <p className='truncate text-[11px] font-semibold text-slate-500'>{item.text}</p>
+            <p className='truncate text-[10px] font-semibold text-slate-500'>{item.text}</p>
           </div>
         </div>
       ))}
     </div>
 
-    <div className='mx-3 mb-3 mt-2 flex items-center justify-between rounded-none bg-green-600 px-3 py-2.5 text-xs font-black text-white'>
-      <span className='inline-flex items-center gap-2'>
-        <FaStar className='h-3.5 w-3.5' />
+    <div className='mx-2 mb-2 mt-1 flex items-center justify-between rounded-none bg-green-600 px-2 py-1.5 text-[10px] font-black text-white'>
+      <span className='inline-flex items-center gap-1'>
+        <FaStar className='h-3 w-3' />
         Why choose Wifmart?
       </span>
       <span>Safe payments</span>
@@ -110,10 +110,10 @@ const MobileHero = ({ products }) => (
         <div className='absolute -left-16 top-8 h-40 w-40 rounded-full bg-yellow-300/50 blur-3xl' />
         <div className='absolute right-0 top-0 h-44 w-44 rounded-full bg-pink-300/50 blur-3xl' />
 
-        <div className='relative px-3 py-5'>
+          <div className='relative px-3 py-4'>
           <div className='flex items-center justify-between gap-3'>
-            <span className='inline-flex items-center gap-2 rounded-none bg-slate-950 px-3 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-white'>
-              <FaFire className='h-3.5 w-3.5 text-orange-400' />
+            <span className='inline-flex items-center gap-2 rounded-none bg-slate-950 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-white'>
+              <FaFire className='h-3 w-3 text-orange-400' />
               Hot deals
             </span>
             <Link to='/product-category?all=true' className='text-sm font-black text-orange-600'>
@@ -121,37 +121,37 @@ const MobileHero = ({ products }) => (
             </Link>
           </div>
 
-          <h1 className='mt-5 text-3xl font-black leading-none tracking-tight text-slate-950'>
+          <h1 className='mt-3 text-2xl font-black leading-none tracking-tight text-slate-950'>
             Swipe hot picks
           </h1>
-          <p className='mt-2 text-sm font-bold text-slate-600'>Quick deals. Tap to buy.</p>
+          <p className='mt-1 text-xs font-bold text-slate-600'>Quick deals. Tap to buy.</p>
 
-          <div className='scrollbar-none -mx-3 mt-5 flex gap-3 overflow-x-auto px-3 pb-2'>
+          <div className='scrollbar-none -mx-3 mt-4 flex gap-3 overflow-x-auto px-3 pb-2'>
             {products.map((product, index) => (
               <Link
                 key={product._id}
                 to={`/product/${product._id}`}
-                className='group relative min-w-[168px] overflow-hidden rounded-none bg-white p-3 shadow-sm ring-1 ring-orange-100'
+                className='group relative min-w-[180px] overflow-hidden rounded-none bg-white p-2.5 shadow-sm ring-1 ring-orange-100'
               >
-                <div className='absolute left-3 top-3 z-10 rounded-none bg-red-500 px-2.5 py-1 text-[10px] font-black text-white'>
+                <div className='absolute left-2.5 top-2.5 z-10 rounded-none bg-red-500 px-2 py-0.5 text-[9px] font-black text-white'>
                   -{getDiscount(product)}%
                 </div>
-                <div className='absolute right-3 top-3 z-10 rounded-none bg-yellow-300 px-2.5 py-1 text-[10px] font-black text-slate-950'>
+                <div className='absolute right-2.5 top-2.5 z-10 rounded-none bg-yellow-300 px-2 py-0.5 text-[9px] font-black text-slate-950'>
                   #{index + 1}
                 </div>
 
-                <div className='flex h-32 items-center justify-center rounded-none bg-white'>
+                <div className='flex h-44 items-center justify-center rounded-none bg-white'>
                   <img
                     src={product.productImage?.[0]}
                     alt={product.productName}
                     fetchpriority="high"
-                    className='h-28 w-full object-contain transition duration-300 group-hover:scale-110'
+                    className='h-40 w-full object-contain transition duration-300 group-hover:scale-110'
                   />
                 </div>
 
-                <p className='mt-3 truncate text-sm font-black text-slate-950'>{product.productName}</p>
-                <p className='mt-2 text-lg font-black text-orange-600'>{formatPrice(product.sellingPrice)}</p>
-                <p className='text-xs font-semibold text-slate-400 line-through'>{formatPrice(product.price)}</p>
+                <p className='mt-2 truncate text-xs font-semibold text-slate-950'>{product.productName}</p>
+                <p className='mt-1 text-base font-black text-orange-600'>{formatPrice(product.sellingPrice)}</p>
+                <p className='text-[10px] font-semibold text-slate-400 line-through'>{formatPrice(product.price)}</p>
               </Link>
             ))}
           </div>
@@ -177,61 +177,61 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
           <DesktopUtilityBar />
           <DesktopTrustBars />
 
-          <div className='relative grid gap-5 p-4 sm:p-6 lg:grid-cols-[0.95fr,1.35fr] lg:p-8'>
-            <div className='flex min-h-[440px] flex-col justify-between overflow-hidden rounded-none bg-slate-950 p-5 text-white shadow-2xl sm:p-7'>
+          <div className='relative grid gap-4 p-3 sm:p-4 lg:grid-cols-[0.95fr,1.35fr] lg:p-6'>
+            <div className='flex min-h-[420px] flex-col justify-between overflow-hidden rounded-none bg-slate-950 p-4 text-white shadow-2xl sm:p-5'>
               <div>
                 <div className='flex flex-wrap items-center gap-2'>
-                  <span className='inline-flex items-center gap-2 rounded-none bg-orange-500 px-3 py-1 text-xs font-black uppercase tracking-[0.22em] text-white'>
-                    <FaFire className='h-3.5 w-3.5' />
+                  <span className='inline-flex items-center gap-2 rounded-none bg-orange-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-[0.2em] text-white'>
+                    <FaFire className='h-3 w-3' />
                     Hot deals
                   </span>
-                  <span className='rounded-none bg-white/10 px-3 py-1 text-xs font-bold text-yellow-200'>
+                  <span className='rounded-none bg-white/10 px-2 py-0.5 text-[10px] font-bold text-yellow-200'>
                     {dealCount} live picks
                   </span>
                 </div>
 
-                <h1 className='mt-6 text-4xl font-black leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl'>
+                <h1 className='mt-3 text-3xl font-black leading-[0.95] tracking-tight sm:text-4xl lg:text-5xl'>
                   <span className='bg-gradient-to-r from-yellow-300 via-orange-300 to-pink-300 bg-clip-text text-transparent'>
                     Hot Deals
                   </span>{' '}
                   Today
                 </h1>
-                <p className='mt-4 text-lg font-bold text-yellow-200'>Grab them before they go.</p>
+                <p className='mt-2 text-sm font-bold text-yellow-200'>Grab them before they go.</p>
               </div>
 
               <Link
                 to={`/product/${featuredDeal._id}`}
-                className='mt-8 block rounded-none border border-white/10 bg-white p-4 text-slate-950 transition duration-300 hover:-translate-y-1 hover:shadow-2xl'
+                className='mt-5 block rounded-none border border-white/10 bg-white p-3 text-slate-950 transition duration-300 hover:-translate-y-1 hover:shadow-2xl'
               >
-                <div className='flex items-center justify-between gap-3'>
+                <div className='flex items-center justify-between gap-2'>
                   <div>
-                    <p className='text-xs font-black uppercase tracking-[0.22em] text-orange-600'>
+                    <p className='text-[10px] font-black uppercase tracking-[0.2em] text-orange-600'>
                       Mega save {getDiscount(featuredDeal)}%
                     </p>
-                    <h2 className='mt-2 text-xl font-black'>{featuredDeal.productName}</h2>
+                    <h2 className='mt-1 text-lg font-semibold leading-tight'>{featuredDeal.productName}</h2>
                   </div>
-                  <span className='rounded-none bg-red-100 px-3 py-1 text-xs font-black text-red-600'>
+                  <span className='rounded-none bg-red-100 px-2 py-0.5 text-[10px] font-black text-red-600'>
                     {featuredDeal.brandName}
                   </span>
                 </div>
 
-                <div className='mt-4 flex items-end justify-between gap-4'>
+                <div className='mt-3 flex items-end justify-between gap-3'>
                   <img
                     src={featuredDeal.productImage?.[0]}
                     alt={featuredDeal.productName}
                     fetchpriority="high"
-                    className='h-36 w-40 object-contain drop-shadow-xl sm:h-44'
+                    className='h-44 w-48 object-contain drop-shadow-xl sm:h-52 sm:w-56'
                   />
                   <div className='text-right'>
-                    <p className='text-sm text-slate-400 line-through'>{formatPrice(featuredDeal.price)}</p>
-                    <p className='text-3xl font-black text-orange-600'>{formatPrice(featuredDeal.sellingPrice)}</p>
+                    <p className='text-xs text-slate-400 line-through'>{formatPrice(featuredDeal.price)}</p>
+                    <p className='text-2xl font-black text-orange-600 sm:text-3xl'>{formatPrice(featuredDeal.sellingPrice)}</p>
                   </div>
                 </div>
               </Link>
             </div>
 
-            <div className='grid content-start gap-4'>
-              <div className='flex flex-wrap items-center gap-2'>
+            <div className='grid content-start gap-3'>
+              <div className='flex flex-wrap items-center gap-1.5'>
                 {[
                   { icon: FaBolt, label: 'Flash prices' },
                   { icon: FaTruckFast, label: 'Preorder now' },
@@ -239,51 +239,51 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className='inline-flex items-center gap-2 rounded-none bg-white/90 px-4 py-2 text-sm font-black text-slate-950 shadow-sm backdrop-blur'
+                    className='inline-flex items-center gap-1.5 rounded-none bg-white/90 px-3 py-1 text-xs font-black text-slate-950 shadow-sm backdrop-blur'
                   >
-                    <item.icon className='h-4 w-4 text-orange-500' />
+                    <item.icon className='h-3 w-3 text-orange-500' />
                     {item.label}
                   </div>
                 ))}
               </div>
 
-              <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
+              <div className='grid grid-cols-2 gap-2.5 sm:grid-cols-3'>
                 {sideDeals.map((product, index) => (
                   <Link
                     key={product._id}
                     to={`/product/${product._id}`}
-                    className='group relative overflow-hidden rounded-none bg-white p-3 shadow-sm ring-1 ring-orange-100 transition duration-300 hover:-translate-y-1 hover:shadow-xl'
+                    className='group relative overflow-hidden rounded-none bg-white p-2 shadow-sm ring-1 ring-orange-100 transition duration-300 hover:-translate-y-1 hover:shadow-xl'
                   >
-                    <div className='absolute left-3 top-3 z-10 rounded-none bg-red-500 px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-white'>
+                    <div className='absolute left-2 top-2 z-10 rounded-none bg-red-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.12em] text-white'>
                       -{getDiscount(product)}%
                     </div>
-                    <div className='absolute right-3 top-3 z-10 rounded-none bg-yellow-300 px-2.5 py-1 text-[10px] font-black text-slate-950'>
+                    <div className='absolute right-2 top-2 z-10 rounded-none bg-yellow-300 px-2 py-0.5 text-[9px] font-black text-slate-950'>
                       #{index + 2}
                     </div>
 
-                    <div className='flex h-32 items-center justify-center rounded-none bg-white sm:h-36'>
+                    <div className='flex h-44 items-center justify-center rounded-none bg-white sm:h-48'>
                       <img
                         src={product.productImage?.[0]}
                         alt={product.productName}
                         loading="lazy"
-                        className='h-28 w-full object-contain transition duration-300 group-hover:scale-110 sm:h-32'
+                        className='h-40 w-full object-contain transition duration-300 group-hover:scale-110 sm:h-44'
                       />
                     </div>
 
-                    <div className='mt-3'>
-                      <p className='truncate text-sm font-black text-slate-950'>{product.productName}</p>
-                      <div className='mt-2 flex flex-wrap items-end gap-2'>
-                        <p className='text-lg font-black text-orange-600'>{formatPrice(product.sellingPrice)}</p>
-                        <p className='text-xs font-semibold text-slate-400 line-through'>{formatPrice(product.price)}</p>
+                    <div className='mt-2'>
+                      <p className='truncate text-xs font-semibold text-slate-950'>{product.productName}</p>
+                      <div className='mt-1 flex flex-wrap items-end gap-1.5'>
+                        <p className='text-base font-black text-orange-600'>{formatPrice(product.sellingPrice)}</p>
+                        <p className='text-[10px] font-semibold text-slate-400 line-through'>{formatPrice(product.price)}</p>
                       </div>
                     </div>
                   </Link>
                 ))}
               </div>
 
-              <div className='flex flex-col gap-3 rounded-none bg-white/85 p-4 shadow-sm backdrop-blur sm:flex-row sm:items-center sm:justify-between'>
-                <p className='text-lg font-black text-slate-950'>More hot deals waiting.</p>
-                <Link to='/product-category?all=true' className='brand-btn-primary !rounded-none whitespace-nowrap'>
+              <div className='flex flex-col gap-2 rounded-none bg-white/85 p-3 shadow-sm backdrop-blur sm:flex-row sm:items-center sm:justify-between'>
+                <p className='text-sm font-black text-slate-950'>More hot deals waiting.</p>
+                <Link to='/product-category?all=true' className='brand-btn-primary !rounded-none whitespace-nowrap text-xs py-1.5'>
                   See all deals
                 </Link>
               </div>
@@ -311,15 +311,15 @@ const HeroSkeleton = () => (
             <div className='mt-5 h-8 w-40 rounded-none bg-slate-200' />
             <div className='mt-2 h-4 w-48 rounded-none bg-slate-100' />
 
-            <div className='-mx-3 mt-5 flex gap-3 overflow-hidden px-3 pb-2'>
+            <div className='-mx-3 mt-4 flex gap-3 overflow-hidden px-3 pb-2'>
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   key={index}
-                  className='relative min-w-[168px] overflow-hidden rounded-none bg-white p-3 shadow-sm ring-1 ring-orange-100'
+                  className='relative min-w-[180px] overflow-hidden rounded-none bg-white p-2.5 shadow-sm ring-1 ring-orange-100'
                 >
-                  <div className='h-32 rounded-none bg-slate-100' />
-                  <div className='mt-3 h-4 w-full rounded-none bg-slate-100' />
-                  <div className='mt-2 h-4 w-20 rounded-none bg-slate-100' />
+                  <div className='h-40 rounded-none bg-slate-100' />
+                  <div className='mt-2 h-3 w-full rounded-none bg-slate-100' />
+                  <div className='mt-1 h-3 w-16 rounded-none bg-slate-100' />
                 </div>
               ))}
             </div>
@@ -332,30 +332,30 @@ const HeroSkeleton = () => (
     <section className='hidden w-full px-4 pt-20 sm:px-6 lg:block lg:px-8'>
       <div className='relative mx-auto max-w-7xl overflow-hidden rounded-none bg-gradient-to-br from-orange-200 via-fuchsia-200 to-violet-200 p-1 shadow-[0_24px_70px_rgba(148,163,184,0.4)]'>
         <div className='relative overflow-hidden rounded-none bg-[#fff7ed]'>
-          <div className='animate-pulse'>
-            <div className='h-10 w-full bg-slate-100' />
-            <div className='mt-4 grid gap-5 p-4 sm:p-6 lg:grid-cols-[0.95fr,1.35fr] lg:p-8'>
-              <div className='flex min-h-[440px] flex-col justify-between rounded-none bg-slate-950/90 p-5 sm:p-7'>
-                <div className='space-y-4'>
-                  <div className='h-6 w-32 rounded-none bg-slate-700' />
-                  <div className='h-12 w-64 rounded-none bg-slate-700' />
-                  <div className='h-4 w-40 rounded-none bg-slate-600' />
+            <div className='animate-pulse'>
+            <div className='h-8 w-full bg-slate-100' />
+            <div className='mt-3 grid gap-4 p-3 sm:p-4 lg:grid-cols-[0.95fr,1.35fr] lg:p-6'>
+              <div className='flex min-h-[420px] flex-col justify-between rounded-none bg-slate-950/90 p-4 sm:p-5'>
+                <div className='space-y-3'>
+                  <div className='h-5 w-28 rounded-none bg-slate-700' />
+                  <div className='h-9 w-56 rounded-none bg-slate-700' />
+                  <div className='h-3 w-32 rounded-none bg-slate-600' />
                 </div>
-                <div className='mt-8 h-40 w-full rounded-none bg-slate-800' />
+                <div className='mt-5 h-48 w-full rounded-none bg-slate-800' />
               </div>
 
-              <div className='space-y-4'>
-                <div className='flex flex-wrap gap-3'>
+              <div className='space-y-3'>
+                <div className='flex flex-wrap gap-1.5'>
                   {Array.from({ length: 3 }).map((_, index) => (
-                    <div key={index} className='h-10 w-28 rounded-none bg-slate-100' />
+                    <div key={index} className='h-6 w-20 rounded-none bg-slate-100' />
                   ))}
                 </div>
-                <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
+                <div className='grid grid-cols-2 gap-2.5 sm:grid-cols-3'>
                   {Array.from({ length: 3 }).map((_, index) => (
-                    <div key={index} className='h-40 rounded-none bg-slate-100' />
+                    <div key={index} className='h-44 rounded-none bg-slate-100' />
                   ))}
                 </div>
-                <div className='h-14 w-full rounded-none bg-slate-100' />
+                <div className='h-10 w-full rounded-none bg-slate-100' />
               </div>
             </div>
           </div>

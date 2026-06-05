@@ -76,7 +76,7 @@ const VerticalHotDealCard = ({ hotDeal, heading }) => {
                   className="min-w-[160px] sm:min-w-[180px] md:min-w-[220px] max-w-[220px] bg-white border-2 border-slate-100 hover:border-orange-500 transition-all flex flex-col snap-start group"
                 >
                   {/* Product Image */}
-                  <div className="bg-white h-[160px] sm:h-[200px] flex justify-center items-center relative overflow-hidden p-4">
+                  <div className="bg-white h-[160px] sm:h-[200px] flex justify-center items-center relative overflow-hidden p-2 sm:p-3">
                     <img
                       src={product?.productImage[0]}
                       alt={product?.productName}
@@ -87,7 +87,7 @@ const VerticalHotDealCard = ({ hotDeal, heading }) => {
 
                   {/* Product Details */}
                   <div className="p-3 sm:p-4 flex-1 flex flex-col">
-                    <p className="text-xs font-black uppercase tracking-widest text-slate-950 truncate">
+                    <p className="text-xs font-semibold tracking-normal text-slate-950 truncate">
                       {product?.productName}
                     </p>
                     <div className="flex flex-col mt-2">

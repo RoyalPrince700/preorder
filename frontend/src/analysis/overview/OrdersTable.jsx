@@ -234,7 +234,7 @@ const OrdersTable = () => {
                               />
                             )}
                             <div>
-                              <p className="text-xs font-black uppercase tracking-widest text-slate-950">
+                              <p className="text-xs font-semibold tracking-normal text-slate-950">
                                 {item.productId?.productName || "Unknown"}
                               </p>
                               <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">

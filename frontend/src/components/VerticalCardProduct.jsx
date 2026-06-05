@@ -43,13 +43,11 @@ const VerticalCardProduct = ({ category, heading, showHeading = true }) => {
           {loadingList.map((_, index) => (
             <div key={index} className="overflow-hidden border-2 border-slate-100 bg-white">
               <div className="aspect-square animate-pulse bg-white"></div>
-              <div className="p-4">
-                <div className="mb-2 h-4 animate-pulse bg-slate-50"></div>
-                <div className="mb-4 h-4 w-2/3 animate-pulse bg-slate-50"></div>
-                <div className="flex gap-2">
-                  <div className="h-10 flex-1 animate-pulse bg-slate-50"></div>
-                  <div className="h-10 w-10 animate-pulse bg-slate-50"></div>
-                </div>
+              <div className="p-3">
+                <div className="mb-1 h-2.5 w-1/2 animate-pulse bg-slate-100"></div>
+                <div className="mb-1.5 h-3.5 w-full animate-pulse bg-slate-50"></div>
+                <div className="mb-1 h-2.5 w-1/3 animate-pulse bg-slate-100"></div>
+                <div className="h-4 w-2/3 animate-pulse bg-slate-50"></div>
               </div>
             </div>
           ))}

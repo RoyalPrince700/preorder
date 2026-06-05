@@ -18,7 +18,7 @@ const AdminProductCard = ({ data, fetchdata }) => {
                 />
             </div>
 
-            <h3 className="line-clamp-2 text-xs font-black uppercase tracking-widest text-slate-950 leading-tight">
+            <h3 className="line-clamp-2 text-xs font-semibold tracking-normal text-slate-950 leading-tight">
                 {data?.productName || "Unnamed Product"}
             </h3>
 

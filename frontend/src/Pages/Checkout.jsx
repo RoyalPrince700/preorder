@@ -351,7 +351,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex flex-col justify-between px-4 py-1">
                       <div>
-                        <h3 className="line-clamp-2 text-xs font-black uppercase tracking-widest text-slate-950 leading-tight">
+                        <h3 className="line-clamp-2 text-xs font-semibold tracking-normal text-slate-950 leading-tight">
                           {name}
                         </h3>
                         {product?.category && (

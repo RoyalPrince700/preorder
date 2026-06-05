@@ -212,7 +212,7 @@ const Cart = () => {
                     {/* Product Details */}
                     <div className="px-2 sm:px-6 flex flex-col justify-between py-1">
                       <div>
-                        <h2 className="line-clamp-2 text-xs font-black uppercase tracking-widest text-slate-950 leading-tight">
+                        <h2 className="line-clamp-2 text-xs font-semibold tracking-normal text-slate-950 leading-tight">
                           {product?.productId?.productName}
                         </h2>
                         <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-orange-600">

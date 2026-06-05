@@ -107,7 +107,7 @@ const ProductDetails = () => {
               <span className="inline-flex items-center rounded-none bg-orange-50 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-orange-600">
                 {data?.brandName || 'Wifmart EXCLUSIVE'}
               </span>
-              <h1 className="mt-4 text-3xl font-black uppercase tracking-tighter text-slate-950 sm:text-4xl lg:text-5xl leading-none">
+              <h1 className="mt-4 text-3xl font-semibold tracking-normal text-slate-950 sm:text-4xl lg:text-5xl leading-none">
                 {data?.productName}
               </h1>
               <div className="mt-4 flex items-center gap-4">
@@ -164,9 +164,25 @@ const ProductDetails = () => {
 
             <div className="mt-10 border-t border-slate-100 pt-8">
               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-950">Description</h3>
-              <p className="mt-4 text-sm font-medium leading-relaxed text-slate-600">
-                {data.description}
-              </p>
+              <div className="mt-4 text-sm font-medium leading-relaxed text-slate-600">
+                {data.description ? (
+                  data.description
+                    .split(/\n\s*\n/)
+                    .filter(Boolean)
+                    .map((paragraph, index, arr) => (
+                      <p key={index} className={index < arr.length - 1 ? 'mb-4' : ''}>
+                        {paragraph.split('\n').map((line, lineIndex, lineArr) => (
+                          <React.Fragment key={lineIndex}>
+                            {line}
+                            {lineIndex < lineArr.length - 1 && <br />}
+                          </React.Fragment>
+                        ))}
+                      </p>
+                    ))
+                ) : (
+                  <p className="text-slate-400 italic">No description available.</p>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -174,7 +174,25 @@ const FoodProductDetails = () => {
 
             <div>
               <p className="text-slate-600 font-medium my-1">Description:</p>
-              <p>{data.description}</p>
+              <div className="text-slate-600 font-medium">
+                {data.description ? (
+                  data.description
+                    .split(/\n\s*\n/)
+                    .filter(Boolean)
+                    .map((paragraph, index, arr) => (
+                      <p key={index} className={index < arr.length - 1 ? 'mb-3' : ''}>
+                        {paragraph.split('\n').map((line, lineIndex, lineArr) => (
+                          <React.Fragment key={lineIndex}>
+                            {line}
+                            {lineIndex < lineArr.length - 1 && <br />}
+                          </React.Fragment>
+                        ))}
+                      </p>
+                    ))
+                ) : (
+                  <p className="text-slate-400 italic">No description available.</p>
+                )}
+              </div>
             </div>
           </div>
         )}

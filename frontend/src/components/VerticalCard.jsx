@@ -13,13 +13,11 @@ const VerticalCard = ({ loading, data = [] }) => {
               className="overflow-hidden border border-slate-200 bg-white shadow-sm"
             >
               <div className="aspect-square animate-pulse bg-slate-200"></div>
-              <div className="p-4">
-                <div className="mb-2 h-4 animate-pulse rounded bg-slate-200"></div>
-                <div className="mb-4 h-4 w-3/4 animate-pulse rounded bg-slate-200"></div>
-                <div className="flex gap-2">
-                  <div className="h-10 flex-1 animate-pulse bg-slate-100"></div>
-                  <div className="h-10 w-10 animate-pulse bg-slate-100"></div>
-                </div>
+              <div className="p-3">
+                <div className="mb-1 h-2.5 w-1/2 animate-pulse rounded bg-slate-300"></div>
+                <div className="mb-1.5 h-3.5 w-full animate-pulse rounded bg-slate-200"></div>
+                <div className="mb-1 h-2.5 w-1/3 animate-pulse rounded bg-slate-300"></div>
+                <div className="h-4 w-2/3 animate-pulse rounded bg-slate-200"></div>
               </div>
             </div>
           ))
