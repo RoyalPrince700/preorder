@@ -406,6 +406,9 @@ const Checkout = () => {
               }`}
               onClick={handleWhatsAppCheckout}
               disabled={isLoading}
+              data-gtm="checkout-whatsapp"
+              data-cart-items={totalQty}
+              data-cart-total={totalPrice}
             >
               Checkout via WhatsApp
             </button>

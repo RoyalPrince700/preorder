@@ -290,6 +290,9 @@ const Cart = () => {
                   <button
                     className="w-full bg-slate-950 py-5 text-sm font-black uppercase tracking-[0.2em] text-white transition-colors hover:bg-orange-600 shadow-[0_12px_28px_rgba(15,23,42,0.1)]"
                     onClick={handleCheckout}
+                    data-gtm="cart-proceed-to-checkout"
+                    data-cart-items={totalQty}
+                    data-cart-total={totalPrice}
                   >
                     PROCEED TO CHECKOUT
                   </button>
