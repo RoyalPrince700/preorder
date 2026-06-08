@@ -12,14 +12,13 @@ function AuthCallback() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
+    
+    // Retrieve returnTo BEFORE any async operations to prevent StrictMode double-fire issues
+    const returnTo = sessionStorage.getItem('authReturnTo') || '/';
 
     const handleAuth = async () => {
       if (token) {
         try {
-          // The token is already set as a cookie by the backend redirect
-          // But we can also store it in localStorage if the app uses it for Bearer tokens
-          // Looking at App.jsx, it uses credentials: 'include' which means it relies on cookies.
-          
           // Fetch user profile to get user data and update Redux store
           await fetchUserDetails();
           await mergeLocalCartToAccount(
@@ -28,7 +27,6 @@ function AuthCallback() {
           );
           await fetchUserAddToCart({ forceServer: true });
 
-          const returnTo = sessionStorage.getItem('authReturnTo') || '/';
           sessionStorage.removeItem('authReturnTo');
           navigate(returnTo, { replace: true });
         } catch (error) {
