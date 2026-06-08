@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import moment from "moment";
+import { IoMdClose } from "react-icons/io";
 import SummaryApi from "../../common";
 import displayNARCurrency from "../../helpers/displayCurrency";
 import ChangeOrderStatus from "../../components/ChangeOrderStatus";
@@ -12,6 +13,16 @@ import {
   adminBtnSecondary,
   adminBtnConfirm,
   adminChartTitle,
+  adminModalOverlay,
+  adminModalPanel,
+  adminModalHeader,
+  adminModalCloseBtn,
+  adminModalBody,
+  adminModalFooter,
+  adminInput,
+  adminLabel,
+  adminBtnPrimary,
+  adminBtnDisabled,
 } from "../../common/adminUi";
 
 const statusBadge = (status) => {
@@ -28,7 +39,7 @@ const statusBadge = (status) => {
   }
 };
 
-const OrdersTable = () => {
+const OrdersTable = ({ onOrderDeleted }) => {
   const [allOrders, setAllOrders] = useState([]);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [openChangeStatus, setOpenChangeStatus] = useState(false);
@@ -36,6 +47,12 @@ const OrdersTable = () => {
     orderId: "",
     currentStatus: "",
   });
+  const [openProfitModal, setOpenProfitModal] = useState(false);
+  const [currentProfitOrder, setCurrentProfitOrder] = useState({
+    orderId: "",
+    currentProfit: 0,
+  });
+  const [profitInput, setProfitInput] = useState("");
   const [loadingOrderId, setLoadingOrderId] = useState(null);
   const { socket } = useSocket();
 
@@ -89,6 +106,67 @@ const OrdersTable = () => {
       socket.off('admin-order-status-changed', handleAdminOrderStatusChange);
     };
   }, [socket]);
+
+  const deleteOrder = async (orderId) => {
+    if (!window.confirm("Are you sure you want to delete this order?")) return;
+
+    setLoadingOrderId(orderId);
+    try {
+      const response = await fetch(SummaryApi.deleteOrder.url, {
+        method: SummaryApi.deleteOrder.method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const dataResponse = await response.json();
+
+      if (dataResponse.success) {
+        toast.success("Order deleted successfully.");
+        fetchAllOrders();
+        if (onOrderDeleted) onOrderDeleted();
+      } else {
+        toast.error(dataResponse.message);
+      }
+    } catch (error) {
+      console.error("Delete Error:", error);
+      toast.error("Failed to delete order.");
+    } finally {
+      setLoadingOrderId(null);
+    }
+  };
+
+  const updateOrderProfit = async (orderId, profitValue) => {
+    if (loadingOrderId) return;
+    setLoadingOrderId(orderId);
+    try {
+      const response = await fetch(SummaryApi.updateOrderProfit.url, {
+        method: SummaryApi.updateOrderProfit.method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderId, profit: Number(profitValue) }),
+      });
+
+      const dataResponse = await response.json();
+      if (dataResponse.success) {
+        toast.success("Profit updated successfully.");
+        setOpenProfitModal(false);
+        fetchAllOrders();
+        if (onOrderDeleted) onOrderDeleted(); // Using this to trigger stats refresh
+      } else {
+        toast.error(dataResponse.message);
+      }
+    } catch (error) {
+      console.error("Update Profit Error:", error);
+      toast.error("Failed to update profit.");
+    } finally {
+      setLoadingOrderId(null);
+    }
+  };
 
   const updateOrderStatus = async (orderId, newStatus, adminConfirmed = undefined) => {
     if (loadingOrderId) return;
@@ -202,6 +280,29 @@ const OrdersTable = () => {
                       >
                         Change Status
                       </button>
+                      <button
+                        type="button"
+                        className={adminBtnSecondary}
+                        disabled={isOrderActionLoading(order._id)}
+                        onClick={() => {
+                          setCurrentProfitOrder({
+                            orderId: order._id,
+                            currentProfit: order.profit || 0,
+                          });
+                          setProfitInput(order.profit || "");
+                          setOpenProfitModal(true);
+                        }}
+                      >
+                        Add Profit
+                      </button>
+                      <button
+                        type="button"
+                        className={adminBtnSecondary}
+                        disabled={isOrderActionLoading(order._id)}
+                        onClick={() => deleteOrder(order._id)}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -264,6 +365,70 @@ const OrdersTable = () => {
           onClose={() => setOpenChangeStatus(false)}
           callFunc={fetchAllOrders}
         />
+      )}
+      {openProfitModal && (
+        <div className={adminModalOverlay}>
+          <div className={adminModalPanel}>
+            <div className={adminModalHeader}>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-400">
+                  Order management
+                </p>
+                <h2 className="mt-1 text-sm font-black uppercase tracking-widest">
+                  Add Profit
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpenProfitModal(false)}
+                disabled={isOrderActionLoading(currentProfitOrder.orderId)}
+                className={`${adminModalCloseBtn} ${adminBtnDisabled}`}
+                aria-label="Close"
+              >
+                <IoMdClose className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className={adminModalBody}>
+              <div>
+                <p className={adminLabel}>Order ID</p>
+                <p className="font-mono text-xs font-bold text-slate-950">
+                  #{currentProfitOrder.orderId ? currentProfitOrder.orderId.slice(-12).toUpperCase() : "—"}
+                </p>
+              </div>
+              <div>
+                <label className={adminLabel}>Profit Amount (₦)</label>
+                <input
+                  type="number"
+                  value={profitInput}
+                  onChange={(e) => setProfitInput(e.target.value)}
+                  className={adminInput}
+                  placeholder="Enter profit amount"
+                  disabled={isOrderActionLoading(currentProfitOrder.orderId)}
+                />
+              </div>
+            </div>
+
+            <div className={adminModalFooter}>
+              <button
+                type="button"
+                className={`${adminBtnPrimary} flex-1 py-3 ${adminBtnDisabled}`}
+                onClick={() => updateOrderProfit(currentProfitOrder.orderId, profitInput)}
+                disabled={isOrderActionLoading(currentProfitOrder.orderId)}
+              >
+                {isOrderActionLoading(currentProfitOrder.orderId) ? "Saving..." : "Save Profit"}
+              </button>
+              <button
+                type="button"
+                className={`${adminBtnSecondary} px-6 py-3 ${adminBtnDisabled}`}
+                onClick={() => setOpenProfitModal(false)}
+                disabled={isOrderActionLoading(currentProfitOrder.orderId)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

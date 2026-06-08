@@ -16,6 +16,10 @@ const checkoutSchema = new mongoose.Schema({
         }
     ],
     totalPrice: Number,
+    profit: {
+        type: Number,
+        default: 0
+    },
     paymentMethod: String,
     adminConfirmed: {
         type: Boolean,

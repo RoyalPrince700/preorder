@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaShoppingCart, FaClock, FaCheckCircle, FaMoneyBillWave } from "react-icons/fa";
+import { FaShoppingCart, FaClock, FaCheckCircle, FaMoneyBillWave, FaHandHoldingUsd } from "react-icons/fa";
 import Header from "../common/Header";
 import StatCard from "../common/StatCard";
 import { adminError, adminLoading } from "../common/adminUi";
@@ -9,11 +9,13 @@ import OrdersTable from "../analysis/overview/OrdersTable";
 import SummaryApi from "../common";
 
 const AdminOrderPage = () => {
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
     const [orderStats, setOrderStats] = useState({
         totalOrders: "0",
         pendingOrders: "0",
         completedOrders: "0",
         totalRevenue: "₦0.00",
+        totalProfit: "₦0.00",
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -40,12 +42,16 @@ const AdminOrderPage = () => {
                     const totalRevenue = orders
                         .filter(order => order.status === "Delivered" || order.adminConfirmed === true)
                         .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                    const totalProfit = orders
+                        .filter(order => order.status === "Delivered" || order.adminConfirmed === true)
+                        .reduce((sum, order) => sum + (order.profit || 0), 0);
 
                     setOrderStats({
                         totalOrders: totalOrders.toString(),
                         pendingOrders: pendingOrders.toString(),
                         completedOrders: completedOrders.toString(),
                         totalRevenue: formatCurrency(totalRevenue),
+                        totalProfit: formatCurrency(totalProfit),
                     });
                 } else {
                     setError(data.message || "Failed to fetch order stats.");
@@ -59,7 +65,7 @@ const AdminOrderPage = () => {
         };
 
         fetchOrderStats();
-    }, []);
+    }, [refreshTrigger]);
 
     if (loading) {
         return (
@@ -86,19 +92,20 @@ const AdminOrderPage = () => {
             <Header title="Orders" subtitle="Manage and track customer orders" />
 
             <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
                     <StatCard name="Total Orders" icon={FaShoppingCart} value={orderStats.totalOrders} />
                     <StatCard name="Pending Orders" icon={FaClock} value={orderStats.pendingOrders} />
                     <StatCard name="Completed Orders" icon={FaCheckCircle} value={orderStats.completedOrders} />
                     <StatCard name="Total Revenue" icon={FaMoneyBillWave} value={orderStats.totalRevenue} />
+                    <StatCard name="Total Profit" icon={FaHandHoldingUsd} value={orderStats.totalProfit} />
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    <DailyOrders />
-                    <OrderDistribution />
+                    <DailyOrders key={`daily-${refreshTrigger}`} />
+                    <OrderDistribution key={`dist-${refreshTrigger}`} />
                 </div>
 
-                <OrdersTable />
+                <OrdersTable onOrderDeleted={() => setRefreshTrigger(prev => prev + 1)} />
             </main>
         </div>
     );

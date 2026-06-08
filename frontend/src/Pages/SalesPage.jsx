@@ -12,6 +12,7 @@ import SummaryApi from "../common";
 const SalesPage = () => {
     const [salesStats, setSalesStats] = useState({
         totalRevenue: "₦0.00",
+        totalProfit: "₦0.00",
         averageOrderValue: "₦0.00",
         conversionRate: "0%",
         salesGrowth: "0%",
@@ -46,6 +47,7 @@ const SalesPage = () => {
                     const deliveredOrders = allOrders.filter(order => order.status === "Delivered" || order.adminConfirmed === true);
                     const pendingOrders = allOrders.filter(order => order.status === "Pending" && !order.adminConfirmed);
                     const totalRevenue = deliveredOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                    const totalProfit = deliveredOrders.reduce((sum, order) => sum + (order.profit || 0), 0);
                     const averageOrderValue = deliveredOrders.length
                         ? totalRevenue / deliveredOrders.length
                         : 0;
@@ -67,6 +69,7 @@ const SalesPage = () => {
 
                     setSalesStats({
                         totalRevenue: formatCurrency(totalRevenue),
+                        totalProfit: formatCurrency(totalProfit),
                         averageOrderValue: formatCurrency(averageOrderValue),
                         conversionRate: `${conversionRate.toFixed(2)}%`,
                         salesGrowth,
@@ -111,8 +114,9 @@ const SalesPage = () => {
         <div className="flex-1 overflow-auto">
             <Header title="Sales" subtitle="Revenue and growth metrics" />
             <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <StatCard name="Total Revenue" icon={TbCurrencyNaira} value={salesStats.totalRevenue} />
+                    <StatCard name="Total Profit" icon={TbCurrencyNaira} value={salesStats.totalProfit} />
                     <StatCard name="Pending Orders" icon={FaShoppingCart} value={salesStats.pendingOrdersCount} />
                     <StatCard name="Pending Orders Worth" icon={TbCurrencyNaira} value={salesStats.pendingSalesWorth} />
                     <StatCard name="Avg. Order Value" icon={TbCurrencyNaira} value={salesStats.averageOrderValue} />

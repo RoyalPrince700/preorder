@@ -63,6 +63,8 @@ const getNotificationById = require('../controller/notifications/getNotification
 const getUnreadNotificationCount = require('../controller/notifications/getUnreadNotificationCount');
 const markAsRead = require('../controller/notifications/markAsRead');
 const notifyAdminsOnOrder = require('../controller/order/notifyAdminsOnOrder');
+const deleteOrderController = require('../controller/order/deleteOrder');
+const updateProfitController = require('../controller/order/updateProfit');
 const contactUsController = require('../controller/contact/contactUsController');
 const { upload, uploadImage } = require('../controller/uploadImage');
 
@@ -133,7 +135,9 @@ router.post("/update-user", authToken, requireRole('ADMIN'), updateUser);
 router.post("/update-logistics-attendants", authToken, requireRole('ADMIN','HR'), updateLogisticsAttendant);
 router.post("/assign-logistics-attendants", authToken, requireRole('ADMIN','HR'), assignOrderToLA);
 router.get("/get-order-logistics-attendants", authToken, getOrderForLA);
-router.post("/update-user-order", authToken, updateOrderStatus);
+router.post("/update-user-order", authToken, requireRole('ADMIN'), updateOrderStatus);
+router.post("/update-order-profit", authToken, requireRole('ADMIN'), updateProfitController);
+router.post("/delete-order", authToken, requireRole('ADMIN'), deleteOrderController);
 router.post("/delete-uploaded-product", authToken, requireRole('ADMIN'), deleteProductController);
 router.post('/api/place-food-order', authToken, placeFoodOrder);
 // Food menu route
