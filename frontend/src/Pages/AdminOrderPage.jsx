@@ -15,6 +15,7 @@ const AdminOrderPage = () => {
         pendingOrders: "0",
         completedOrders: "0",
         totalRevenue: "₦0.00",
+        totalCost: "₦0.00",
         totalProfit: "₦0.00",
     });
     const [loading, setLoading] = useState(true);
@@ -45,12 +46,14 @@ const AdminOrderPage = () => {
                     const totalProfit = orders
                         .filter(order => order.status === "Delivered" || order.adminConfirmed === true)
                         .reduce((sum, order) => sum + (order.profit || 0), 0);
+                    const totalCost = totalRevenue - totalProfit;
 
                     setOrderStats({
                         totalOrders: totalOrders.toString(),
                         pendingOrders: pendingOrders.toString(),
                         completedOrders: completedOrders.toString(),
                         totalRevenue: formatCurrency(totalRevenue),
+                        totalCost: formatCurrency(totalCost),
                         totalProfit: formatCurrency(totalProfit),
                     });
                 } else {
@@ -92,11 +95,12 @@ const AdminOrderPage = () => {
             <Header title="Orders" subtitle="Manage and track customer orders" />
 
             <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                     <StatCard name="Total Orders" icon={FaShoppingCart} value={orderStats.totalOrders} />
                     <StatCard name="Pending Orders" icon={FaClock} value={orderStats.pendingOrders} />
                     <StatCard name="Completed Orders" icon={FaCheckCircle} value={orderStats.completedOrders} />
                     <StatCard name="Total Revenue" icon={FaMoneyBillWave} value={orderStats.totalRevenue} />
+                    <StatCard name="Total Cost" icon={FaMoneyBillWave} value={orderStats.totalCost} />
                     <StatCard name="Total Profit" icon={FaHandHoldingUsd} value={orderStats.totalProfit} />
                 </div>
 
