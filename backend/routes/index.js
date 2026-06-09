@@ -23,6 +23,7 @@ const countAddToCartProduct = require('../controller/user/countAddToCartProduct'
 const updateAddToCartProduct = require('../controller/user/updateAddToCartProduct');
 const addToCartViewProduct  = require('../controller/user/addToCartViewProduct');
 const deleteAddToCartProduct = require('../controller/user/deleteAddToCartProduct');
+const getCartAnalytics = require('../controller/cart/getCartAnalytics');
 const searchProduct = require('../controller/product/searchProduct');
 const filterProductController = require('../controller/product/filterProduct');
 const paymentController = require('../controller/order/paymentController');
@@ -128,6 +129,7 @@ router.get("/all-logistics-associate", authToken, requireRole('ADMIN','HR'), all
 router.get("/get-active-logistics-associate", authToken, getActiveLAs);
 router.get("/assigned-order", assignedOrdersController);
 router.get("/all-orders", authToken, requireRole('ADMIN'), allOrdersController);
+router.get("/cart-analytics", authToken, requireRole('ADMIN'), getCartAnalytics);
 router.get("/daily-sales", authToken, requireRole('ADMIN'), dailySalesController);
 router.get("/sales-channel", authToken, requireRole('ADMIN'), salesByChannelController);
 router.get("/sales-trend", authToken, requireRole('ADMIN'), salesTrendController);

@@ -6,6 +6,7 @@ import { TbCurrencyNaira } from 'react-icons/tb';
 import { CgProfile } from 'react-icons/cg';
 import { AiFillProduct } from 'react-icons/ai';
 import { IoMdMenu } from 'react-icons/io';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const SIDEBAR_ITEMS = [
   { name: 'Overview', icon: MdOutlineBarChart, href: '/admin-overview/overview' },
@@ -13,6 +14,7 @@ const SIDEBAR_ITEMS = [
   { name: 'Products', icon: AiFillProduct, href: '/admin-overview/all-products' },
   { name: 'Users', icon: CgProfile, href: '/admin-overview/user-page' },
   { name: 'Sales', icon: TbCurrencyNaira, href: '/admin-overview/sale-page' },
+  { name: 'Carts', icon: FaShoppingCart, href: '/admin-overview/cart-page' },
   { name: 'Back to Store', icon: IoArrowBackOutline, href: '/' },
 ];
 

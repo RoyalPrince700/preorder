@@ -194,6 +194,10 @@ const SummaryApi = {
         url : `${backendDomain}/api/delete-cart-product`,
         method : 'post'
     },
+    cartAnalytics : {
+        url : `${backendDomain}/api/cart-analytics`,
+        method : 'get'
+    },
     searchProduct : {
         url : `${backendDomain}/api/search`,
         method : "get"
