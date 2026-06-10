@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaUserPlus } from "react-icons/fa";
 import ChangeUserRole from "../../common/ChangeUserRole";
 import AdminUserMeasurements from "../../components/AdminUserMeasurements";
+import AddUserModal from "../../components/AddUserModal";
 import SummaryApi from "../../common";
 import {
   adminChartCard,
   adminChartTitle,
   adminTableHead,
   adminTh,
+  adminBtnPrimary,
   adminBtnSecondary,
 } from "../../common/adminUi";
 
@@ -29,6 +31,7 @@ const UsersTable = () => {
   const [userData, setUserData] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
+  const [openAddUser, setOpenAddUser] = useState(false);
   const [openMeasurements, setOpenMeasurements] = useState(false);
   const [updateUserDetails, setUpdateUserDetails] = useState({
     email: "",
@@ -60,12 +63,20 @@ const UsersTable = () => {
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = userData.filter(
-      (user) =>
-        user.email.toLowerCase().includes(term) ||
-        user.role.toLowerCase().includes(term) ||
-        (user.isVerified ? "verified" : "not verified").includes(term)
-    );
+    const filtered = userData.filter((user) => {
+      const email = (user.email || "").toLowerCase();
+      const phone = (user.phone || "").toLowerCase();
+      const name = (user.fullName || user.name || "").toLowerCase();
+      const role = (user.role || "").toLowerCase();
+      const verified = user.isVerified ? "verified" : "not verified";
+      return (
+        email.includes(term) ||
+        phone.includes(term) ||
+        name.includes(term) ||
+        role.includes(term) ||
+        verified.includes(term)
+      );
+    });
     setFilteredUsers(filtered);
   };
 
@@ -76,7 +87,17 @@ const UsersTable = () => {
   return (
     <div className={adminChartCard}>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className={adminChartTitle}>All Users</h2>
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className={`${adminChartTitle} mb-0 border-b-0 pb-0`}>All Users</h2>
+          <button
+            type="button"
+            className={`${adminBtnPrimary} inline-flex items-center gap-2`}
+            onClick={() => setOpenAddUser(true)}
+          >
+            <FaUserPlus size={12} />
+            Add user
+          </button>
+        </div>
         <div className="relative">
           <input
             type="text"
@@ -94,7 +115,9 @@ const UsersTable = () => {
           <thead>
             <tr className={adminTableHead}>
               <th className={adminTh}>Sr.</th>
+              <th className={adminTh}>Name</th>
               <th className={adminTh}>Email</th>
+              <th className={adminTh}>Phone</th>
               <th className={adminTh}>Role</th>
               <th className={adminTh}>Verified</th>
               <th className={adminTh}>Actions</th>
@@ -111,7 +134,13 @@ const UsersTable = () => {
                   {index + 1}
                 </td>
                 <td className="px-4 py-4 text-xs font-bold text-slate-700">
-                  {user.email}
+                  {user.fullName || user.name || "—"}
+                </td>
+                <td className="px-4 py-4 text-xs font-bold text-slate-700">
+                  {user.email || "—"}
+                </td>
+                <td className="px-4 py-4 text-xs font-bold text-slate-700">
+                  {user.phone || "—"}
                 </td>
                 <td className="px-4 py-4">
                   <span
@@ -168,10 +197,17 @@ const UsersTable = () => {
         )}
       </div>
 
+      {openAddUser && (
+        <AddUserModal
+          onClose={() => setOpenAddUser(false)}
+          onCreated={fetchUsers}
+        />
+      )}
+
       {openUpdateRole && (
         <ChangeUserRole
           onClose={() => setOpenUpdateRole(false)}
-          name={updateUserDetails.name}
+          name={updateUserDetails.fullName || updateUserDetails.name}
           email={updateUserDetails.email}
           role={updateUserDetails.role}
           userId={updateUserDetails._id}

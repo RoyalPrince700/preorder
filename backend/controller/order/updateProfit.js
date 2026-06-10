@@ -2,7 +2,7 @@ const orderModel = require("../../models/checkoutModel");
 
 const updateProfitController = async (req, res) => {
     try {
-        const { orderId, profit } = req.body;
+        const { orderId, profit, amountPaid } = req.body;
         
         if (!orderId) {
             return res.status(400).json({
@@ -12,17 +12,26 @@ const updateProfitController = async (req, res) => {
             });
         }
 
-        if (profit === undefined) {
+        if (profit === undefined && amountPaid === undefined) {
             return res.status(400).json({
-                message: "Profit amount is required",
+                message: "Provide amount paid and/or profit to update",
                 success: false,
                 error: true
             });
         }
 
+        const payload = {};
+        if (profit !== undefined) {
+            payload.profit = Number(profit);
+        }
+        if (amountPaid !== undefined) {
+            payload.amountPaid =
+                amountPaid === '' || amountPaid === null ? null : Number(amountPaid);
+        }
+
         const updateResult = await orderModel.findByIdAndUpdate(
             orderId,
-            { profit: Number(profit) },
+            payload,
             { new: true }
         );
         
@@ -36,7 +45,7 @@ const updateProfitController = async (req, res) => {
 
         res.json({
             data: updateResult,
-            message: "Order profit updated successfully",
+            message: "Order payment details updated successfully",
             success: true,
             error: false
         });

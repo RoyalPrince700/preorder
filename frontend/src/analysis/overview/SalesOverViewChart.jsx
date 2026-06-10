@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import SummaryApi from "../../common";
+import { getAmountPaid, isOrderCounted } from "../../helpers/orderFinance";
 import { adminChartCard, adminChartTitle } from "../../common/adminUi";
 
 const tooltipStyle = {
@@ -47,11 +48,11 @@ const SalesOverviewChart = () => {
 
         // Process orders to calculate sales per day
         orders.forEach((order) => {
-          if (order.status === "Delivered" || order.adminConfirmed === true) {
+          if (isOrderCounted(order)) {
             const orderDate = new Date(order.createdAt);
-            const dayOfWeek = orderDate.getDay(); // 0 (Sunday) to 6 (Saturday)
+            const dayOfWeek = orderDate.getDay();
 
-            updatedSalesData[dayOfWeek].sales += order.totalPrice;
+            updatedSalesData[dayOfWeek].sales += getAmountPaid(order);
           }
         });
 

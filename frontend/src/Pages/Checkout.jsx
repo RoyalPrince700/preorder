@@ -5,6 +5,7 @@ import SummaryApi from '../common';
 import displayNARCurrency from '../helpers/displayCurrency';
 import { toast } from 'react-toastify';
 import Context from '../context';
+import { clearLocalCart, toCartPageItems } from '../helpers/localAddToCart';
 
 const inputClass =
   'block w-full rounded-none border-2 border-slate-100 bg-slate-50 p-4 text-xs font-bold uppercase tracking-widest text-slate-950 outline-none transition-colors placeholder:text-slate-400 focus:border-orange-500';
@@ -45,13 +46,12 @@ const Checkout = () => {
   useEffect(() => {
     if (!authReady) return;
 
+    if (initialCartItems.length || fallbackCartItems.length) return;
+
     if (!user) {
-      sessionStorage.setItem('authReturnTo', '/checkout');
-      navigate('/login', { replace: true, state: { from: '/checkout' } });
+      setFallbackCartItems(toCartPageItems());
       return;
     }
-
-    if (initialCartItems.length || fallbackCartItems.length) return;
 
     const fetchCheckoutCart = async () => {
       setIsCartLoading(true);
@@ -176,7 +176,14 @@ const Checkout = () => {
 
       let message = `*New Order Details*\n\n`;
 
-      message += `*Products:*\n`;
+      message += `*Customer Details:*\n`;
+      message += `Name: ${shippingDetails.name}\n`;
+      message += `Phone: ${shippingDetails.number}\n`;
+      message += `Address: ${shippingDetails.address}\n`;
+      if (shippingDetails.note) {
+        message += `Note: ${shippingDetails.note}\n`;
+      }
+      message += `\n*Products:*\n`;
       cartItems.forEach((item, index) => {
         const product = item?.productId || {};
         const name = product?.productName || item?.name || 'Item';
@@ -193,6 +200,13 @@ const Checkout = () => {
       const encodedMessage = encodeURIComponent(message);
       const whatsappUrl = `https://wa.me/2348160881705?text=${encodedMessage}`;
 
+      if (!user) {
+        clearLocalCart();
+        toast.success('Redirecting to WhatsApp to complete your order...');
+        window.location.href = whatsappUrl;
+        return;
+      }
+
       const response = await fetch(SummaryApi.checkout.url, {
         method: SummaryApi.checkout.method,
         credentials: 'include',
@@ -208,10 +222,7 @@ const Checkout = () => {
         console.error('Error refreshing cart after WhatsApp checkout:', error);
       });
 
-      // Update the current route so that when they come back, they are on the orders page
       navigate('/order', { replace: true });
-
-      // Redirect the current tab to WhatsApp (bypasses popup blockers)
       window.location.href = whatsappUrl;
     } catch (error) {
       console.error('Error during WhatsApp checkout:', error);
@@ -221,7 +232,7 @@ const Checkout = () => {
     }
   };
 
-  if (!authReady || !user || isCartLoading) {
+  if (!authReady || isCartLoading) {
     return (
       <div className="container mx-auto mt-4 px-4 pt-20 max-w-7xl">
         <div className="border-2 border-slate-100 bg-white py-20 text-center">

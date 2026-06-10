@@ -1,4 +1,5 @@
 const orderModel = require("../../models/checkoutModel");
+const { effectiveRevenueExpr } = require("../../helpers/orderFinance");
 
 const salesByChannelController = async (req, res) => {
     try {
@@ -15,7 +16,7 @@ const salesByChannelController = async (req, res) => {
             {
                 $group: {
                     _id: "$salesChannel", // Assuming "salesChannel" is a field in the order schema
-                    totalSales: { $sum: "$totalPrice" }, // Sum the total sales for each channel
+                    totalSales: { $sum: effectiveRevenueExpr },
                     count: { $sum: 1 }, // Count the number of orders per channel
                 },
             },

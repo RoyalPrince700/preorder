@@ -6,12 +6,22 @@ import StatCard from "../common/StatCard";
 import { adminError, adminLoading } from "../common/adminUi";
 import SalesOverviewChart from "../analysis/overview/SalesOverViewChart";
 import CategoryDistributionChart from "../analysis/overview/CategoryDistributionChart";
+import BrandDistributionCharts from "../analysis/overview/BrandDistributionCharts";
 import DailySalesTrend from "../analysis/overview/DailySalesTrend";
 import SummaryApi from "../common";
+import {
+    getAmountPaid,
+    isOrderCounted,
+    sumAmountPaid,
+    sumDiscountForfeited,
+    sumWebsiteTotal,
+} from "../helpers/orderFinance";
 
 const SalesPage = () => {
     const [salesStats, setSalesStats] = useState({
         totalRevenue: "₦0.00",
+        websiteListedValue: "₦0.00",
+        discountForfeited: "₦0.00",
         totalProfit: "₦0.00",
         totalCost: "₦0.00",
         averageOrderValue: "₦0.00",
@@ -45,9 +55,11 @@ const SalesPage = () => {
         
                 if (data.success) {
                     const allOrders = data.data;
-                    const deliveredOrders = allOrders.filter(order => order.status === "Delivered" || order.adminConfirmed === true);
+                    const deliveredOrders = allOrders.filter(isOrderCounted);
                     const pendingOrders = allOrders.filter(order => order.status === "Pending" && !order.adminConfirmed);
-                    const totalRevenue = deliveredOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                    const totalRevenue = sumAmountPaid(deliveredOrders);
+                    const websiteListedValue = sumWebsiteTotal(deliveredOrders);
+                    const discountForfeited = sumDiscountForfeited(deliveredOrders);
                     const totalProfit = deliveredOrders.reduce((sum, order) => sum + (order.profit || 0), 0);
                     const totalCost = totalRevenue - totalProfit;
                     const averageOrderValue = deliveredOrders.length
@@ -57,20 +69,22 @@ const SalesPage = () => {
                         ? (pendingOrders.length / deliveredOrders.length) * 100
                         : 0;
                     const salesYesterday = deliveredOrders
-                        .filter(order => new Date(order.date).toDateString() === new Date().toDateString())
-                        .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                        .filter(order => new Date(order.createdAt).toDateString() === new Date().toDateString())
+                        .reduce((sum, order) => sum + getAmountPaid(order), 0);
                     const salesTwoDaysAgo = deliveredOrders
-                        .filter(order => 
-                            new Date(order.date).toDateString() === 
+                        .filter(order =>
+                            new Date(order.createdAt).toDateString() ===
                             new Date(new Date().setDate(new Date().getDate() - 1)).toDateString()
                         )
-                        .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                        .reduce((sum, order) => sum + getAmountPaid(order), 0);
                     const salesGrowth = calculateSalesGrowth(salesYesterday, salesTwoDaysAgo);
                     const pendingOrdersCount = pendingOrders.length;
-                    const pendingSalesWorth = pendingOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                    const pendingSalesWorth = pendingOrders.reduce((sum, order) => sum + getAmountPaid(order), 0);
 
                     setSalesStats({
                         totalRevenue: formatCurrency(totalRevenue),
+                        websiteListedValue: formatCurrency(websiteListedValue),
+                        discountForfeited: formatCurrency(discountForfeited),
                         totalProfit: formatCurrency(totalProfit),
                         totalCost: formatCurrency(totalCost),
                         averageOrderValue: formatCurrency(averageOrderValue),
@@ -118,7 +132,9 @@ const SalesPage = () => {
             <Header title="Sales" subtitle="Revenue and growth metrics" />
             <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <StatCard name="Total Revenue" icon={TbCurrencyNaira} value={salesStats.totalRevenue} />
+                    <StatCard name="Money Received" icon={TbCurrencyNaira} value={salesStats.totalRevenue} />
+                    <StatCard name="Website Listed Value" icon={TbCurrencyNaira} value={salesStats.websiteListedValue} />
+                    <StatCard name="Discount Forfeited" icon={TbCurrencyNaira} value={salesStats.discountForfeited} />
                     <StatCard name="Total Cost" icon={TbCurrencyNaira} value={salesStats.totalCost} />
                     <StatCard name="Total Profit" icon={TbCurrencyNaira} value={salesStats.totalProfit} />
                     <StatCard name="Pending Orders" icon={FaShoppingCart} value={salesStats.pendingOrdersCount} />
@@ -129,6 +145,8 @@ const SalesPage = () => {
                 </div>
 
                 <SalesOverviewChart />
+
+                <BrandDistributionCharts />
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     <CategoryDistributionChart />

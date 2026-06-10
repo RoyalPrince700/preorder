@@ -5,9 +5,16 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true,
-      required: true,
-      lowercase: true, // Automatically convert email to lowercase
-      trim: true, // Remove leading/trailing whitespace
+      sparse: true,
+      required: false,
+      lowercase: true,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -55,8 +62,16 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Ensure case-insensitive uniqueness for email
-userSchema.path('email').index({ unique: true });
+userSchema.pre('validate', function (next) {
+  if (!this.email && !this.phone) {
+    next(new Error('Either email or phone is required'));
+  } else {
+    next();
+  }
+});
+
+userSchema.path('email').index({ unique: true, sparse: true });
+userSchema.path('phone').index({ unique: true, sparse: true });
 
 const userModel = mongoose.model('User', userSchema);
 module.exports = userModel;

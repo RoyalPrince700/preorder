@@ -149,12 +149,6 @@ const Cart = () => {
     
     const handleCheckout = () => {
         if (data.length > 0) {
-            if (!user) {
-                sessionStorage.setItem('authReturnTo', '/checkout');
-                navigate('/login', { state: { from: '/checkout' } });
-                return;
-            }
-
             navigate('/checkout', {
                 state: {
                     cartItems: data,

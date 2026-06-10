@@ -5,7 +5,7 @@ const allOrdersController = async (req, res) => {
         const allOrders = await orderModel
         .find({}) // Fetch all orders regardless of status or assignment
         .sort({ createdAt: -1 })
-        .populate("cartItems.productId", "productName productImage sellingPrice")
+        .populate("cartItems.productId", "productName productImage sellingPrice price brandName")
         .populate("userId", "name email address number");
       
 

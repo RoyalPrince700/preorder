@@ -87,6 +87,10 @@ const SummaryApi = {
     allOrders : {
         url : `${backendDomain}/api/all-orders`,
         method : 'get'
+    },
+    createOrder : {
+        url : `${backendDomain}/api/create-order`,
+        method : 'post'
     },assignedOrders : {
         url : `${backendDomain}/api/assigned-order`,
         method : 'get'
@@ -97,6 +101,10 @@ const SummaryApi = {
     }, salesByChannel : {
         url : `${backendDomain}/api/sales-channel`,
         method : `get`
+    },
+    createUser : {
+        url : `${backendDomain}/api/create-user`,
+        method : "post"
     },
     updateUser : {
         url : `${backendDomain}/api/update-user`,

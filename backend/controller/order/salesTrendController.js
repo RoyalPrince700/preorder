@@ -1,4 +1,5 @@
 const orderModel = require("../../models/checkoutModel");
+const { effectiveRevenueExpr } = require("../../helpers/orderFinance");
 
 const salesTrendController = async (req, res) => {
     try {
@@ -15,7 +16,7 @@ const salesTrendController = async (req, res) => {
             {
                 $group: {
                     _id: { $month: "$createdAt" }, // Group by the month of the createdAt field
-                    totalSales: { $sum: "$totalPrice" }, // Sum the total sales for each month
+                    totalSales: { $sum: effectiveRevenueExpr },
                 },
             },
             {

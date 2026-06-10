@@ -16,6 +16,10 @@ const checkoutSchema = new mongoose.Schema({
         }
     ],
     totalPrice: Number,
+    amountPaid: {
+        type: Number,
+        default: null,
+    },
     profit: {
         type: Number,
         default: 0

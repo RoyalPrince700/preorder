@@ -2,9 +2,16 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { IoMdClose } from "react-icons/io";
+import { FaShoppingCart } from "react-icons/fa";
 import SummaryApi from "../../common";
 import displayNARCurrency from "../../helpers/displayCurrency";
+import {
+  getAmountPaid,
+  getDiscountForfeited,
+  getWebsiteTotal,
+} from "../../helpers/orderFinance";
 import ChangeOrderStatus from "../../components/ChangeOrderStatus";
+import AddOrderModal from "../../components/AddOrderModal";
 import { useSocket } from "../../context/SocketContext";
 import {
   adminTableWrap,
@@ -24,6 +31,18 @@ import {
   adminBtnPrimary,
   adminBtnDisabled,
 } from "../../common/adminUi";
+
+const getOrderProductSummary = (order) => {
+  const items = order.cartItems || [];
+  if (!items.length) return "No products";
+
+  return items
+    .map((item) => {
+      const name = item.productId?.productName || "Unknown product";
+      return item.quantity > 1 ? `${name} ×${item.quantity}` : name;
+    })
+    .join(", ");
+};
 
 const statusBadge = (status) => {
   switch (status) {
@@ -51,8 +70,12 @@ const OrdersTable = ({ onOrderDeleted }) => {
   const [currentProfitOrder, setCurrentProfitOrder] = useState({
     orderId: "",
     currentProfit: 0,
+    websiteTotal: 0,
+    currentAmountPaid: "",
   });
   const [profitInput, setProfitInput] = useState("");
+  const [amountPaidInput, setAmountPaidInput] = useState("");
+  const [openAddOrder, setOpenAddOrder] = useState(false);
   const [loadingOrderId, setLoadingOrderId] = useState(null);
   const { socket } = useSocket();
 
@@ -138,31 +161,45 @@ const OrdersTable = ({ onOrderDeleted }) => {
     }
   };
 
-  const updateOrderProfit = async (orderId, profitValue) => {
+  const updateOrderFinance = async (orderId) => {
     if (loadingOrderId) return;
+
+    if (profitInput === "" && amountPaidInput === "") {
+      toast.error("Enter money paid and/or profit");
+      return;
+    }
+
     setLoadingOrderId(orderId);
     try {
+      const payload = { orderId };
+      if (profitInput !== "") {
+        payload.profit = Number(profitInput);
+      }
+      if (amountPaidInput !== "") {
+        payload.amountPaid = Number(amountPaidInput);
+      }
+
       const response = await fetch(SummaryApi.updateOrderProfit.url, {
         method: SummaryApi.updateOrderProfit.method,
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ orderId, profit: Number(profitValue) }),
+        body: JSON.stringify(payload),
       });
 
       const dataResponse = await response.json();
       if (dataResponse.success) {
-        toast.success("Profit updated successfully.");
+        toast.success("Payment details updated successfully.");
         setOpenProfitModal(false);
         fetchAllOrders();
-        if (onOrderDeleted) onOrderDeleted(); // Using this to trigger stats refresh
+        if (onOrderDeleted) onOrderDeleted();
       } else {
         toast.error(dataResponse.message);
       }
     } catch (error) {
-      console.error("Update Profit Error:", error);
-      toast.error("Failed to update profit.");
+      console.error("Update payment error:", error);
+      toast.error("Failed to update payment details.");
     } finally {
       setLoadingOrderId(null);
     }
@@ -207,13 +244,23 @@ const OrdersTable = ({ onOrderDeleted }) => {
 
   return (
     <div>
-      <h2 className={`${adminChartTitle} mb-4`}>All Orders</h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className={`${adminChartTitle} mb-0 border-b-0 pb-0`}>All Orders</h2>
+        <button
+          type="button"
+          className={`${adminBtnPrimary} inline-flex items-center gap-2`}
+          onClick={() => setOpenAddOrder(true)}
+        >
+          <FaShoppingCart size={12} />
+          Add order
+        </button>
+      </div>
       <div className={adminTableWrap}>
         <table className="w-full table-auto text-sm">
           <thead>
             <tr className={adminTableHead}>
               <th className={adminTh}>#</th>
-              <th className={adminTh}>Order ID</th>
+              <th className={adminTh}>Products</th>
               <th className={adminTh}>Status</th>
               <th className={adminTh}>Order Date</th>
               <th className={adminTh}>Actions</th>
@@ -225,14 +272,12 @@ const OrdersTable = ({ onOrderDeleted }) => {
                 <tr className="border-b border-slate-100 transition-colors hover:bg-orange-50/30">
                   <td className="px-4 py-3 text-xs font-bold">{index + 1}</td>
                   <td className="px-4 py-3">
-                    <div className="group relative">
-                      <span
-                        className="inline-block max-w-[8rem] cursor-help truncate font-black uppercase tracking-widest text-slate-950"
-                        title={order._id}
-                      >
-                        {order._id.slice(-12)}
-                      </span>
-                    </div>
+                    <span
+                      className="block max-w-xs truncate text-xs font-semibold normal-case tracking-normal text-slate-950"
+                      title={getOrderProductSummary(order)}
+                    >
+                      {getOrderProductSummary(order)}
+                    </span>
                   </td>
                   <td className="px-4 py-3">
                     <span className={`border px-2 py-1 text-[10px] font-black uppercase tracking-widest ${statusBadge(order.status)}`}>
@@ -288,12 +333,18 @@ const OrdersTable = ({ onOrderDeleted }) => {
                           setCurrentProfitOrder({
                             orderId: order._id,
                             currentProfit: order.profit || 0,
+                            websiteTotal: getWebsiteTotal(order),
+                            currentAmountPaid:
+                              order.amountPaid != null ? order.amountPaid : "",
                           });
-                          setProfitInput(order.profit || "");
+                          setProfitInput(order.profit ?? "");
+                          setAmountPaidInput(
+                            order.amountPaid != null ? String(order.amountPaid) : ""
+                          );
                           setOpenProfitModal(true);
                         }}
                       >
-                        Add Profit
+                        Set Payment
                       </button>
                       <button
                         type="button"
@@ -311,13 +362,27 @@ const OrdersTable = ({ onOrderDeleted }) => {
                     <td colSpan={5} className="bg-slate-50 p-6">
                       <div className="grid grid-cols-1 gap-4 border-2 border-slate-100 bg-white p-6 md:grid-cols-2">
                         <div className="space-y-2 text-xs font-bold uppercase tracking-widest text-slate-500">
+                          <p>
+                            <span className="text-slate-950">Order ID:</span>{" "}
+                            <span className="font-mono normal-case tracking-normal">{order._id}</span>
+                          </p>
                           <p><span className="text-slate-950">Customer:</span> {order.name || "Unknown"}</p>
                           <p><span className="text-slate-950">Phone:</span> {order.number || "N/A"}</p>
                           <p><span className="text-slate-950">Address:</span> {order.address || "N/A"}</p>
                         </div>
                         <div className="space-y-2 text-xs font-bold uppercase tracking-widest text-slate-500">
                           <p><span className="text-slate-950">Note:</span> {order.note || "N/A"}</p>
-                          <p><span className="text-slate-950">Total:</span> {displayNARCurrency(order.totalPrice.toFixed(2))}</p>
+                          <p><span className="text-slate-950">Website total:</span> {displayNARCurrency(getWebsiteTotal(order).toFixed(2))}</p>
+                          <p><span className="text-slate-950">Money paid:</span> {displayNARCurrency(getAmountPaid(order).toFixed(2))}</p>
+                          {getDiscountForfeited(order) > 0 && (
+                            <p className="text-orange-700">
+                              <span className="text-slate-950">Discount given:</span>{" "}
+                              {displayNARCurrency(getDiscountForfeited(order).toFixed(2))}
+                            </p>
+                          )}
+                          {order.profit > 0 && (
+                            <p><span className="text-slate-950">Profit:</span> {displayNARCurrency(Number(order.profit).toFixed(2))}</p>
+                          )}
                         </div>
                       </div>
                       
@@ -358,6 +423,16 @@ const OrdersTable = ({ onOrderDeleted }) => {
           </p>
         )}
       </div>
+      {openAddOrder && (
+        <AddOrderModal
+          onClose={() => setOpenAddOrder(false)}
+          onCreated={() => {
+            fetchAllOrders();
+            if (onOrderDeleted) onOrderDeleted();
+          }}
+        />
+      )}
+
       {openChangeStatus && (
         <ChangeOrderStatus
           orderId={currentOrderDetails.orderId}
@@ -375,7 +450,7 @@ const OrdersTable = ({ onOrderDeleted }) => {
                   Order management
                 </p>
                 <h2 className="mt-1 text-sm font-black uppercase tracking-widest">
-                  Add Profit
+                  Set payment
                 </h2>
               </div>
               <button
@@ -397,9 +472,40 @@ const OrdersTable = ({ onOrderDeleted }) => {
                 </p>
               </div>
               <div>
-                <label className={adminLabel}>Profit Amount (₦)</label>
+                <p className={adminLabel}>Website listed total</p>
+                <p className="text-xs font-bold text-slate-950">
+                  {displayNARCurrency(currentProfitOrder.websiteTotal.toFixed(2))}
+                </p>
+              </div>
+              <div>
+                <label className={adminLabel}>Money paid (₦)</label>
                 <input
                   type="number"
+                  min="0"
+                  step="0.01"
+                  value={amountPaidInput}
+                  onChange={(e) => setAmountPaidInput(e.target.value)}
+                  className={adminInput}
+                  placeholder={`Leave blank to use website total (${displayNARCurrency(currentProfitOrder.websiteTotal.toFixed(2))})`}
+                  disabled={isOrderActionLoading(currentProfitOrder.orderId)}
+                />
+                <p className="mt-1 text-[10px] text-slate-400">
+                  Overrides website price when customer got a discount.
+                </p>
+              </div>
+              {amountPaidInput !== "" && Number(amountPaidInput) < currentProfitOrder.websiteTotal && (
+                <p className="text-xs font-bold uppercase tracking-widest text-orange-700">
+                  Discount: {displayNARCurrency(
+                    (currentProfitOrder.websiteTotal - Number(amountPaidInput)).toFixed(2)
+                  )}
+                </p>
+              )}
+              <div>
+                <label className={adminLabel}>Profit amount (₦)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
                   value={profitInput}
                   onChange={(e) => setProfitInput(e.target.value)}
                   className={adminInput}
@@ -413,10 +519,10 @@ const OrdersTable = ({ onOrderDeleted }) => {
               <button
                 type="button"
                 className={`${adminBtnPrimary} flex-1 py-3 ${adminBtnDisabled}`}
-                onClick={() => updateOrderProfit(currentProfitOrder.orderId, profitInput)}
+                onClick={() => updateOrderFinance(currentProfitOrder.orderId)}
                 disabled={isOrderActionLoading(currentProfitOrder.orderId)}
               >
-                {isOrderActionLoading(currentProfitOrder.orderId) ? "Saving..." : "Save Profit"}
+                {isOrderActionLoading(currentProfitOrder.orderId) ? "Saving..." : "Save payment"}
               </button>
               <button
                 type="button"

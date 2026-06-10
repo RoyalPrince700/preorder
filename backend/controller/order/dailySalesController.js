@@ -1,5 +1,6 @@
 const orderModel = require("../../models/checkoutModel");
 const moment = require("moment");
+const { effectiveRevenueExpr } = require("../../helpers/orderFinance");
 
 const dailySalesController = async (req, res) => {
     try {
@@ -21,7 +22,7 @@ const dailySalesController = async (req, res) => {
             {
                 $group: {
                     _id: { $dayOfWeek: "$createdAt" }, // Group by the day of the week (1 = Sunday, 7 = Saturday)
-                    totalSales: { $sum: "$totalPrice" }, // Sum totalPrice for each group
+                    totalSales: { $sum: effectiveRevenueExpr },
                 },
             },
             {

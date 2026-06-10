@@ -7,6 +7,12 @@ import DailyOrders from "../analysis/overview/DailyOrders";
 import OrderDistribution from "../analysis/overview/OrderDistribution";
 import OrdersTable from "../analysis/overview/OrdersTable";
 import SummaryApi from "../common";
+import {
+    isOrderCounted,
+    sumAmountPaid,
+    sumDiscountForfeited,
+    sumWebsiteTotal,
+} from "../helpers/orderFinance";
 
 const AdminOrderPage = () => {
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -15,6 +21,8 @@ const AdminOrderPage = () => {
         pendingOrders: "0",
         completedOrders: "0",
         totalRevenue: "₦0.00",
+        websiteListedValue: "₦0.00",
+        discountForfeited: "₦0.00",
         totalCost: "₦0.00",
         totalProfit: "₦0.00",
     });
@@ -40,12 +48,11 @@ const AdminOrderPage = () => {
                     const totalOrders = orders.length;
                     const pendingOrders = orders.filter(order => order.status === "Pending").length;
                     const completedOrders = orders.filter(order => order.status === "Delivered" || order.adminConfirmed === true).length;
-                    const totalRevenue = orders
-                        .filter(order => order.status === "Delivered" || order.adminConfirmed === true)
-                        .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
-                    const totalProfit = orders
-                        .filter(order => order.status === "Delivered" || order.adminConfirmed === true)
-                        .reduce((sum, order) => sum + (order.profit || 0), 0);
+                    const countedOrders = orders.filter(isOrderCounted);
+                    const totalRevenue = sumAmountPaid(countedOrders);
+                    const websiteListedValue = sumWebsiteTotal(countedOrders);
+                    const discountForfeited = sumDiscountForfeited(countedOrders);
+                    const totalProfit = countedOrders.reduce((sum, order) => sum + (order.profit || 0), 0);
                     const totalCost = totalRevenue - totalProfit;
 
                     setOrderStats({
@@ -53,6 +60,8 @@ const AdminOrderPage = () => {
                         pendingOrders: pendingOrders.toString(),
                         completedOrders: completedOrders.toString(),
                         totalRevenue: formatCurrency(totalRevenue),
+                        websiteListedValue: formatCurrency(websiteListedValue),
+                        discountForfeited: formatCurrency(discountForfeited),
                         totalCost: formatCurrency(totalCost),
                         totalProfit: formatCurrency(totalProfit),
                     });
@@ -95,11 +104,13 @@ const AdminOrderPage = () => {
             <Header title="Orders" subtitle="Manage and track customer orders" />
 
             <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     <StatCard name="Total Orders" icon={FaShoppingCart} value={orderStats.totalOrders} />
                     <StatCard name="Pending Orders" icon={FaClock} value={orderStats.pendingOrders} />
                     <StatCard name="Completed Orders" icon={FaCheckCircle} value={orderStats.completedOrders} />
-                    <StatCard name="Total Revenue" icon={FaMoneyBillWave} value={orderStats.totalRevenue} />
+                    <StatCard name="Money Received" icon={FaMoneyBillWave} value={orderStats.totalRevenue} />
+                    <StatCard name="Website Listed Value" icon={FaMoneyBillWave} value={orderStats.websiteListedValue} />
+                    <StatCard name="Discount Forfeited" icon={FaMoneyBillWave} value={orderStats.discountForfeited} />
                     <StatCard name="Total Cost" icon={FaMoneyBillWave} value={orderStats.totalCost} />
                     <StatCard name="Total Profit" icon={FaHandHoldingUsd} value={orderStats.totalProfit} />
                 </div>
