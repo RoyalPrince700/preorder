@@ -9,9 +9,9 @@ const OrderDetails = ({ order, onClose }) => {
                     <IoMdClose />
                 </button>
                 <h1 className="text-lg font-medium pb-4">Order Details</h1>
-                <p><strong>Customer Name:</strong> {order.userId?.name || "Unknown"}</p>
-                <p><strong>Phone Number:</strong> {order.userId?.number || "N/A"}</p>
-                <p><strong>Address:</strong> {order.userId?.address || "N/A"}</p>
+                <p><strong>Customer Name:</strong> {order.name || order.userId?.name || "Unknown"}</p>
+                <p><strong>Phone Number:</strong> {order.number || order.userId?.number || "N/A"}</p>
+                <p><strong>Address:</strong> {order.address || order.userId?.address || "N/A"}</p>
                 <p><strong>Note:</strong> {order.note || "N/A"}</p>
                 <p><strong>Total:</strong> ${order.totalPrice.toFixed(2)}</p>
 

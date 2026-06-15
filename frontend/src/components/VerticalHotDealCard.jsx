@@ -71,7 +71,7 @@ const VerticalHotDealCard = ({ hotDeal, heading }) => {
               ))
             : data.map((product, index) => (
                 <Link
-                  to={'/product/' + product?._id}
+                  to={'/product/' + (product?.slug || product?._id)}
                   key={index}
                   className="min-w-[160px] sm:min-w-[180px] md:min-w-[220px] max-w-[220px] bg-white border-2 border-slate-100 hover:border-orange-500 transition-all flex flex-col snap-start group"
                 >

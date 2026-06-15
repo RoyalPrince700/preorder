@@ -61,7 +61,7 @@ const SubCategoryWiseProductDisplay = ({ subCategory, heading }) => {
                 hover:shadow-md transition-shadow relative h-[60px]"
               >
                 <Link
-                  to={`/product/${product?._id}`}
+                  to={`/product/${product?.slug || product?._id}`}
                   className="flex w-full"
                   onClick={scrollTop}
                 >

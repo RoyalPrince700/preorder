@@ -1,10 +1,18 @@
 const productModel = require("../../models/productModel")
+const mongoose = require("mongoose")
 
 const getProductDetails = async(req,res) =>{
     try{
         const {productId} = req.body
 
-        const product = await productModel.findById(productId)
+        let query = {};
+        if (mongoose.Types.ObjectId.isValid(productId)) {
+            query = { $or: [{ _id: productId }, { slug: productId }] };
+        } else {
+            query = { slug: productId };
+        }
+
+        const product = await productModel.findOne(query)
 
         if (!product) {
             return res.status(404).json({

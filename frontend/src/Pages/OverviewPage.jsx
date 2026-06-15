@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MdOutlineBarChart } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
+import { FaUserCheck, FaUser } from "react-icons/fa";
 import Header from "../common/Header";
 import StatCard from "../common/StatCard";
 import SummaryApi from "../common";
 import { adminError, adminLoading } from "../common/adminUi";
 import SalesOverviewChart from "../analysis/overview/SalesOverViewChart";
 import CategoryDistributionChart from "../analysis/overview/CategoryDistributionChart";
+import { isSignedInOrder, isGuestOrder } from "../helpers/orderFinance";
 
 const OverviewPage = () => {
     const [stats, setStats] = useState({
@@ -18,6 +20,13 @@ const OverviewPage = () => {
         totalUsers: 0,
         totalProducts: 0,
         conversionRate: "0%",
+        // Signed-in vs Guest
+        signedInSales: 0,
+        guestSales: 0,
+        signedInPendingWorth: 0,
+        guestPendingWorth: 0,
+        signedInPendingCount: 0,
+        guestPendingCount: 0,
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -36,16 +45,42 @@ const OverviewPage = () => {
                 let pendingOrdersCount = 0;
                 let pendingSalesWorth = 0;
 
+                // Signed-in vs Guest (hoisted so they are available for the final setStats)
+                let signedInSales = 0;
+                let guestSales = 0;
+                let signedInPendingWorth = 0;
+                let guestPendingWorth = 0;
+                let signedInPendingCount = 0;
+                let guestPendingCount = 0;
+
                 if (allOrdersData.success) {
                     const allOrders = allOrdersData.data;
 
-                    totalSales = allOrders
-                        .filter(order => order.status === "Delivered" || order.adminConfirmed === true)
-                        .reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                    const deliveredOrders = allOrders.filter(order => order.status === "Delivered" || order.adminConfirmed === true);
+                    totalSales = deliveredOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
                     
                     const pendingOrders = allOrders.filter(order => order.status === "Pending" && !order.adminConfirmed);
                     pendingOrdersCount = pendingOrders.length;
                     pendingSalesWorth = pendingOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+
+                    // Signed-in vs Guest splits (userId present = signed-in / logged-in at time of order)
+                    const signedInAll = allOrders.filter(isSignedInOrder);
+                    const guestAll = allOrders.filter(isGuestOrder);
+
+                    const signedInDelivered = signedInAll.filter(order => order.status === "Delivered" || order.adminConfirmed === true);
+                    const guestDelivered = guestAll.filter(order => order.status === "Delivered" || order.adminConfirmed === true);
+
+                    signedInSales = signedInDelivered.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                    guestSales = guestDelivered.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+
+                    const signedInPending = signedInAll.filter(order => order.status === "Pending" && !order.adminConfirmed);
+                    const guestPending = guestAll.filter(order => order.status === "Pending" && !order.adminConfirmed);
+
+                    signedInPendingCount = signedInPending.length;
+                    guestPendingCount = guestPending.length;
+
+                    signedInPendingWorth = signedInPending.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                    guestPendingWorth = guestPending.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
                 }
 
                 const usersResponse = await fetch(SummaryApi.allUser.url, {
@@ -76,6 +111,12 @@ const OverviewPage = () => {
                     pendingSalesWorth,
                     totalUsers,
                     totalProducts,
+                    signedInSales,
+                    guestSales,
+                    signedInPendingWorth,
+                    guestPendingWorth,
+                    signedInPendingCount,
+                    guestPendingCount,
                 }));
             } catch (err) {
                 console.error("Error fetching data:", err);
@@ -144,6 +185,38 @@ const OverviewPage = () => {
                         icon={MdOutlineBarChart}
                         value={stats.conversionRate}
                     />
+                </div>
+
+                {/* Signed-in vs Guest breakdown on Overview */}
+                <div>
+                    <div className="mb-3 text-xs font-black uppercase tracking-[0.3em] text-slate-500">
+                        Sales & Pending by Customer Type
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <StatCard
+                            name="Signed-in Sales"
+                            icon={FaUserCheck}
+                            value={`₦${(stats.signedInSales || 0).toFixed(2)}`}
+                        />
+                        <StatCard
+                            name="Guest Sales"
+                            icon={FaUser}
+                            value={`₦${(stats.guestSales || 0).toFixed(2)}`}
+                        />
+                        <StatCard
+                            name="Signed-in Pending Worth"
+                            icon={TbCurrencyNaira}
+                            value={`₦${(stats.signedInPendingWorth || 0).toFixed(2)}`}
+                        />
+                        <StatCard
+                            name="Guest Pending Worth"
+                            icon={TbCurrencyNaira}
+                            value={`₦${(stats.guestPendingWorth || 0).toFixed(2)}`}
+                        />
+                    </div>
+                    <p className="mt-1 text-[10px] text-slate-400">
+                        Signed-in orders come from logged-in accounts. Guest orders come from users who checked out without signing in.
+                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

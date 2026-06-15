@@ -44,7 +44,7 @@ const HotDealWiseDisplay = ({ hotDeal, heading }) => {
           : data.map((product) => (
               <Link
                 key={product?._id}
-                to={`/product/${product?._id}`}
+                to={`/product/${product?.slug || product?._id}`}
                 className="w-full min-w-[250px] max-w-[250px] bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
                 onClick={scrollTop}
               >

@@ -130,7 +130,7 @@ const MobileHero = ({ products }) => (
             {products.map((product, index) => (
               <Link
                 key={product._id}
-                to={`/product/${product._id}`}
+                to={`/product/${product?.slug || product?._id}`}
                 className='group relative min-w-[180px] overflow-hidden rounded-none bg-white p-2.5 shadow-sm ring-1 ring-orange-100'
               >
                 <div className='absolute left-2.5 top-2.5 z-10 rounded-none bg-red-500 px-2 py-0.5 text-[9px] font-black text-white'>
@@ -200,7 +200,7 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
               </div>
 
               <Link
-                to={`/product/${featuredDeal._id}`}
+                to={`/product/${featuredDeal?.slug || featuredDeal?._id}`}
                 className='mt-5 block rounded-none border border-white/10 bg-white p-3 text-slate-950 transition duration-300 hover:-translate-y-1 hover:shadow-2xl'
               >
                 <div className='flex items-center justify-between gap-2'>
@@ -251,7 +251,7 @@ const DesktopHero = ({ featuredDeal, sideDeals, dealCount }) => {
                 {sideDeals.map((product, index) => (
                   <Link
                     key={product._id}
-                    to={`/product/${product._id}`}
+                    to={`/product/${product?.slug || product?._id}`}
                     className='group relative overflow-hidden rounded-none bg-white p-2 shadow-sm ring-1 ring-orange-100 transition duration-300 hover:-translate-y-1 hover:shadow-xl'
                   >
                     <div className='absolute left-2 top-2 z-10 rounded-none bg-red-500 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.12em] text-white'>

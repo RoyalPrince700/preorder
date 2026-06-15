@@ -2,6 +2,7 @@
 
 const uploadProductPermission = require("../../helpers/permission")
 const productModel = require("../../models/productModel")
+const generateSlug = require("../../helpers/generateSlug")
 
 
 async function uploadProductController(req,res) {
@@ -36,8 +37,11 @@ async function uploadProductController(req,res) {
                 throw new Error("At least one product image is required")
             }
 
+            const slug = await generateSlug(productName);
+
             const uploadProduct = new productModel({
                 productName,
+                slug,
                 brandName,
                 category,
                 subCategory,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import SummaryApi from '../common';
@@ -96,39 +96,6 @@ const Checkout = () => {
     return true;
   };
 
-  const handlePayOnDelivery = async () => {
-    if (!validateShippingDetails()) return;
-
-    try {
-      const payload = {
-        name: shippingDetails.name,
-        number: shippingDetails.number,
-        address: shippingDetails.address,
-        note: shippingDetails.note || '',
-        cartItems,
-        totalPrice: totalPrice,
-        paymentMethod: 'Pay on Delivery',
-      };
-
-      const response = await fetch(SummaryApi.checkout.url, {
-        method: SummaryApi.checkout.method,
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to process order');
-
-      toast.success('Your order has been placed successfully!');
-      await fetchUserAddToCart();
-      navigate('/order');
-    } catch (error) {
-      console.error('Error during Pay on Delivery:', error);
-      toast.error('Error processing your order. Please try again.');
-    }
-  };
-
   // const handleFlutterwavePayment = async () => {
   //   if (!validateShippingDetails()) return;
   //
@@ -190,7 +157,7 @@ const Checkout = () => {
         const qty = item?.quantity || 1;
         const price = product?.sellingPrice || item?.price || 0;
 
-        const productLink = `${window.location.origin}/product/${product?._id || item?._id}`;
+        const productLink = `${window.location.origin}/product/${product?.slug || product?._id || item?._id}`;
 
         message += `${index + 1}. ${name}\n   Qty: ${qty} | Price: ${displayNARCurrency(price * qty)}\n   Link: ${productLink}\n`;
       });
@@ -201,6 +168,24 @@ const Checkout = () => {
       const whatsappUrl = `https://wa.me/2348160881705?text=${encodedMessage}`;
 
       if (!user) {
+        // Notify admins via email for guest (non-signed-in) orders placed from checkout
+        fetch(SummaryApi.notifyAdminsOrder.url, {
+          method: SummaryApi.notifyAdminsOrder.method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: shippingDetails.name,
+            number: shippingDetails.number,
+            address: shippingDetails.address,
+            note: shippingDetails.note || '',
+            cartItems,
+            total: displayNARCurrency(totalPrice),
+            totalPrice,
+            paymentMethod: 'WhatsApp',
+          }),
+        }).catch((err) => {
+          console.error('Failed to send admin order notification for guest checkout:', err);
+        });
+
         clearLocalCart();
         toast.success('Redirecting to WhatsApp to complete your order...');
         window.location.href = whatsappUrl;

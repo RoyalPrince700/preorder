@@ -1,5 +1,6 @@
 const uploadProductPermission = require("../../helpers/permission")
 const productModel = require("../../models/productModel")
+const generateSlug = require("../../helpers/generateSlug")
 
 const ALLOWED_UPDATE_FIELDS = [
     "productName",
@@ -45,6 +46,10 @@ async function updateProductController (req,res){
             if (!Array.isArray(updatePayload.productImage) || updatePayload.productImage.length === 0) {
                 throw new Error("At least one product image is required")
             }
+        }
+
+        if (updatePayload.productName) {
+            updatePayload.slug = await generateSlug(updatePayload.productName);
         }
 
         const updateProduct = await productModel.findByIdAndUpdate(

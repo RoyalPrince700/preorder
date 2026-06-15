@@ -63,8 +63,8 @@ const ProductDetails = () => {
     navigate('/cart');
   };
 
-  const handleNavigateToProduct = (productId) => {
-    navigate(`/product/${productId}`);
+  const handleNavigateToProduct = (product) => {
+    navigate(`/product/${product?.slug || product?._id}`);
   };
 
   return (

@@ -20,7 +20,7 @@ const ProductGridCard = ({ product }) => {
   return (
     <div className="group flex h-full min-w-0 flex-col overflow-hidden border-2 border-slate-100 bg-white transition-all duration-300 hover:border-orange-500">
       <Link
-        to={`/product/${product?._id}`}
+        to={`/product/${product?.slug || product?._id}`}
         onClick={scrollTop}
         className="flex min-h-0 flex-1 flex-col"
       >
@@ -68,7 +68,7 @@ const ProductGridCard = ({ product }) => {
 
       <div className="mt-1 flex items-center justify-between px-3 pb-2 md:px-3 md:pb-3">
         <Link
-          to={`/product/${product?._id}`}
+          to={`/product/${product?.slug || product?._id}`}
           onClick={scrollTop}
           className="text-[10px] font-black uppercase tracking-[0.1em] text-slate-950 hover:text-orange-600 hover:underline underline-offset-4"
         >

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { FaShoppingCart, FaClock, FaCheckCircle, FaMoneyBillWave, FaHandHoldingUsd } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaShoppingCart, FaClock, FaCheckCircle, FaMoneyBillWave, FaHandHoldingUsd, FaUserCheck, FaUser } from "react-icons/fa";
 import Header from "../common/Header";
 import StatCard from "../common/StatCard";
 import { adminError, adminLoading } from "../common/adminUi";
@@ -9,6 +9,8 @@ import OrdersTable from "../analysis/overview/OrdersTable";
 import SummaryApi from "../common";
 import {
     isOrderCounted,
+    isSignedInOrder,
+    isGuestOrder,
     sumAmountPaid,
     sumDiscountForfeited,
     sumWebsiteTotal,
@@ -25,6 +27,11 @@ const AdminOrderPage = () => {
         discountForfeited: "₦0.00",
         totalCost: "₦0.00",
         totalProfit: "₦0.00",
+        // Signed-in vs Guest breakdown
+        signedInOrders: "0",
+        signedInRevenue: "₦0.00",
+        guestOrders: "0",
+        guestRevenue: "₦0.00",
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -55,6 +62,16 @@ const AdminOrderPage = () => {
                     const totalProfit = countedOrders.reduce((sum, order) => sum + (order.profit || 0), 0);
                     const totalCost = totalRevenue - totalProfit;
 
+                    // Signed-in vs Guest breakdowns
+                    const signedInAll = orders.filter(isSignedInOrder);
+                    const guestAll = orders.filter(isGuestOrder);
+
+                    const signedInCounted = signedInAll.filter(isOrderCounted);
+                    const guestCounted = guestAll.filter(isOrderCounted);
+
+                    const signedInRevenue = sumAmountPaid(signedInCounted);
+                    const guestRevenue = sumAmountPaid(guestCounted);
+
                     setOrderStats({
                         totalOrders: totalOrders.toString(),
                         pendingOrders: pendingOrders.toString(),
@@ -64,6 +81,10 @@ const AdminOrderPage = () => {
                         discountForfeited: formatCurrency(discountForfeited),
                         totalCost: formatCurrency(totalCost),
                         totalProfit: formatCurrency(totalProfit),
+                        signedInOrders: signedInAll.length.toString(),
+                        signedInRevenue: formatCurrency(signedInRevenue),
+                        guestOrders: guestAll.length.toString(),
+                        guestRevenue: formatCurrency(guestRevenue),
                     });
                 } else {
                     setError(data.message || "Failed to fetch order stats.");
@@ -113,6 +134,22 @@ const AdminOrderPage = () => {
                     <StatCard name="Discount Forfeited" icon={FaMoneyBillWave} value={orderStats.discountForfeited} />
                     <StatCard name="Total Cost" icon={FaMoneyBillWave} value={orderStats.totalCost} />
                     <StatCard name="Total Profit" icon={FaHandHoldingUsd} value={orderStats.totalProfit} />
+                </div>
+
+                {/* Signed-in vs Guest breakdown */}
+                <div>
+                    <div className="mb-3 text-xs font-black uppercase tracking-[0.3em] text-slate-500">
+                        Customer Type Breakdown — Signed-in vs Guest (unsigned)
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <StatCard name="Signed-in Orders" icon={FaUserCheck} value={orderStats.signedInOrders} />
+                        <StatCard name="Signed-in Revenue" icon={FaMoneyBillWave} value={orderStats.signedInRevenue} />
+                        <StatCard name="Guest Orders" icon={FaUser} value={orderStats.guestOrders} />
+                        <StatCard name="Guest Revenue" icon={FaMoneyBillWave} value={orderStats.guestRevenue} />
+                    </div>
+                    <p className="mt-2 text-[10px] text-slate-400">
+                        Signed-in = orders placed while logged in. Guest = orders placed without sign-in (e.g. WhatsApp guest checkout).
+                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

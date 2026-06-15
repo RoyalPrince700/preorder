@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TbCurrencyNaira } from "react-icons/tb";
-import { FaShoppingCart, FaChartLine, FaArrowUp } from "react-icons/fa";
+import { FaShoppingCart, FaChartLine, FaArrowUp, FaUserCheck, FaUser } from "react-icons/fa";
 import Header from "../common/Header";
 import StatCard from "../common/StatCard";
 import { adminError, adminLoading } from "../common/adminUi";
@@ -12,6 +12,8 @@ import SummaryApi from "../common";
 import {
     getAmountPaid,
     isOrderCounted,
+    isSignedInOrder,
+    isGuestOrder,
     sumAmountPaid,
     sumDiscountForfeited,
     sumWebsiteTotal,
@@ -29,6 +31,13 @@ const SalesPage = () => {
         salesGrowth: "0%",
         pendingOrdersCount: "0",
         pendingSalesWorth: "₦0.00",
+        // Signed-in vs Guest
+        signedInOrders: "0",
+        signedInRevenue: "₦0.00",
+        guestOrders: "0",
+        guestRevenue: "₦0.00",
+        guestPendingOrders: "0",
+        guestPendingWorth: "₦0.00",
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -81,6 +90,20 @@ const SalesPage = () => {
                     const pendingOrdersCount = pendingOrders.length;
                     const pendingSalesWorth = pendingOrders.reduce((sum, order) => sum + getAmountPaid(order), 0);
 
+                    // Signed-in vs Guest breakdowns
+                    const signedInAll = allOrders.filter(isSignedInOrder);
+                    const guestAll = allOrders.filter(isGuestOrder);
+
+                    const signedInDelivered = signedInAll.filter(isOrderCounted);
+                    const guestDelivered = guestAll.filter(isOrderCounted);
+
+                    const signedInRevenue = sumAmountPaid(signedInDelivered);
+                    const guestRevenue = sumAmountPaid(guestDelivered);
+
+                    const guestPending = guestAll.filter(order => order.status === "Pending" && !order.adminConfirmed);
+                    const guestPendingOrdersCount = guestPending.length;
+                    const guestPendingWorth = guestPending.reduce((sum, order) => sum + getAmountPaid(order), 0);
+
                     setSalesStats({
                         totalRevenue: formatCurrency(totalRevenue),
                         websiteListedValue: formatCurrency(websiteListedValue),
@@ -92,6 +115,12 @@ const SalesPage = () => {
                         salesGrowth,
                         pendingOrdersCount: pendingOrdersCount.toString(),
                         pendingSalesWorth: formatCurrency(pendingSalesWorth),
+                        signedInOrders: signedInAll.length.toString(),
+                        signedInRevenue: formatCurrency(signedInRevenue),
+                        guestOrders: guestAll.length.toString(),
+                        guestRevenue: formatCurrency(guestRevenue),
+                        guestPendingOrders: guestPendingOrdersCount.toString(),
+                        guestPendingWorth: formatCurrency(guestPendingWorth),
                     });
                 } else {
                     setError(data.message || "Failed to fetch sales data.");
@@ -142,6 +171,24 @@ const SalesPage = () => {
                     <StatCard name="Avg. Order Value" icon={TbCurrencyNaira} value={salesStats.averageOrderValue} />
                     <StatCard name="Conversion Rate" icon={FaChartLine} value={salesStats.conversionRate} />
                     <StatCard name="Sales Growth" icon={FaArrowUp} value={salesStats.salesGrowth} />
+                </div>
+
+                {/* Signed-in vs Guest breakdown for sales */}
+                <div>
+                    <div className="mb-3 text-xs font-black uppercase tracking-[0.3em] text-slate-500">
+                        Revenue & Orders by Customer Type — Signed-in vs Guest
+                    </div>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <StatCard name="Signed-in Orders" icon={FaUserCheck} value={salesStats.signedInOrders} />
+                        <StatCard name="Signed-in Revenue" icon={TbCurrencyNaira} value={salesStats.signedInRevenue} />
+                        <StatCard name="Guest Orders" icon={FaUser} value={salesStats.guestOrders} />
+                        <StatCard name="Guest Revenue" icon={TbCurrencyNaira} value={salesStats.guestRevenue} />
+                        <StatCard name="Guest Pending Orders" icon={FaShoppingCart} value={salesStats.guestPendingOrders} />
+                        <StatCard name="Guest Pending Worth" icon={TbCurrencyNaira} value={salesStats.guestPendingWorth} />
+                    </div>
+                    <p className="mt-2 text-[10px] text-slate-400">
+                        Signed-in = logged-in users at checkout. Guest = unsigned users (WhatsApp/direct checkout without account).
+                    </p>
                 </div>
 
                 <SalesOverviewChart />

@@ -86,7 +86,7 @@ const VerticalSubCardProduct = ({ category,subCategory, heading }) => {
             ))
           : data.map((product, index) => (
               <Link
-                to={'product/' + product?._id}
+                to={'/product/' + (product?.slug || product?._id)}
                 key={index}
                 className='w-full min-w-[200px] md:min-w-[220px] max-w-[280px] md:max-w-[280px] bg-white rounded-sm shadow'
               >
